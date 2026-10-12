@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The hard questions · Aefinity AI</title>
+<meta name="description" content="Ten hard questions about AI, what our labs found so far, what is still open, and the questions we have not tested yet.">
+<link rel="canonical" href="https://aefinityai.com/questions/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Aefinity AI">
+<meta property="og:title" content="The hard questions · Aefinity AI">
+<meta property="og:description" content="Ten hard questions about AI, what our labs found so far, what is still open, and the questions we have not tested yet.">
+<meta property="og:url" content="https://aefinityai.com/questions/">
+<meta property="og:image" content="https://aefinityai.com/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500&amp;family=Instrument+Serif:ital@0;1&amp;display=swap">
+<link rel="stylesheet" href="/assets/site.css?v=56a4e161d4">
+<script>(function(){var d=document.documentElement;d.classList.add('js');try{var t=localStorage.getItem('aefinity-theme');if(t==='light'||t==='dark')d.setAttribute('data-theme',t);}catch(e){}})();</script>
+<script src="/assets/site.js?v=331dd97031" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap hdr">
+    <a class="brand" href="/" aria-label="Aefinity AI, home"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8"/><path d="M8.6 24.2 16 7.6l7.4 16.6M12.4 17.4h7.2M11 21h10"/></svg><span class="wm">Aefinity <span>AI</span></span></a>
+    <nav id="site-nav" class="nav" aria-label="Primary">
+      <ul><li><a href="/alice/">ALICE</a></li><li><a href="/cis/">CIS</a></li><li><a href="/operations/">Operations</a></li><li><a href="/labs/">Labs</a></li><li><a href="/questions/" aria-current="page">Questions</a></li><li><a href="/standard/">Standard</a></li><li><a href="/mission/">Mission</a></li><li class="nav-more"><a href="/learned/">Learned</a></li><li class="nav-more"><a href="/projects/">Projects</a></li></ul>
+      <a class="nav-cta" href="/contact/">Book a briefing</a>
+    </nav>
+    <div class="hdr-tools">
+      <button class="icon-btn theme-btn" type="button" data-theme-toggle aria-label="Switch colour theme"><svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+      <button class="icon-btn menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Menu"><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+<main id="main" tabindex="-1">
+<section class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li aria-current="page">Questions</li></ol></nav>
+    <p class="kicker">The hard questions</p>
+    <h1 class="display">Ten questions. <em>What we found, and what is still open.</em></h1>
+    <p class="lede">Each finding is from our own runs, at the scopes stated in the labs it links to.</p>
+  </div>
+</section>
+<div class="wrap q-layout">
+  <nav class="q-toc" aria-label="Questions"><ol><li><a href="#q1"><span>01</span>Same bits on two computers</a></li><li><a href="#q2"><span>02</span>Graphics cards and shortcuts</a></li><li><a href="#q3"><span>03</span>Silent weight changes</a></li><li><a href="#q4"><span>04</span>Agent records and their cost</a></li><li><a href="#q5"><span>05</span>Rebuilt from the written spec</a></li><li><a href="#q6"><span>06</span>Do our tests test anything</a></li><li><a href="#q7"><span>07</span>No tuning after the fact</a></li><li><a href="#q8"><span>08</span>Speed numbers</a></li><li><a href="#q9"><span>09</span>Shrinking models</a></li><li><a href="#q10"><span>10</span>Repeatable evaluation</a></li></ol></nav>
+  <ol class="hq-list"><li class="hq" id="q1">
+  <div class="hq-n" aria-hidden="true">01</div>
+  <div class="hq-body">
+    <h2 class="hq-q"><span class="sr-only">Question 1: </span>Can two different computers produce the exact same AI output, bit for bit?</h2>
+    <div class="hq-cols">
+      <div><p class="hq-k">What we found so far</p><p>In our own runs, yes, for one narrow case: fp32 greedy decoding of one small model (SmolLM2-135M, 16 tokens), once the arithmetic is pinned in a written specification. The same digest came out on AVX2 and scalar x86 machines, an aarch64 phone and a free cloud CPU. Ten differently optimised x86_64 builds produced one identical dump. For training, default PyTorch gave different checkpoints on two CPUs even though the printed losses were identical, while a fixed-order C trainer gave identical checkpoints on five hosts including a phone, at toy scale (13,088 parameters).</p></div>
+      <div><p class="hq-k">Still open</p><p>Whether anyone outside our lab gets the same result; larger models; production precisions such as bf16; sampling, batching and quantisation. We have not tested those.</p></div>
+    </div>
+    <p class="hq-k">Labs that address it</p>
+    <ul class="lab-chips"><li><a class="lab-chip o-positive" href="/labs/cis2-cross-machine-digest/"><i aria-hidden="true"></i><span class="lc-no">L01</span><span class="lch-t">CIS-2: the same AI output, bit for bit, on different machines</span><span class="lch-o"><span class="sr-only">, </span>Positive</span></a></li><li><a class="lab-chip o-positive" href="/labs/e29-optimizer-invariance/"><i aria-hidden="true"></i><span class="lc-no">L19</span><span class="lch-t">E29: does the compiler&#x27;s optimiser change the bits?</span><span class="lch-o"><span class="sr-only">, </span>Positive</span></a></li><li><a class="lab-chip o-mixed" href="/labs/training-checkpoints-cross-isa/"><i aria-hidden="true"></i><span class="lc-no">L12</span><span class="lch-t">Training checkpoints across CPUs and instruction sets</span><span class="lch-o"><span class="sr-only">, </span>Mixed</span></a></li></ul>
+  </div>
+</li><li class="hq" id="q2">
+  <div class="hq-n" aria-hidden="true">02</div>
+  <div class="hq-body">
+    <h2 class="hq-q"><span class="sr-only">Question 2: </span>Does the same hold on graphics cards and under the usual speed shortcuts?</h2>
+    <div class="hq-cols">
+      <div><p class="hq-k">What we found so far</p><p>On one Tesla P100, an independent CUDA implementation matched the CPU digests, after two earlier GPU runs turned out to be false positives (the binary had really been built for the CPU) and were withdrawn. On a Tesla T4, one matrix multiply gave identical results with row-batched fp32 at batch sizes 1, 4 and 8, while grouped fp32 and int8 changed the result at every batch size, as predicted before the run.</p></div>
+      <div><p class="hq-k">Still open</p><p>Other GPU generations, tensor cores, whole-model batching beyond row-batched fp32, multi-GPU serving, and performance. The CUDA code is not public.</p></div>
+    </div>
+    <p class="hq-k">Labs that address it</p>
+    <ul class="lab-chips"><li><a class="lab-chip o-positive" href="/labs/gpu-p100-reproduces-cpu/"><i aria-hidden="true"></i><span class="lc-no">L02</span><span class="lch-t">An NVIDIA GPU reproduces the CPU reference digest (Tesla P100)</span><span class="lch-o"><span class="sr-only">, </span>Positive</span></a></li><li><a class="lab-chip o-positive" href="/labs/t4-batching-precision/"><i aria-hidden="true"></i><span class="lc-no">L03</span><span class="lch-t">Batching and precision on a Tesla T4: which shortcuts change the digest</span><span class="lch-o"><span class="sr-only">, </span>Positive</span></a></li></ul>
+  </div>
+</li><li class="hq" id="q3">
+  <div class="hq-n" aria-hidden="true">03</div>
+  <div class="hq-body">
+    <h2 class="hq-q"><span class="sr-only">Question 3: </span>If someone changes a model&#x27;s weights without telling you, how would you know?</h2>
+    <div class="hq-cols">
+      <div><p class="hq-k">What we found so far</p><p>Re-reading the output is a weak detector. In one run of 295 bit-flip trials, among the 247 where the output changed, a replay-style column missed 182 and a receipt-style check missed 82. An edited embedding row that no test prompt read was missed 40 of 40 times by text replay and by a top-5 check, while a check over the full computation caught all 40. A one-byte file corruption was stopped by a hash gate, but our own self-check would likely have repaired the file and hidden the corruption from a monitor. Also, 43 flips changed nothing in the computation, which a computation-level check by design does not flag.</p></div>
+      <div><p class="hq-k">Still open</p><p>Adversaries who optimise their tampering; other prompts, models and tensors; a scheduled, multi-host monitoring deployment.</p></div>
+    </div>
+    <p class="hq-k">Labs that address it</p>
+    <ul class="lab-chips"><li><a class="lab-chip o-positive" href="/labs/bitflip-weights/"><i aria-hidden="true"></i><span class="lc-no">L06</span><span class="lch-t">One flipped bit in the weights: which checks notice?</span><span class="lch-o"><span class="sr-only">, </span>Positive</span></a></li><li><a class="lab-chip o-positive" href="/labs/embedding-edits/"><i aria-hidden="true"></i><span class="lc-no">L07</span><span class="lch-t">Realistic edits to the embedding table, including one hidden row</span><span class="lch-o"><span class="sr-only">, </span>Positive</span></a></li><li><a class="lab-chip o-mixed" href="/labs/continuous-validation/"><i aria-hidden="true"></i><span class="lc-no">L11</span><span class="lch-t">Continuous validation: does a one-byte corruption get caught, and what hides it?</span><span class="lch-o"><span class="sr-only">, </span>Mixed</span></a></li></ul>
+  </div>
+</li><li class="hq" id="q4">
+  <div class="hq-n" aria-hidden="true">04</div>
+  <div class="hq-body">
+    <h2 class="hq-q"><span class="sr-only">Question 4: </span>Can you trust a record of what an AI agent did, and what does it cost?</h2>
+    <div class="hq-cols">
+      <div><p class="hq-k">What we found so far</p><p>A receipt that is replayed against pinned artifacts can catch edits an ordinary log display does not flag. Trying to break our own verifier found a hole: a genuine receipt filed under the wrong test item verified like a real one. Binding each receipt to its item closed that case. Receipts are not free: on one old laptop the episode with receipts took 2.51 times as long as a plain decode (the source calls that an upper bound), and verification took 40 seconds there and minutes on a weaker machine.</p></div>
+      <div><p class="hq-k">Still open</p><p>Whether the fix holds against tampering that was not hand-picked; cost on other hardware and at scale.</p></div>
+    </div>
+    <p class="hq-k">Labs that address it</p>
+    <ul class="lab-chips"><li><a class="lab-chip o-mixed" href="/labs/receipt-verified-eval/"><i aria-hidden="true"></i><span class="lc-no">L08</span><span class="lch-t">Receipt-verified agent evaluation, and the hole we found in our own verifier</span><span class="lch-o"><span class="sr-only">, </span>Mixed</span></a></li><li><a class="lab-chip o-positive" href="/labs/logging-vs-receipts/"><i aria-hidden="true"></i><span class="lc-no">L09</span><span class="lch-t">Ordinary logging versus replay-based receipts on one-field edits</span><span class="lch-o"><span class="sr-only">, </span>Positive</span></a></li><li><a class="lab-chip o-mixed" href="/labs/receipt-overhead/"><i aria-hidden="true"></i><span class="lc-no">L10</span><span class="lch-t">What receipts cost on a real agent episode</span><span class="lch-o"><span class="sr-only">, </span>Mixed</span></a></li></ul>
+  </div>
+</li><li class="hq" id="q5">
+  <div class="hq-n" aria-hidden="true">05</div>
+  <div class="hq-body">
+    <h2 class="hq-q"><span class="sr-only">Question 5: </span>Can someone who has never seen our code rebuild the same bits from the written description alone?</h2>
+    <div class="hq-cols">
+      <div><p class="hq-k">What we found so far</p><p>Partly. A Rust version written from an internal memo did not match. A Rust version written from spec v0.1 matched all digests on its first CI run. A C version written from spec v0.2 matched three of four digests, and the mismatch led us to a defect in our own spec: the written order of the witness chain disagreed with the reference. We then found two more gaps by reading our spec critically: it names no Unicode version for letters, and it pins text to tokens but not tokens to text.</p></div>
+      <div><p class="hq-k">Still open</p><p>Independent humans doing the same; every one of these implementers was an AI coding agent run by one operator inside our organisation.</p></div>
+    </div>
+    <p class="hq-k">Labs that address it</p>
+    <ul class="lab-chips"><li><a class="lab-chip o-mixed" href="/labs/cleanroom-reimplementations/"><i aria-hidden="true"></i><span class="lc-no">L04</span><span class="lch-t">Clean-room reimplementations: one mismatch (from a memo), one match (from spec v0.1), one partial that exposed a spec error</span><span class="lch-o"><span class="sr-only">, </span>Mixed</span></a></li><li><a class="lab-chip o-mixed" href="/labs/e24-unicode-gap/"><i aria-hidden="true"></i><span class="lc-no">L14</span><span class="lch-t">E24: the spec never says which Unicode version defines a letter</span><span class="lch-o"><span class="sr-only">, </span>Mixed</span></a></li><li><a class="lab-chip o-negative" href="/labs/e41-detokenization-gap/"><i aria-hidden="true"></i><span class="lc-no">L21</span><span class="lch-t">E41: the spec pins how text becomes tokens, but not how tokens become text</span><span class="lch-o"><span class="sr-only">, </span>Negative</span></a></li></ul>
+  </div>
+</li><li class="hq" id="q6">
+  <div class="hq-n" aria-hidden="true">06</div>
+  <div class="hq-body">
+    <h2 class="hq-q"><span class="sr-only">Question 6: </span>How do we know our own tests test anything?</h2>
+    <div class="hq-cols">
+      <div><p class="hq-k">What we found so far</p><p>We broke our spec&#x27;s rules one at a time: the official test noticed 12 of 16 breaks, and not the tie-break or the denormal-flush pin. Sampled accuracy checks gave comfortable wrong answers (at most 1 ULP) where exhaustive sweeps found much larger ULP errors near zeros of sin and cos. Exhaustive testing of exp found a real defect in a safety guard in our spec. A pre-registered 2 ULP bar was missed by our first fix and met by a second. We also retracted two wrong explanations of why the flush-to-zero rule never mattered.</p></div>
+      <div><p class="hq-k">Still open</p><p>Whether the test vector exercises every rule; the untriggered rules are protected only by separate self-tests.</p></div>
+    </div>
+    <p class="hq-k">Labs that address it</p>
+    <ul class="lab-chips"><li><a class="lab-chip o-mixed" href="/labs/e22-necessity-matrix/"><i aria-hidden="true"></i><span class="lc-no">L13</span><span class="lch-t">E22: which spec rules does the test vector actually exercise?</span><span class="lch-o"><span class="sr-only">, </span>Mixed</span></a></li><li><a class="lab-chip o-mixed" href="/labs/e26-trig-range/"><i aria-hidden="true"></i><span class="lc-no">L16</span><span class="lch-t">E26: sin/cos at very long contexts — the sampled answer was wrong</span><span class="lch-o"><span class="sr-only">, </span>Mixed</span></a></li><li><a class="lab-chip o-mixed" href="/labs/e27-exp-ln-range/"><i aria-hidden="true"></i><span class="lc-no">L17</span><span class="lch-t">E27: exp, ln and SiLU on every float32 input, and a defect in our spec</span><span class="lch-o"><span class="sr-only">, </span>Mixed</span></a></li><li><a class="lab-chip o-positive" href="/labs/layer-oracle-e28-e36-e37/"><i aria-hidden="true"></i><span class="lc-no">L18</span><span class="lch-t">E28, E36, E37: every internal activation compared against an independent implementation</span><span class="lch-o"><span class="sr-only">, </span>Positive</span></a></li><li><a class="lab-chip o-null" href="/labs/ftz-reach-e35-e40/"><i aria-hidden="true"></i><span class="lc-no">L20</span><span class="lch-t">E35 to E40: does the flush-to-zero rule ever matter? (after two wrong explanations)</span><span class="lch-o"><span class="sr-only">, </span>Null</span></a></li><li><a class="lab-chip o-mixed" href="/labs/sincos-prereg-2ulp/"><i aria-hidden="true"></i><span class="lc-no">L05</span><span class="lch-t">Sin/cos accuracy for RoPE against a pre-registered 2 ULP bar (v0.2, v0.3, v0.3b)</span><span class="lch-o"><span class="sr-only">, </span>Mixed</span></a></li><li><a class="lab-chip o-positive" href="/labs/e25-rmsnorm-order/"><i aria-hidden="true"></i><span class="lc-no">L15</span><span class="lch-t">E25: the RMSNorm multiply order matters, and our spec sentence saying otherwise was false</span><span class="lch-o"><span class="sr-only">, </span>Positive</span></a></li></ul>
+  </div>
+</li><li class="hq" id="q7">
+  <div class="hq-n" aria-hidden="true">07</div>
+  <div class="hq-body">
+    <h2 class="hq-q"><span class="sr-only">Question 7: </span>How can an outsider tell that a lab did not tune results after the fact, or quietly drop failures?</h2>
+    <div class="hq-cols">
+      <div><p class="hq-k">What we found so far</p><p>They cannot tell completely, and our own ledger page says so. We publish pass marks before runs, a hash-chained public ledger of the private register, numbered errata and a rule that mismatches count as results. The ledger cannot show when an experiment ran. As of 2026-10-12 nobody outside the lab has reproduced or broken our results, and the public Hall of Divergence says so plainly.</p></div>
+      <div><p class="hq-k">Still open</p><p>An outside audit of whether our practice always matched our statement.</p></div>
+    </div>
+    <p class="hq-k">Labs that address it</p>
+    <ul class="lab-chips"><li><a class="lab-chip o-mixed" href="/labs/test-standard-ledger/"><i aria-hidden="true"></i><span class="lc-no">L23</span><span class="lch-t">Our test standard and the public experiment ledger</span><span class="lch-o"><span class="sr-only">, </span>Mixed</span></a></li><li><a class="lab-chip o-null" href="/labs/hall-of-divergence/"><i aria-hidden="true"></i><span class="lc-no">L24</span><span class="lch-t">Open challenge: the Hall of Divergence</span><span class="lch-o"><span class="sr-only">, </span>Null</span></a></li></ul>
+  </div>
+</li><li class="hq" id="q8">
+  <div class="hq-n" aria-hidden="true">08</div>
+  <div class="hq-body">
+    <h2 class="hq-q"><span class="sr-only">Question 8: </span>Do speed numbers survive scrutiny?</h2>
+    <div class="hq-cols">
+      <div><p class="hq-k">What we found so far</p><p>Ours did not, at first. Our benchmark laptop was clamped to about a fifth of its clock, so every earlier number from it was retracted. A compiler setting removed all vector instructions and the binary ran 217 to 258 times slower. A pre-registered comparison of a no-OS build against a minimal Linux was held back after a surprising first result; we found one contributing cause in our own build (soft-float), and the question remains open. A &#x27;16% slower&#x27; claim copied from a source comment did not reproduce. An early version of our software printed benchmark lines that were fixed strings.</p></div>
+      <div><p class="hq-k">Still open</p><p>A clean, controlled speed comparison across machines. We make no general speed claim; the speed figures on this site are single measurements on named machines.</p></div>
+    </div>
+    <p class="hq-k">Labs that address it</p>
+    <ul class="lab-chips"><li><a class="lab-chip o-negative" href="/labs/retraction-prochot/"><i aria-hidden="true"></i><span class="lc-no">L27</span><span class="lch-t">Retraction: our benchmark laptop was running at about one fifth speed</span><span class="lch-o"><span class="sr-only">, </span>Negative</span></a></li><li><a class="lab-chip o-negative" href="/labs/soft-float-avx2/"><i aria-hidden="true"></i><span class="lc-no">L28</span><span class="lch-t">A compiler setting silently deleted our vector instructions</span><span class="lch-o"><span class="sr-only">, </span>Negative</span></a></li><li><a class="lab-chip o-held" href="/labs/os-cost-held-back/"><i aria-hidden="true"></i><span class="lc-no">L29</span><span class="lch-t">What does an operating system cost? A pre-registered result we held back</span><span class="lch-o"><span class="sr-only">, </span>Held back</span></a></li><li><a class="lab-chip o-negative" href="/labs/lut-kernel-retraction/"><i aria-hidden="true"></i><span class="lc-no">L30</span><span class="lch-t">The &#x27;16% slower&#x27; lookup-table kernel claim, retracted</span><span class="lch-o"><span class="sr-only">, </span>Negative</span></a></li><li><a class="lab-chip o-negative" href="/labs/fabricated-metrics-audit/"><i aria-hidden="true"></i><span class="lc-no">L31</span><span class="lch-t">Audit of our own removed code: benchmark lines that measured nothing</span><span class="lch-o"><span class="sr-only">, </span>Negative</span></a></li></ul>
+  </div>
+</li><li class="hq" id="q9">
+  <div class="hq-n" aria-hidden="true">09</div>
+  <div class="hq-body">
+    <h2 class="hq-q"><span class="sr-only">Question 9: </span>Do published tricks for shrinking AI models actually work?</h2>
+    <div class="hq-cols">
+      <div><p class="hq-k">What we found so far</p><p>Some, within narrow limits. On two real small models, a rotation recovered 92.3% and 92.5% of the 4-bit activation collapse, though perplexity stayed above the baseline. A shortcut that skips the rotation was refuted, a super-weight lever was null at 135M parameters, and one of our own earlier null results was retracted. Lossless coding of a ternary 2B model reached 1.532 bits per weight, about 4% below ideal packing. A stock soft-prompt recipe gave outputs wrong by about 300 times on one layer when we ran it.</p></div>
+      <div><p class="hq-k">Still open</p><p>Models above about 0.6B parameters, quantisation-aware training, and deployable int4 kernels.</p></div>
+    </div>
+    <p class="hq-k">Labs that address it</p>
+    <ul class="lab-chips"><li><a class="lab-chip o-mixed" href="/labs/ranger-mock-run/"><i aria-hidden="true"></i><span class="lc-no">L25</span><span class="lch-t">RANGER mock run: low-bit quantization ideas tested on synthetic tensors</span><span class="lch-o"><span class="sr-only">, </span>Mixed</span></a></li><li><a class="lab-chip o-mixed" href="/labs/ranger-phase1/"><i aria-hidden="true"></i><span class="lc-no">L26</span><span class="lch-t">RANGER Phase 1: the quantization ideas on real models (SmolLM2-135M, Qwen3-0.6B)</span><span class="lch-o"><span class="sr-only">, </span>Mixed</span></a></li><li><a class="lab-chip o-null" href="/labs/es1-trit-census/"><i aria-hidden="true"></i><span class="lc-no">L32</span><span class="lch-t">E-S1: how far can a ternary 2B model be compressed without loss?</span><span class="lch-o"><span class="sr-only">, </span>Null</span></a></li><li><a class="lab-chip o-negative" href="/labs/refuted-literature-claims/"><i aria-hidden="true"></i><span class="lc-no">L33</span><span class="lch-t">Claims from the literature that failed when we ran them</span><span class="lch-o"><span class="sr-only">, </span>Negative</span></a></li></ul>
+  </div>
+</li><li class="hq" id="q10">
+  <div class="hq-n" aria-hidden="true">10</div>
+  <div class="hq-body">
+    <h2 class="hq-q"><span class="sr-only">Question 10: </span>Can a tiny model be evaluated in a way anyone can repeat exactly, and what does it score?</h2>
+    <div class="hq-cols">
+      <div><p class="hq-k">What we found so far</p><p>The 160-item evaluation repeated exactly on one machine (20 of 20 self-consistency items). The model scored poorly, which was expected from a 135M base model with simple heuristics: 3 of 60 on truthfulness, 5 of 60 on a tool-use proxy and 10 of 20 on refusal probes, which the source says is chance. The point was repeatability, not accuracy.</p></div>
+      <div><p class="hq-k">Still open</p><p>Cross-host verification of the evaluation, and anything about larger or instruction-tuned models.</p></div>
+    </div>
+    <p class="hq-k">Labs that address it</p>
+    <ul class="lab-chips"><li><a class="lab-chip o-mixed" href="/labs/ev1-mini-eval/"><i aria-hidden="true"></i><span class="lc-no">L22</span><span class="lch-t">ev-1: a 160-item mini evaluation on the pinned 135M model</span><span class="lch-o"><span class="sr-only">, </span>Mixed</span></a></li></ul>
+  </div>
+</li></ol>
+</div>
+<section class="section alt" aria-labelledby="oq-h">
+  <div class="wrap split">
+    <header class="sec-head"><h2 class="sec-title" id="oq-h">Open questions we have not tested yet</h2><p class="sec-intro">No results here. These are questions our own limits sections point at. Nothing below has been measured.</p></header>
+    <ul class="open-q"><li><h3>Does bit-exact reproduction survive production serving?</h3><p>The spec covers fp32 greedy decoding on small open models, mostly CPU. bf16 and GPU serving, sampling, batching and larger models are outside it today. We have not tested them.</p></li><li><h3>Do receipt checks hold against someone who optimises the tampering?</h3><p>Our tampering tests used hand-picked and harness-chosen edits. We have not tested an adversary who knows the verifier.</p></li><li><h3>Will anyone outside our lab reproduce the results, or break them?</h3><p>Not yet known. No unaffiliated reproduction is recorded. The Hall of Divergence is the standing invitation.</p></li><li><h3>Does reproducible output say anything about whether an answer is correct, safe or fair?</h3><p>We have not tested this. Reproducibility shows that two machines computed the same thing, not that the thing is good.</p></li><li><h3>Which other rules in the spec does the test vector never exercise?</h3><p>We tested 16 single-rule mutations. We have not mapped the rest.</p></li></ul>
+  </div>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-about">
+        <a class="brand" href="/" aria-label="Aefinity AI, home"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8"/><path d="M8.6 24.2 16 7.6l7.4 16.6M12.4 17.4h7.2M11 21h10"/></svg><span class="wm">Aefinity <span>AI</span></span></a>
+        <p>We are not another AI platform or cloud service.</p>
+        <p class="foot-prov">Every result on this site: run by us; no unaffiliated reproduction.</p>
+      </div>
+      <nav aria-label="Site"><h2>Site</h2><ul class="foot-nav"><li><a href="/alice/">ALICE</a></li><li><a href="/cis/">CIS</a></li><li><a href="/operations/">Operations</a></li><li><a href="/labs/">Labs</a></li><li><a href="/questions/">Questions</a></li><li><a href="/standard/">Standard</a></li><li><a href="/mission/">Mission</a></li><li><a href="/learned/">Learned</a></li><li><a href="/projects/">Projects</a></li><li><a href="/contact/">Contact</a></li><li><a href="/pilot">Replay pilot</a></li></ul></nav>
+      <nav aria-label="Open materials"><h2>Open materials</h2><ul>
+        <li><a class="ext" href="https://github.com/Aefinity-AI/cis2-spec">CIS-2 on GitHub</a></li>
+        <li><a class="ext" href="https://huggingface.co/datasets/aefinityAIINC/cis2-conformance">Conformance dataset</a></li>
+        <li><a class="ext" href="https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/public/Design_Partner_Adoption_Path.md">Design Partner Adoption Path</a></li>
+        <li><a class="ext" href="https://github.com/Aefinity-AI/aefinityai.com">Site source</a></li>
+      </ul></nav>
+      <div><h2>Contact</h2><ul>
+        <li><a href="mailto:justin@aefinityai.com">justin@aefinityai.com</a></li>
+        <li><a href="tel:+14093201536">409-320-1536</a></li>
+        <li>Orange, Texas</li>
+      </ul></div>
+    </div>
+    <div class="foot-bottom"><span>&copy; 2026 AEFINITY AI INC. &middot; Orange, Texas</span></div>
+  </div>
+</footer>
+</body>
+</html>

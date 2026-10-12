@@ -1,5 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://aefinityai.com/</loc></url>
+  <url><loc>https://aefinityai.com/mission/</loc></url>
+  <url><loc>https://aefinityai.com/questions/</loc></url>
+  <url><loc>https://aefinityai.com/labs/</loc></url>
+  <url><loc>https://aefinityai.com/labs/cis2-cross-machine-digest/</loc></url>
+  <url><loc>https://aefinityai.com/labs/gpu-p100-reproduces-cpu/</loc></url>
+  <url><loc>https://aefinityai.com/labs/t4-batching-precision/</loc></url>
+  <url><loc>https://aefinityai.com/labs/cleanroom-reimplementations/</loc></url>
+  <url><loc>https://aefinityai.com/labs/sincos-prereg-2ulp/</loc></url>
+  <url><loc>https://aefinityai.com/labs/bitflip-weights/</loc></url>
+  <url><loc>https://aefinityai.com/labs/embedding-edits/</loc></url>
+  <url><loc>https://aefinityai.com/labs/receipt-verified-eval/</loc></url>
+  <url><loc>https://aefinityai.com/labs/logging-vs-receipts/</loc></url>
+  <url><loc>https://aefinityai.com/labs/receipt-overhead/</loc></url>
+  <url><loc>https://aefinityai.com/labs/continuous-validation/</loc></url>
+  <url><loc>https://aefinityai.com/labs/training-checkpoints-cross-isa/</loc></url>
+  <url><loc>https://aefinityai.com/labs/e22-necessity-matrix/</loc></url>
+  <url><loc>https://aefinityai.com/labs/e24-unicode-gap/</loc></url>
+  <url><loc>https://aefinityai.com/labs/e25-rmsnorm-order/</loc></url>
+  <url><loc>https://aefinityai.com/labs/e26-trig-range/</loc></url>
+  <url><loc>https://aefinityai.com/labs/e27-exp-ln-range/</loc></url>
+  <url><loc>https://aefinityai.com/labs/layer-oracle-e28-e36-e37/</loc></url>
+  <url><loc>https://aefinityai.com/labs/e29-optimizer-invariance/</loc></url>
+  <url><loc>https://aefinityai.com/labs/ftz-reach-e35-e40/</loc></url>
+  <url><loc>https://aefinityai.com/labs/e41-detokenization-gap/</loc></url>
+  <url><loc>https://aefinityai.com/labs/ev1-mini-eval/</loc></url>
+  <url><loc>https://aefinityai.com/labs/test-standard-ledger/</loc></url>
+  <url><loc>https://aefinityai.com/labs/hall-of-divergence/</loc></url>
+  <url><loc>https://aefinityai.com/labs/ranger-mock-run/</loc></url>
+  <url><loc>https://aefinityai.com/labs/ranger-phase1/</loc></url>
+  <url><loc>https://aefinityai.com/labs/retraction-prochot/</loc></url>
+  <url><loc>https://aefinityai.com/labs/soft-float-avx2/</loc></url>
+  <url><loc>https://aefinityai.com/labs/os-cost-held-back/</loc></url>
+  <url><loc>https://aefinityai.com/labs/lut-kernel-retraction/</loc></url>
+  <url><loc>https://aefinityai.com/labs/fabricated-metrics-audit/</loc></url>
+  <url><loc>https://aefinityai.com/labs/es1-trit-census/</loc></url>
+  <url><loc>https://aefinityai.com/labs/refuted-literature-claims/</loc></url>
+  <url><loc>https://aefinityai.com/learned/</loc></url>
+  <url><loc>https://aefinityai.com/standard/</loc></url>
+  <url><loc>https://aefinityai.com/projects/</loc></url>
   <url><loc>https://aefinityai.com/pilot</loc></url>
+  <url><loc>https://aefinityai.com/alice/</loc></url>
+  <url><loc>https://aefinityai.com/cis/</loc></url>
+  <url><loc>https://aefinityai.com/operations/</loc></url>
+  <url><loc>https://aefinityai.com/contact/</loc></url>
 </urlset>

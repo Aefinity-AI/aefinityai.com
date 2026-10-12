@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>E28, E36, E37: every internal activation compared against an independent implementation · Aefinity AI</title>
+<meta name="description" content="Could errors inside the model cancel out, so the final answer looks right while the inside is wrong? Outcome: Positive. Run by us; no unaffiliated reproduction.">
+<link rel="canonical" href="https://aefinityai.com/labs/layer-oracle-e28-e36-e37/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Aefinity AI">
+<meta property="og:title" content="E28, E36, E37: every internal activation compared against an independent implementation · Aefinity AI">
+<meta property="og:description" content="Could errors inside the model cancel out, so the final answer looks right while the inside is wrong? Outcome: Positive. Run by us; no unaffiliated reproduction.">
+<meta property="og:url" content="https://aefinityai.com/labs/layer-oracle-e28-e36-e37/">
+<meta property="og:image" content="https://aefinityai.com/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500&amp;family=Instrument+Serif:ital@0;1&amp;display=swap">
+<link rel="stylesheet" href="/assets/site.css?v=56a4e161d4">
+<script>(function(){var d=document.documentElement;d.classList.add('js');try{var t=localStorage.getItem('aefinity-theme');if(t==='light'||t==='dark')d.setAttribute('data-theme',t);}catch(e){}})();</script>
+<script src="/assets/site.js?v=331dd97031" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap hdr">
+    <a class="brand" href="/" aria-label="Aefinity AI, home"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8"/><path d="M8.6 24.2 16 7.6l7.4 16.6M12.4 17.4h7.2M11 21h10"/></svg><span class="wm">Aefinity <span>AI</span></span></a>
+    <nav id="site-nav" class="nav" aria-label="Primary">
+      <ul><li><a href="/alice/">ALICE</a></li><li><a href="/cis/">CIS</a></li><li><a href="/operations/">Operations</a></li><li><a href="/labs/" aria-current="page">Labs</a></li><li><a href="/questions/">Questions</a></li><li><a href="/standard/">Standard</a></li><li><a href="/mission/">Mission</a></li><li class="nav-more"><a href="/learned/">Learned</a></li><li class="nav-more"><a href="/projects/">Projects</a></li></ul>
+      <a class="nav-cta" href="/contact/">Book a briefing</a>
+    </nav>
+    <div class="hdr-tools">
+      <button class="icon-btn theme-btn" type="button" data-theme-toggle aria-label="Switch colour theme"><svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+      <button class="icon-btn menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Menu"><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+<main id="main" tabindex="-1">
+<article class="lab o-positive">
+<header class="lab-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/labs/">Labs</a></li><li aria-current="page">L18</li></ol></nav>
+    <p class="eyebrow"><span class="lc-no">L18</span> <time datetime="2026-09-09">2026-09-09</time> <span class="badge o-positive"><i aria-hidden="true"></i>Positive</span> <a class="eb-q" href="/questions/#q6">Q6 &middot; Do our tests test anything</a></p>
+    <h1 class="lab-title">E28, E36, E37: every internal activation compared against an independent implementation</h1>
+    <p class="lab-q"><span>Question</span>Could errors inside the model cancel out, so the final answer looks right while the inside is wrong?</p>
+    <p class="prov"><span class="prov-dot" aria-hidden="true"></span>Run by us; no unaffiliated reproduction</p>
+  </div>
+</header>
+<div class="wrap lab-grid">
+  <div class="lab-body prose-col">
+    <section id="why" aria-labelledby="why-h"><h2 id="why-h"><span class="sn">01</span>Why it matters</h2><p class="lead">Errors inside a model could cancel, so the final answer looks right while the middle is wrong.</p></section>
+    <section id="method" aria-labelledby="method-h"><h2 id="method-h"><span class="sn">02</span>Method, step by step</h2>
+      <ol class="steps"><li>Feed the same token ids to our verifier and to a Hugging Face transformers fp32 forward pass.</li><li>Compare every intermediate tensor.</li><li>Start with one prompt, then widen to six cells on each model.</li></ol>
+      <div class="recorded"><p class="rec-k">Method as recorded</p><p>Teacher-forced comparison of every intermediate tensor of the verifier against a Hugging Face transformers fp32 forward pass: one prompt on SmolLM2-135M and Qwen2.5-0.5B (E28), then six prompt/length cells on SmolLM2-135M (E36) and six on Qwen2.5-0.5B (E37). Run by us.</p></div>
+    </section>
+    <section id="results" aria-labelledby="results-h"><h2 id="results-h"><span class="sn">03</span>Results, exact and sourced</h2>
+      
+      <ol class="results"><li class="result">
+  <p class="r-claim"><span class="r-n">R1</span>E28: 13,452 intermediate tensors (one prompt, 19 positions, two models: SmolLM2-135M and Qwen2.5-0.5B) compared; worst relative L2 disagreement 9.9e-5, on one tensor of one model (Qwen). This is a single-prompt maximum, not a bound for the model.</p>
+  <figure class="evidence ev-prose">
+    <blockquote cite="https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E28_LAYER_ORACLE.md"><p>Worst disagreement: <strong>9.9e-5</strong> relative</p></blockquote>
+    <figcaption><span class="ev-lab">Verbatim source</span> <a class="ext" href="https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E28_LAYER_ORACLE.md">cis2-spec / E28_LAYER_ORACLE.md</a></figcaption>
+  </figure>
+</li><li class="result">
+  <p class="r-claim"><span class="r-n">R2</span>E36 corrected our own published worst case: over six SmolLM2-135M prompt cells (80,565 tensors) the worst was 3.406e-05, 1.53 times the 2.228e-05 E28 published from its single SmolLM2 prompt.</p>
+  <figure class="evidence ev-prose">
+    <blockquote cite="https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E36_ORACLE_PROMPT_SWEEP.md"><p>worst case is <strong>3.406e-05</strong>, 1.53x the</p></blockquote>
+    <figcaption><span class="ev-lab">Verbatim source</span> <a class="ext" href="https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E36_ORACLE_PROMPT_SWEEP.md">cis2-spec / E36_ORACLE_PROMPT_SWEEP.md</a></figcaption>
+  </figure>
+</li><li class="result">
+  <p class="r-claim"><span class="r-n">R3</span>E37: six Qwen2.5-0.5B cells add 64,260 tensors; with E36 that is 144,825 tensors across two architectures. On Qwen, E28&#x27;s 9.923e-05 turned out to be the six-cell maximum (rel_rms rose to 2.883e-03); the earlier layer-ratio bounds were per-prompt and were corrected (erratum E-9).</p>
+  <figure class="evidence ev-prose">
+    <blockquote cite="https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E37_QWEN_ORACLE_SWEEP.md"><p>Taken with E36 this is 144,825 tensors across two</p></blockquote>
+    <figcaption><span class="ev-lab">Verbatim source</span> <a class="ext" href="https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E37_QWEN_ORACLE_SWEEP.md">cis2-spec / E37_QWEN_ORACLE_SWEEP.md</a></figcaption>
+  </figure>
+</li></ol>
+    </section>
+    <section id="not-show" class="not-show" aria-labelledby="ns-h"><h2 id="ns-h"><span class="sn">04</span>What it does NOT show</h2><p>Bit-exactness (the oracle is a different implementation), tokenization, or all prompts.</p></section>
+    <section id="scope" aria-labelledby="scope-h"><h2 id="scope-h"><span class="sn">05</span>Scope and caveats</h2><ul class="caveats"><li>Agreement is to about 1e-5 relative (up to ~1e-4 on Qwen), not bit-exact, because the oracle is a different implementation and must not be bit-exact; this is an accuracy check, not a determinism check.</li><li>Two small models; six prompts per model is still not all prompts (E37 states this).</li><li>The Qwen runs use supplied token ids from the oracle tokenizer and are not conformance runs; they attest to spec sections 4-11 only, not tokenization (section 3).</li><li>The oracle (transformers) is an independent implementation, not ground truth.</li><li>Not run in CI; reproducible on demand with the model artifacts and torch.</li><li>Run by us; no unaffiliated reproduction.</li></ul></section>
+    <section id="outcome" aria-labelledby="out-h"><h2 id="out-h"><span class="sn">06</span>Outcome</h2>
+      <div class="outcome-box"><span class="badge o-positive badge-lg"><i aria-hidden="true"></i>Positive</span><p>The check worked as expected, within the stated scope.</p></div></section>
+    <section id="learned" aria-labelledby="learn-h"><h2 id="learn-h"><span class="sn">07</span>What we learned</h2><p class="learned">A maximum measured on one input is only that input&#x27;s maximum. Widening the sweep corrected our own published number on SmolLM2 (1.53x higher), and on Qwen showed the single-prompt figure happened to be the worst case, so it was unknown, not reliably low.</p></section>
+    <section id="check" aria-labelledby="check-h"><h2 id="check-h"><span class="sn">08</span>Check it yourself</h2><ul class="check-links"><li><a class="ext" href="https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E28_LAYER_ORACLE.md">cis2-spec / E28_LAYER_ORACLE.md</a><span class="u-full">https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E28_LAYER_ORACLE.md</span></li><li><a class="ext" href="https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E36_ORACLE_PROMPT_SWEEP.md">cis2-spec / E36_ORACLE_PROMPT_SWEEP.md</a><span class="u-full">https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E36_ORACLE_PROMPT_SWEEP.md</span></li><li><a class="ext" href="https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E37_QWEN_ORACLE_SWEEP.md">cis2-spec / E37_QWEN_ORACLE_SWEEP.md</a><span class="u-full">https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E37_QWEN_ORACLE_SWEEP.md</span></li></ul><p>Read the three pages (links above). The comparison is reproducible on demand with the model artifacts and torch; it is not run in CI.</p></section>
+  </div>
+  <aside class="rail" aria-labelledby="rail-h">
+    <h2 class="rail-h" id="rail-h">Lab record</h2>
+    <dl class="rail-dl"><div><dt>Lab</dt><dd>L18 <span class="muted">of 33</span></dd></div><div><dt>Date</dt><dd>2026-09-09</dd></div><div><dt>Outcome</dt><dd><span class="badge o-positive"><i aria-hidden="true"></i>Positive</span></dd></div><div><dt>Hard question</dt><dd><a href="/questions/#q6">Q6 Do our tests test anything</a></dd></div><div><dt>Models</dt><dd>SmolLM2-135M<br>Qwen2.5-0.5B</dd></div><div><dt>Public sources</dt><dd>3</dd></div><div><dt>Reproduction</dt><dd>Run by us; no unaffiliated reproduction</dd></div></dl>
+    <div class="rail-ledger"><p class="rail-k">Position among all 33 labs</p><div class="ledger ledger-compact"><div class="lg o-positive" style="--n:9"><ol class="lg-cells"><li><a class="cell" href="/labs/cis2-cross-machine-digest/" aria-label="L01, Positive: CIS-2: the same AI output, bit for bit, on different machines" title="L01 · CIS-2: the same AI output, bit for bit, on different machines"></a></li><li><a class="cell" href="/labs/gpu-p100-reproduces-cpu/" aria-label="L02, Positive: An NVIDIA GPU reproduces the CPU reference digest (Tesla P100)" title="L02 · An NVIDIA GPU reproduces the CPU reference digest (Tesla P100)"></a></li><li><a class="cell" href="/labs/t4-batching-precision/" aria-label="L03, Positive: Batching and precision on a Tesla T4: which shortcuts change the digest" title="L03 · Batching and precision on a Tesla T4: which shortcuts change the digest"></a></li><li><a class="cell" href="/labs/bitflip-weights/" aria-label="L06, Positive: One flipped bit in the weights: which checks notice?" title="L06 · One flipped bit in the weights: which checks notice?"></a></li><li><a class="cell" href="/labs/embedding-edits/" aria-label="L07, Positive: Realistic edits to the embedding table, including one hidden row" title="L07 · Realistic edits to the embedding table, including one hidden row"></a></li><li><a class="cell" href="/labs/logging-vs-receipts/" aria-label="L09, Positive: Ordinary logging versus replay-based receipts on one-field edits" title="L09 · Ordinary logging versus replay-based receipts on one-field edits"></a></li><li><a class="cell" href="/labs/e25-rmsnorm-order/" aria-label="L15, Positive: E25: the RMSNorm multiply order matters, and our spec sentence saying otherwise was false" title="L15 · E25: the RMSNorm multiply order matters, and our spec sentence saying otherwise was false"></a></li><li><a class="cell is-cur" href="/labs/layer-oracle-e28-e36-e37/" aria-label="L18, Positive: E28, E36, E37: every internal activation compared against an independent implementation" title="L18 · E28, E36, E37: every internal activation compared against an independent implementation"></a></li><li><a class="cell" href="/labs/e29-optimizer-invariance/" aria-label="L19, Positive: E29: does the compiler&#x27;s optimiser change the bits?" title="L19 · E29: does the compiler&#x27;s optimiser change the bits?"></a></li></ol><p class="lg-lab"><b>9</b> Positive</p></div><div class="lg o-mixed" style="--n:14"><ol class="lg-cells"><li><a class="cell" href="/labs/cleanroom-reimplementations/" aria-label="L04, Mixed: Clean-room reimplementations: one mismatch (from a memo), one match (from spec v0.1), one partial that exposed a spec error" title="L04 · Clean-room reimplementations: one mismatch (from a memo), one match (from spec v0.1), one partial that exposed a spec error"></a></li><li><a class="cell" href="/labs/sincos-prereg-2ulp/" aria-label="L05, Mixed: Sin/cos accuracy for RoPE against a pre-registered 2 ULP bar (v0.2, v0.3, v0.3b)" title="L05 · Sin/cos accuracy for RoPE against a pre-registered 2 ULP bar (v0.2, v0.3, v0.3b)"></a></li><li><a class="cell" href="/labs/receipt-verified-eval/" aria-label="L08, Mixed: Receipt-verified agent evaluation, and the hole we found in our own verifier" title="L08 · Receipt-verified agent evaluation, and the hole we found in our own verifier"></a></li><li><a class="cell" href="/labs/receipt-overhead/" aria-label="L10, Mixed: What receipts cost on a real agent episode" title="L10 · What receipts cost on a real agent episode"></a></li><li><a class="cell" href="/labs/continuous-validation/" aria-label="L11, Mixed: Continuous validation: does a one-byte corruption get caught, and what hides it?" title="L11 · Continuous validation: does a one-byte corruption get caught, and what hides it?"></a></li><li><a class="cell" href="/labs/training-checkpoints-cross-isa/" aria-label="L12, Mixed: Training checkpoints across CPUs and instruction sets" title="L12 · Training checkpoints across CPUs and instruction sets"></a></li><li><a class="cell" href="/labs/e22-necessity-matrix/" aria-label="L13, Mixed: E22: which spec rules does the test vector actually exercise?" title="L13 · E22: which spec rules does the test vector actually exercise?"></a></li><li><a class="cell" href="/labs/e24-unicode-gap/" aria-label="L14, Mixed: E24: the spec never says which Unicode version defines a letter" title="L14 · E24: the spec never says which Unicode version defines a letter"></a></li><li><a class="cell" href="/labs/e26-trig-range/" aria-label="L16, Mixed: E26: sin/cos at very long contexts — the sampled answer was wrong" title="L16 · E26: sin/cos at very long contexts — the sampled answer was wrong"></a></li><li><a class="cell" href="/labs/e27-exp-ln-range/" aria-label="L17, Mixed: E27: exp, ln and SiLU on every float32 input, and a defect in our spec" title="L17 · E27: exp, ln and SiLU on every float32 input, and a defect in our spec"></a></li><li><a class="cell" href="/labs/ev1-mini-eval/" aria-label="L22, Mixed: ev-1: a 160-item mini evaluation on the pinned 135M model" title="L22 · ev-1: a 160-item mini evaluation on the pinned 135M model"></a></li><li><a class="cell" href="/labs/test-standard-ledger/" aria-label="L23, Mixed: Our test standard and the public experiment ledger" title="L23 · Our test standard and the public experiment ledger"></a></li><li><a class="cell" href="/labs/ranger-mock-run/" aria-label="L25, Mixed: RANGER mock run: low-bit quantization ideas tested on synthetic tensors" title="L25 · RANGER mock run: low-bit quantization ideas tested on synthetic tensors"></a></li><li><a class="cell" href="/labs/ranger-phase1/" aria-label="L26, Mixed: RANGER Phase 1: the quantization ideas on real models (SmolLM2-135M, Qwen3-0.6B)" title="L26 · RANGER Phase 1: the quantization ideas on real models (SmolLM2-135M, Qwen3-0.6B)"></a></li></ol><p class="lg-lab"><b>14</b> Mixed</p></div><div class="lg o-negative" style="--n:6"><ol class="lg-cells"><li><a class="cell" href="/labs/e41-detokenization-gap/" aria-label="L21, Negative: E41: the spec pins how text becomes tokens, but not how tokens become text" title="L21 · E41: the spec pins how text becomes tokens, but not how tokens become text"></a></li><li><a class="cell" href="/labs/retraction-prochot/" aria-label="L27, Negative: Retraction: our benchmark laptop was running at about one fifth speed" title="L27 · Retraction: our benchmark laptop was running at about one fifth speed"></a></li><li><a class="cell" href="/labs/soft-float-avx2/" aria-label="L28, Negative: A compiler setting silently deleted our vector instructions" title="L28 · A compiler setting silently deleted our vector instructions"></a></li><li><a class="cell" href="/labs/lut-kernel-retraction/" aria-label="L30, Negative: The &#x27;16% slower&#x27; lookup-table kernel claim, retracted" title="L30 · The &#x27;16% slower&#x27; lookup-table kernel claim, retracted"></a></li><li><a class="cell" href="/labs/fabricated-metrics-audit/" aria-label="L31, Negative: Audit of our own removed code: benchmark lines that measured nothing" title="L31 · Audit of our own removed code: benchmark lines that measured nothing"></a></li><li><a class="cell" href="/labs/refuted-literature-claims/" aria-label="L33, Negative: Claims from the literature that failed when we ran them" title="L33 · Claims from the literature that failed when we ran them"></a></li></ol><p class="lg-lab"><b>6</b> Negative</p></div><div class="lg o-null" style="--n:3"><ol class="lg-cells"><li><a class="cell" href="/labs/ftz-reach-e35-e40/" aria-label="L20, Null: E35 to E40: does the flush-to-zero rule ever matter? (after two wrong explanations)" title="L20 · E35 to E40: does the flush-to-zero rule ever matter? (after two wrong explanations)"></a></li><li><a class="cell" href="/labs/hall-of-divergence/" aria-label="L24, Null: Open challenge: the Hall of Divergence" title="L24 · Open challenge: the Hall of Divergence"></a></li><li><a class="cell" href="/labs/es1-trit-census/" aria-label="L32, Null: E-S1: how far can a ternary 2B model be compressed without loss?" title="L32 · E-S1: how far can a ternary 2B model be compressed without loss?"></a></li></ol><p class="lg-lab"><b>3</b> Null</p></div><div class="lg o-held" style="--n:1"><ol class="lg-cells"><li><a class="cell" href="/labs/os-cost-held-back/" aria-label="L29, Held back: What does an operating system cost? A pre-registered result we held back" title="L29 · What does an operating system cost? A pre-registered result we held back"></a></li></ol><p class="lg-lab"><b>1</b> Held back</p></div></div></div>
+    <nav class="toc" aria-label="On this page"><p class="rail-k">On this page</p><ol><li><a href="#why">Why it matters</a></li><li><a href="#method">Method</a></li><li><a href="#results">Results</a></li><li><a href="#not-show">What it does NOT show</a></li><li><a href="#scope">Scope and caveats</a></li><li><a href="#outcome">Outcome</a></li><li><a href="#learned">What we learned</a></li><li><a href="#check">Check it yourself</a></li></ol></nav>
+  </aside>
+</div>
+<section class="wrap related" aria-labelledby="rel-h">
+  <h2 id="rel-h" class="related-h">Related labs</h2>
+  <ul class="lab-grid-cards"><li class="lab-card o-mixed" data-outcome="mixed" data-q="6">
+  <div class="lc-top"><span class="lc-no">L05</span><time datetime="2026-08-29">2026-08-29</time></div>
+  <span class="badge o-mixed"><i aria-hidden="true"></i>Mixed</span>
+  <h3 class="lc-title"><a href="/labs/sincos-prereg-2ulp/">Sin/cos accuracy for RoPE against a pre-registered 2 ULP bar (v0.2, v0.3, v0.3b)</a></h3>
+  <p class="lc-find">Fixing only the reduction improved the error a lot and still failed the bar, because the polynomial was now the dominant error. We kept the bar and changed both the reduction and the polynomials, which met it in the local harness.</p>
+  <p class="lc-q"><span>Q6</span></p>
+</li><li class="lab-card o-mixed" data-outcome="mixed" data-q="6">
+  <div class="lc-top"><span class="lc-no">L13</span><time datetime="2026-09-09">2026-09-09</time></div>
+  <span class="badge o-mixed"><i aria-hidden="true"></i>Mixed</span>
+  <h3 class="lc-title"><a href="/labs/e22-necessity-matrix/">E22: which spec rules does the test vector actually exercise?</a></h3>
+  <p class="lc-find">Passing the published test does not prove every rule matters. 12 of 16 single-rule breaks were caught. The tie-break and the denormal-flush pin are protected only by inputs this vector never contains. One of our own null results turned out to be a vacuous edit that tested nothing, and we corrected it in place. Correcting it exposed a weak spot in the spec&#x27;s own rsqrt check, which tests only a value where every implementation agrees.</p>
+  <p class="lc-q"><span>Q6</span></p>
+</li><li class="lab-card o-positive" data-outcome="positive" data-q="6">
+  <div class="lc-top"><span class="lc-no">L15</span><time datetime="2026-09-09">2026-09-09</time></div>
+  <span class="badge o-positive"><i aria-hidden="true"></i>Positive</span>
+  <h3 class="lc-title"><a href="/labs/e25-rmsnorm-order/">E25: the RMSNorm multiply order matters, and our spec sentence saying otherwise was false</a></h3>
+  <p class="lc-find">A reordering that leaves the generated text unchanged (on this short vector) still changes the bits, so comparing text is not enough. A published limitation was out of date, and we corrected it in the open.</p>
+  <p class="lc-q"><span>Q6</span></p>
+</li></ul>
+  <nav class="prevnext" aria-label="Previous and next lab"><a class="pn-prev" href="/labs/e27-exp-ln-range/"><span>&larr; L17</span>E27: exp, ln and SiLU on every float32 input, and a defect in our spec</a><a class="pn-next" href="/labs/e29-optimizer-invariance/"><span>L19 &rarr;</span>E29: does the compiler&#x27;s optimiser change the bits?</a></nav>
+</section>
+</article>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-about">
+        <a class="brand" href="/" aria-label="Aefinity AI, home"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8"/><path d="M8.6 24.2 16 7.6l7.4 16.6M12.4 17.4h7.2M11 21h10"/></svg><span class="wm">Aefinity <span>AI</span></span></a>
+        <p>We are not another AI platform or cloud service.</p>
+        <p class="foot-prov">Every result on this site: run by us; no unaffiliated reproduction.</p>
+      </div>
+      <nav aria-label="Site"><h2>Site</h2><ul class="foot-nav"><li><a href="/alice/">ALICE</a></li><li><a href="/cis/">CIS</a></li><li><a href="/operations/">Operations</a></li><li><a href="/labs/">Labs</a></li><li><a href="/questions/">Questions</a></li><li><a href="/standard/">Standard</a></li><li><a href="/mission/">Mission</a></li><li><a href="/learned/">Learned</a></li><li><a href="/projects/">Projects</a></li><li><a href="/contact/">Contact</a></li><li><a href="/pilot">Replay pilot</a></li></ul></nav>
+      <nav aria-label="Open materials"><h2>Open materials</h2><ul>
+        <li><a class="ext" href="https://github.com/Aefinity-AI/cis2-spec">CIS-2 on GitHub</a></li>
+        <li><a class="ext" href="https://huggingface.co/datasets/aefinityAIINC/cis2-conformance">Conformance dataset</a></li>
+        <li><a class="ext" href="https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/public/Design_Partner_Adoption_Path.md">Design Partner Adoption Path</a></li>
+        <li><a class="ext" href="https://github.com/Aefinity-AI/aefinityai.com">Site source</a></li>
+      </ul></nav>
+      <div><h2>Contact</h2><ul>
+        <li><a href="mailto:justin@aefinityai.com">justin@aefinityai.com</a></li>
+        <li><a href="tel:+14093201536">409-320-1536</a></li>
+        <li>Orange, Texas</li>
+      </ul></div>
+    </div>
+    <div class="foot-bottom"><span>&copy; 2026 AEFINITY AI INC. &middot; Orange, Texas</span></div>
+  </div>
+</footer>
+</body>
+</html>
