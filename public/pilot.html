@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paid pilots | AEFINITY AI INC.</title>
+<meta name="description" content="A 4 to 6 week paid pilot: one of your inference pipelines emits CIS-2 receipts and we replay them on a separate machine and report every mismatch.">
+<link rel="canonical" href="https://aefinityai.com/pilot.html">
+<style>
+  :root {
+    --bg: #fbfaf7; --fg: #1b1b1f; --muted: #5a5a63; --line: #e2dfd7;
+    --accent: #1f5f8b; --accent-fg: #ffffff; --code-bg: #f1efe9; --card: #ffffff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #121418; --fg: #ececf0; --muted: #a2a2ad; --line: #2a2d34;
+      --accent: #7fb6e0; --accent-fg: #0e1a24; --code-bg: #1b1e25; --card: #181b21;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #121418; --fg: #ececf0; --muted: #a2a2ad; --line: #2a2d34;
+    --accent: #7fb6e0; --accent-fg: #0e1a24; --code-bg: #1b1e25; --card: #181b21;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.6 Georgia, "Times New Roman", serif; }
+  a { color: var(--accent); }
+  header, main, footer { max-width: 860px; margin: 0 auto; padding: 0 16px; }
+  header { padding-top: 28px; }
+  .brand { font: 700 15px/1 system-ui, sans-serif; letter-spacing: .12em; text-transform: uppercase; }
+  nav { margin-top: 14px; font: 15px/1.4 system-ui, sans-serif; }
+  nav a { margin-right: 18px; text-decoration: none; }
+  h1 { font-size: 2.1rem; line-height: 1.15; margin: 48px 0 12px; }
+  h2 { font-size: 1.35rem; margin: 40px 0 10px; padding-top: 8px; border-top: 1px solid var(--line); }
+  p.lede { font-size: 1.15rem; color: var(--muted); margin-top: 0; }
+  ul { padding-left: 22px; }
+  li { margin: 6px 0; }
+  code { font: 0.92em ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: var(--code-bg); padding: 1px 4px; border-radius: 3px; }
+  .btn { display: inline-block; background: var(--accent); color: var(--accent-fg); padding: 10px 16px; border-radius: 6px; text-decoration: none; font: 600 15px system-ui, sans-serif; margin: 8px 10px 0 0; }
+  footer { padding: 40px 16px 48px; color: var(--muted); font-size: .92rem; border-top: 1px solid var(--line); margin-top: 56px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">AEFINITY AI INC.</div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="https://github.com/Aefinity-AI/cis2-spec">CIS-2 on GitHub</a>
+  </nav>
+</header>
+
+<main>
+  <h1>Paid pilots</h1>
+  <p class="lede">One of your inference pipelines emits CIS-2 receipts. We replay them on a machine separate from yours and report every mismatch. 4 to 6 weeks.</p>
+  <a class="btn" href="mailto:justin@aefinityai.com?subject=CIS-2%20pilot">Email us about a pilot</a>
+
+  <h2>Who it is for</h2>
+  <ul>
+    <li>Inference providers and platform teams who want a third party to be able to check that a deployment serves the model it says it serves.</li>
+    <li>AI governance and audit platforms that want to attach checkable evidence of the exact computation to a record.</li>
+    <li>Evaluation and assurance teams who need results that others can replay.</li>
+  </ul>
+
+  <h2>What happens</h2>
+  <ul>
+    <li><strong>Scoping.</strong> We agree one pipeline, one open-weight model, a set of requests, and what a match must mean for you.</li>
+    <li><strong>Receipts.</strong> Your pipeline emits CIS-2 receipts for those requests. The specification and verifiers are open (Apache-2.0); how much integration help you need is settled in scoping.</li>
+    <li><strong>Replay.</strong> We replay the receipts on a machine separate from yours with the open verifier and compare every digest.</li>
+    <li><strong>Report.</strong> You get a mismatch report that lists every request whose digests differ and, where the per-step trace is available, the first step at which it diverges, a replayable artifact (receipts, pinned digests, a verify script) your own staff can re-run, and a plain statement of limits.</li>
+  </ul>
+
+  <h2>What you get</h2>
+  <ul>
+    <li>A written answer to one question: do your receipts replay bit for bit elsewhere, and if not, where do they stop matching?</li>
+    <li>Nothing you have to trust us for: the verifier is open, and the artifact re-runs without us.</li>
+  </ul>
+
+  <h2>What it is not</h2>
+  <ul>
+    <li>Not a correctness, safety or fairness audit. A matching receipt shows a computation was reproduced, not that the answer was right.</li>
+    <li>Not a certification, and not legal advice. We think the evidence is relevant to record-keeping requirements such as the EU AI Act's logging provisions; no auditor or lawyer has confirmed that mapping.</li>
+    <li>Not a promise that your stack will match. Our evidence is small open models in fp32, mostly on CPU, greedy decoding only. Production bf16 or GPU serving is outside the spec today, so the pilot shows how far your stack gets, and the report says so.</li>
+  </ul>
+
+  <h2>Before you write</h2>
+  <p>Run the self-check on your own machine and see whether it matches. It takes about 15 minutes and needs no account or GPU:</p>
+  <p><code>git clone https://github.com/Aefinity-AI/cis2-spec &amp;&amp; cd cis2-spec &amp;&amp; ./selfcheck.sh</code></p>
+  <p>The <a href="https://github.com/Aefinity-AI/cis2-spec">README</a> lists what has been run, on which machines, and what has not. No unaffiliated party has reproduced it yet; every run listed is ours.</p>
+
+  <h2>How to start</h2>
+  <p>Paid pilots; contact us for scope and terms. Email <a href="mailto:justin@aefinityai.com?subject=CIS-2%20pilot">justin@aefinityai.com</a> with three lines: which pipeline and model, which precision and hardware you serve on, and what you would use a receipt for. AEFINITY AI INC. is an early-stage company in Orange, Texas, founded by Justin Thompson.</p>
+
+</main>
+
+<footer>
+  &copy; 2026 AEFINITY AI INC. &middot; Orange, Texas &middot; <a href="https://github.com/Aefinity-AI/aefinity-ai.github.io">Site source</a>
+</footer>
+</body>
+</html>
