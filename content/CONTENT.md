@@ -455,14 +455,14 @@ Read the pre-registration and the result page (links above). The branch the work
 3. Run three kinds of check on each corrupted run and count the misses, with 95% Wilson intervals.
 4. Recount everything from the raw per-trial logs on a second host.
 
-**Method as recorded.** Pruned BitNet-2B checkpoint, prompt 'Once upon a time', 64 new tokens, greedy, one host (aefinity-box). Experiment 1 (moat-3): 50 trials (5 no-flip controls, 40 random low-mantissa flips in bits 0-4, 5 forced bit-7 flips); A = text/argmax replay, B = top-5 logit-set match, C = full witness-chain digest match. Experiment 2 (moat-3b): 295 trials stratified by tensor class plus a bit-position sweep; as the source defines them, A = inference completed without error, B = receipt/verifier accepted the run, C = output matches the uncorrupted baseline (digest-equivalent ground truth). The source's summary tables label Experiment 2's A as text/argmax replay and C as the witness digest, which conflicts with those definitions. Wilson 95% intervals computed for the doc; counts recounted from raw per-trial logs on a second host (recomputation only, not re-inference). Harness commits (14ef1a1, 1567ee1) are public; we did not rebuild them for this summary.
+**Method as recorded.** Pruned BitNet-2B checkpoint, prompt 'Once upon a time', 64 new tokens, greedy, one host (aefinity-box). Experiment 1 (moat-3): 50 trials (5 no-flip controls, 40 random low-mantissa flips in bits 0-4, 5 forced bit-7 flips); A = text/argmax replay, B = top-5 logit-set match, C = full witness-chain digest match. Experiment 2 (moat-3b): 295 trials stratified by tensor class plus a bit-position sweep; the harness source (commit 1567ee1, header lines 28-30) defines A = generated token ids identical to the clean baseline, B = top-5 logit index set identical at every step, C = witness-chain digest match, which agrees with the write-up's summary tables. The write-up's setup paragraph describes Experiment 2's A and B differently (run completed without error; receipt accepted); the harness code is the authority. Wilson 95% intervals computed for the doc; counts recounted from raw per-trial logs on a second host (recomputation only, not re-inference). Harness commits (14ef1a1, 1567ee1) are public; we did not rebuild them for this summary.
 
 **Results (exact, sourced).**
 
-- Experiment 2 (295 trials): of 247 trials where the output changed, the text-replay column (A) missed 182. In the source's Experiment 2 definitions, A is 'inference ran to completion without erroring'.
+- Experiment 2 (295 trials): of 247 trials where the output logits changed, text replay (A: same generated token ids) missed 182. The harness source defines A this way; the write-up's setup paragraph describes A differently, but its tables and the code agree.
   - Source quote: `| text/argmax replay (A) | 182 / 247 | [0.679, 0.788] |`
   - Source: https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/results/2026-09-13-BITFLIP-HEADTOHEAD.md
-- Experiment 2: the top-k / receipt-style check (B) missed 82 of the same 247. In Experiment 2 B means the receipt verifier accepted the run, not top-5 replay.
+- Experiment 2: the top-5 logit-set check (B, labelled 'top-k / receipt-style' in the write-up's table) missed 82 of the same 247.
   - Source quote: `| top-k / receipt-style check (B) | 82 / 247 | [0.276, 0.393] |`
   - Source: https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/results/2026-09-13-BITFLIP-HEADTOHEAD.md
 - The witness digest row is 0 of 247. The document says this is exact by construction, since a digest miss and a C-fail are the same event.
@@ -483,9 +483,9 @@ Read the pre-registration and the result page (links above). The branch the work
 **Scope and caveats, as recorded.**
 
 - The digest's 0/247 is exact by construction (C is defined as a digest or baseline-output mismatch); the informative numbers are how often A and B miss.
-- Experiment 2's definitions differ from the entry's headline labels. A there is 'inference completed without error' and C is 'output matches baseline', so the 182/247 figure is not a pure text-replay measurement. The source's own tables relabel the columns, and readers should be told.
+- The write-up's setup paragraph describes Experiment 2's A as 'inference completed without error' and B as 'receipt accepted'. The harness source at commit 1567ee1 defines A as identical generated token ids, B as an identical top-5 logit index set and C as a witness-digest match, matching the write-up's tables; we follow the code.
 - Experiment 1's random flips were low-mantissa bits 0 to 4 only (plus 5 forced bit-7 flips). Flips were chosen by the harness, not an adversary.
-- B means different things in Experiment 1 (top-5 logit set) and Experiment 2 (receipt accepted). The two are not merged.
+- B is the top-5 logit-set check in both experiments per the harness source; the write-up's prose calls Experiment 2's B a receipt check. The two experiments' counts are still reported separately, not merged.
 - In Experiment 1 every method caught all 5 forced high-bit flips. In Experiment 2 the EMBED class (80 trials) was missed by both A and B 80 of 80 times.
 - Embedding result: EMBED C-fail was 80/80 for the fixed prompt only. The unused-embedding-row case was not tested.
 - No adversarial (optimised) tampering was tested. No timing claims are made.

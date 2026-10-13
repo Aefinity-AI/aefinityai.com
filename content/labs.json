@@ -44,7 +44,34 @@
    ],
    "outcome": "positive",
    "learned": "With the arithmetic pinned in writing, one fp32 digest reproduced across AVX2 and scalar x86, an aarch64 phone and an AVX-512 cloud CPU, in our own runs. Until an outsider runs it, the claim stays 'reproduced by us'.",
-   "order": 1
+   "order": 1,
+   "explainer": {
+    "question": "Can different computers produce exactly the same AI output, bit for bit, from a written specification?",
+    "why": "If the same AI gives different bits on different machines, nobody can check a result by re-running it. A spec that makes the bits identical turns 'trust us' into 'run it yourself'.",
+    "steps": [
+     "Write the arithmetic down: order of additions, no fused multiply-add, fixed sin/cos formulas.",
+     "Pin one test: SmolLM2-135M, the prompt 'Once upon a time', 16 tokens, fp32.",
+     "Hash the full output scores into a SHA-256 chain. That digest is the receipt.",
+     "Run the self-check on other machines and compare with the pinned digests."
+    ],
+    "icons": [
+     "write",
+     "flag",
+     "hash",
+     "compare"
+    ],
+    "headline": "4 of 4 digests match",
+    "result": "A free cloud machine (Xeon Platinum 8488C, not ours) matched all four pinned digests. An Android phone matched them through a different code path. The README's expected self-check output ends 9 passed, 0 failed.",
+    "meaning": "With the arithmetic pinned, the bits reproduced across these machines in our own runs. It says nothing about whether the model is right, safe or fair, and no outside party has reproduced it yet.",
+    "analogy": "Like a recipe that fixes the oven settings and the order of every step, so every oven bakes the same cake, crumb for crumb.",
+    "sources": [
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/README.md",
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/EXPECTED_DIGESTS.md",
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/CIS2_SPEC_v0.3b.md",
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/results/2026-09-25-LIGHTNING-STUDIO-SELFCHECK.md",
+     "https://huggingface.co/datasets/aefinityAIINC/cis2-conformance"
+    ]
+   }
   },
   {
    "slug": "gpu-p100-reproduces-cpu",
@@ -79,7 +106,31 @@
    ],
    "outcome": "positive",
    "learned": "Our own early GPU runs passed for the wrong reason. A re-run caught it, and the claim now rests only on the corrected run.",
-   "order": 2
+   "order": 2,
+   "explainer": {
+    "question": "Does the same AI output come out bit for bit on a graphics card, not just on other CPUs?",
+    "why": "Most AI runs on graphics cards. A claim that only holds on CPUs would miss where the work is done.",
+    "steps": [
+     "Write an independent CUDA version of the same spec.",
+     "Run the four test vectors on a Kaggle Tesla P100 with the internet off.",
+     "Compare the GPU digests with the CPU digests.",
+     "Sample GPU use and read the compiled code to prove the work ran on the GPU."
+    ],
+    "icons": [
+     "write",
+     "run",
+     "compare",
+     "search"
+    ],
+    "headline": "4 of 4 vectors match",
+    "result": "All four vectors matched the CPU digests on the GPU (Tesla P100, run of 2026-09-08). Two earlier GPU runs were false positives, because the program had really been built for the CPU, and we withdrew them.",
+    "meaning": "The bits reproduce on one older GPU generation. It says nothing about speed or newer GPUs, and our CUDA code is not public, so outsiders cannot rerun our port.",
+    "analogy": null,
+    "sources": [
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/GPU_RESULT.md",
+     "https://huggingface.co/datasets/aefinityAIINC/cis2-conformance/blob/main/GPU_RESULT.md"
+    ]
+   }
   },
   {
    "slug": "t4-batching-precision",
@@ -117,7 +168,30 @@
    ],
    "outcome": "positive",
    "learned": "In our fp32 test, the pinned order of operations decided the digest. The same order matched on CPU and GPU, and a different order broke it, which is what a digest is supposed to detect. This is one matmul on one GPU type, so it shows the check works there, not that it holds everywhere.",
-   "order": 3
+   "order": 3,
+   "explainer": {
+    "question": "Do common GPU speed shortcuts, like batching requests or switching to int8, quietly change the answer?",
+    "why": "Batching and lower precision are the usual ways to make serving cheaper. If they silently change answers, a receipt has to be able to tell.",
+    "steps": [
+     "Take one matrix multiply from the model (layer 0, q_proj).",
+     "Compute it on a Tesla T4 and a CPU three ways: row-batched fp32, grouped fp32, int8; batch sizes 1, 4, 8.",
+     "Count how many of the 576 output values differ from the batch-1 CPU answer.",
+     "Compare CPU and GPU digests across all 10 configurations."
+    ],
+    "icons": [
+     "chip",
+     "run",
+     "count",
+     "compare"
+    ],
+    "headline": "Row-batched: 0 of 576 differ",
+    "result": "Row-batched fp32 matched the reference exactly at every batch size, on CPU and GPU. Grouped fp32 and int8 changed the result at every batch size (455 and 576 of 576 differ), as predicted before the run. CPU and GPU digests agreed on all 10.",
+    "meaning": "The pinned order of operations decided the digest, which is what a digest should detect. One matrix multiply on one GPU type, so it shows the check works there, not everywhere.",
+    "analogy": null,
+    "sources": [
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/results/2026-09-19-GPU-BATCHED-FP32-DETERMINISM.md"
+    ]
+   }
   },
   {
    "slug": "cleanroom-reimplementations",
@@ -179,7 +253,33 @@
    ],
    "outcome": "mixed",
    "learned": "The failures taught more than the match. The C attempt showed that the spec's own prose on witness-chain order contradicted the reference. A spec-only implementer reproduced it faithfully, and the mismatch exposed the defect. Fixing the spec led to a full C match.",
-   "order": 4
+   "order": 4,
+   "explainer": {
+    "question": "Can someone who has never seen our code build the same bits from the written description alone?",
+    "why": "A specification is only useful if someone who never saw the original code can build the same thing from it.",
+    "steps": [
+     "Give isolated AI coding agents the written material only, never our source code.",
+     "Three attempts: Rust from an internal memo, Rust from spec v0.1, C11 from spec v0.2.",
+     "Compare four digests and 16 token ids with the reference on x86_64 and aarch64.",
+     "When the C version missed one digest, hash every tensor and find where they first differ."
+    ],
+    "icons": [
+     "lock",
+     "blocks",
+     "compare",
+     "search"
+    ],
+    "headline": "1 miss, 1 match, 1 partial",
+    "result": "The memo-based build did not match. The spec v0.1 build matched all four digests and 16 token ids on its first run. The C11 build matched 3 of 4; the miss traced to our own spec text listing the digest-chain items in the wrong order. After we fixed the spec, it matched 4 of 4.",
+    "meaning": "A written description can be enough, and a failed attempt exposed a real bug in our spec. But the builders were AI agents run by one operator inside our organisation, and the cited CI runs are private.",
+    "analogy": "Like handing a recipe to a cook who has never seen your kitchen: when the dish comes out slightly off, the typo turns out to be in the recipe.",
+    "sources": [
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E15e_CLEANROOM_RESULT.md",
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E15g_CLEANROOM_V2_RESULT.md",
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E15j_CLEANROOM_C_RESULT.md",
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E15k_DIVERGENCE_LOCALIZATION.md"
+    ]
+   }
   },
   {
    "slug": "sincos-prereg-2ulp",
@@ -224,7 +324,31 @@
    ],
    "outcome": "mixed",
    "learned": "Fixing only the reduction improved the error a lot and still failed the bar, because the polynomial was now the dominant error. We kept the bar and changed both the reduction and the polynomials, which met it in the local harness.",
-   "order": 5
+   "order": 5,
+   "explainer": {
+    "question": "Is the pinned sin/cos accurate enough for long contexts, measured against a bar we set before we tested?",
+    "why": "Position encoding feeds sin and cos large angles at long context. If those functions are inaccurate there, the spec pins a bad answer exactly.",
+    "steps": [
+     "Write the pass mark first: within 2 ULP of the correctly rounded value.",
+     "Build a 60-digit-precision reference for positions up to 8192 on two models.",
+     "Score three versions: the original, a better reduction only, and new reduction plus new polynomials.",
+     "Report each against the bar."
+    ],
+    "icons": [
+     "flag",
+     "chip",
+     "count",
+     "check"
+    ],
+    "headline": "115,198 down to 1.5 ULP",
+    "result": "The original was off by up to 115,198 ULP (sin) and 163,969 (cos). A better reduction alone cut the error 55 to 70 times but still missed (up to 2813.5 ULP). The final version reached at most 1.5 ULP on both models. A ULP is the gap between neighbouring numbers.",
+    "meaning": "The final version met the bar in our local test. The bar came first, but the final fix was chosen after the second version missed, so it was not itself pre-registered. No cross-machine confirmation was recorded.",
+    "analogy": null,
+    "sources": [
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E15m_RESULT.md",
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E15m_PREREG.md"
+    ]
+   }
   },
   {
    "slug": "bitflip-weights",
@@ -236,15 +360,15 @@
     "https://github.com/Aefinity-AI/alice-aegis/commit/14ef1a1",
     "https://github.com/Aefinity-AI/alice-aegis/commit/1567ee1"
    ],
-   "method": "Pruned BitNet-2B checkpoint, prompt 'Once upon a time', 64 new tokens, greedy, one host (aefinity-box). Experiment 1 (moat-3): 50 trials (5 no-flip controls, 40 random low-mantissa flips in bits 0-4, 5 forced bit-7 flips); A = text/argmax replay, B = top-5 logit-set match, C = full witness-chain digest match. Experiment 2 (moat-3b): 295 trials stratified by tensor class plus a bit-position sweep; as the source defines them, A = inference completed without error, B = receipt/verifier accepted the run, C = output matches the uncorrupted baseline (digest-equivalent ground truth). The source's summary tables label Experiment 2's A as text/argmax replay and C as the witness digest, which conflicts with those definitions. Wilson 95% intervals computed for the doc; counts recounted from raw per-trial logs on a second host (recomputation only, not re-inference). Harness commits (14ef1a1, 1567ee1) are public; we did not rebuild them for this summary.",
+   "method": "Pruned BitNet-2B checkpoint, prompt 'Once upon a time', 64 new tokens, greedy, one host (aefinity-box). Experiment 1 (moat-3): 50 trials (5 no-flip controls, 40 random low-mantissa flips in bits 0-4, 5 forced bit-7 flips); A = text/argmax replay, B = top-5 logit-set match, C = full witness-chain digest match. Experiment 2 (moat-3b): 295 trials stratified by tensor class plus a bit-position sweep; the harness source (commit 1567ee1, header lines 28-30) defines A = generated token ids identical to the clean baseline, B = top-5 logit index set identical at every step, C = witness-chain digest match, which agrees with the write-up's summary tables. The write-up's setup paragraph describes Experiment 2's A and B differently (run completed without error; receipt accepted); the harness code is the authority. Wilson 95% intervals computed for the doc; counts recounted from raw per-trial logs on a second host (recomputation only, not re-inference). Harness commits (14ef1a1, 1567ee1) are public; we did not rebuild them for this summary.",
    "results": [
     {
-     "claim": "Experiment 2 (295 trials): of 247 trials where the output changed, the text-replay column (A) missed 182. In the source's Experiment 2 definitions, A is 'inference ran to completion without erroring'.",
+     "claim": "Experiment 2 (295 trials): of 247 trials where the output logits changed, text replay (A: same generated token ids) missed 182. The harness source defines A this way; the write-up's setup paragraph describes A differently, but its tables and the code agree.",
      "quote": "| text/argmax replay (A) | 182 / 247 | [0.679, 0.788] |",
      "url": "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/results/2026-09-13-BITFLIP-HEADTOHEAD.md"
     },
     {
-     "claim": "Experiment 2: the top-k / receipt-style check (B) missed 82 of the same 247. In Experiment 2 B means the receipt verifier accepted the run, not top-5 replay.",
+     "claim": "Experiment 2: the top-5 logit-set check (B, labelled 'top-k / receipt-style' in the write-up's table) missed 82 of the same 247.",
      "quote": "| top-k / receipt-style check (B) | 82 / 247 | [0.276, 0.393] |",
      "url": "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/results/2026-09-13-BITFLIP-HEADTOHEAD.md"
     },
@@ -271,9 +395,9 @@
    ],
    "caveats": [
     "The digest's 0/247 is exact by construction (C is defined as a digest or baseline-output mismatch); the informative numbers are how often A and B miss.",
-    "Experiment 2's definitions differ from the entry's headline labels. A there is 'inference completed without error' and C is 'output matches baseline', so the 182/247 figure is not a pure text-replay measurement. The source's own tables relabel the columns, and readers should be told.",
+    "The write-up's setup paragraph describes Experiment 2's A as 'inference completed without error' and B as 'receipt accepted'. The harness source at commit 1567ee1 defines A as identical generated token ids, B as an identical top-5 logit index set and C as a witness-digest match, matching the write-up's tables; we follow the code.",
     "Experiment 1's random flips were low-mantissa bits 0 to 4 only (plus 5 forced bit-7 flips). Flips were chosen by the harness, not an adversary.",
-    "B means different things in Experiment 1 (top-5 logit set) and Experiment 2 (receipt accepted). The two are not merged.",
+    "B is the top-5 logit-set check in both experiments per the harness source; the write-up's prose calls Experiment 2's B a receipt check. The two experiments' counts are still reported separately, not merged.",
     "In Experiment 1 every method caught all 5 forced high-bit flips. In Experiment 2 the EMBED class (80 trials) was missed by both A and B 80 of 80 times.",
     "Embedding result: EMBED C-fail was 80/80 for the fixed prompt only. The unused-embedding-row case was not tested.",
     "No adversarial (optimised) tampering was tested. No timing claims are made.",
@@ -282,7 +406,33 @@
    ],
    "outcome": "positive",
    "learned": "In the larger run, among the 247 trials where the output actually changed, the text-replay column missed 182 and the top-k/receipt-style check missed 82. Some flips (43) changed nothing in the computation. A check on the computation itself is by definition silent only on flips that changed nothing, but that 0/247 is true by construction, so the informative finding is how often the weaker checks miss. Single prompt and model, harness-chosen flips, no adversary.",
-   "order": 6
+   "order": 6,
+   "explainer": {
+    "question": "If one bit of an AI model's weights is silently corrupted, can you tell by re-reading its output, or must you check the computation itself?",
+    "why": "Weights are files that can be corrupted or tampered with. Re-reading the answer is the cheap check; checking the computation is the expensive one. We wanted to know how much the cheap one misses.",
+    "steps": [
+     "Take one pruned BitNet-2B model and one prompt, 64 tokens.",
+     "Flip single bits in the weights: 50 trials, then 295 trials across tensor classes.",
+     "Run three checks on each corrupted run: same text, same top-5 candidates, same computation digest.",
+     "Count misses with 95% intervals; recount from raw logs on a second host."
+    ],
+    "icons": [
+     "doc",
+     "flip",
+     "check",
+     "count"
+    ],
+    "headline": "182 of 247 missed by text",
+    "result": "In the 295-trial run, 247 flips changed the model's output scores. Text replay missed 182 of them and the top-5 check missed 82. The computation digest missed 0, which is true by construction. 43 flips changed nothing in the computation.",
+    "meaning": "Comparing output text missed most of the real changes in this test. One model, one prompt, flips chosen by our harness, no adversary. The informative numbers are the two weaker checks' misses, not the digest's built-in 0.",
+    "analogy": "Like judging a cake by its look: a swapped ingredient can slip past, but re-baking it step by step shows the difference.",
+    "sources": [
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/results/2026-09-13-BITFLIP-HEADTOHEAD.md",
+     "https://github.com/Aefinity-AI/alice-aegis/commit/14ef1a1",
+     "https://github.com/Aefinity-AI/alice-aegis/commit/1567ee1",
+     "https://github.com/Aefinity-AI/alice-aegis/blob/1567ee1/aegis-linux/examples/cis_bitflip_moat3b.rs"
+    ]
+   }
   },
   {
    "slug": "embedding-edits",
@@ -332,7 +482,30 @@
    ],
    "outcome": "positive",
    "learned": "Output checks are only as good as the prompts you test with. One edited row that no prompt read was missed by text replay and by the top-5 check in 40 of 40 trials, while a check over the computation caught all 40. Even when prompts did read the edited row, those output checks caught only 11 and 21 of 40.",
-   "order": 7
+   "order": 7,
+   "explainer": {
+    "question": "Can a small, realistic edit to a model hide from output checks if the test prompts never touch it?",
+    "why": "A realistic model edit may touch only rare words. If your tests never use those words, output checks pass while the model has changed.",
+    "steps": [
+     "Edit the model's word table in realistic ways: INT8 round-trip, 1% pruning, a fine-tune-style patch, single rows.",
+     "For single rows: 8 rows the prompts never read, 8 they do read, 5 prompts each (40 trials).",
+     "Compare three detectors with the unedited model: text replay, top-5 logits, computation digest.",
+     "Report counts with 95% intervals. A same-shape model swap was judged infeasible and not run."
+    ],
+    "icons": [
+     "wrench",
+     "list",
+     "compare",
+     "count"
+    ],
+    "headline": "0 of 40 caught by output checks",
+    "result": "For one edited row that no test prompt read, text replay and the top-5 check each caught 0 of 40; the computation digest caught 40 of 40. When prompts did read the row, top-5 caught 21 of 40 and text replay 11 of 40.",
+    "meaning": "Output checks are only as good as your test prompts. Small samples (20 or 40), one model, embedding table only; a smarter attacker and the digest's false-positive rate were not tested.",
+    "analogy": "Like proofreading a book by reading only chapters 1 to 3: an edit on page 200 slips through.",
+    "sources": [
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/results/2026-09-17-EMBED-SUBSTITUTION-HEADTOHEAD.md"
+    ]
+   }
   },
   {
    "slug": "receipt-verified-eval",
@@ -375,7 +548,29 @@
    ],
    "outcome": "mixed",
    "learned": "A receipt can verify and still be filed on the wrong item. We found that by trying to break our own verifier, and binding each receipt to its item closed the case we found.",
-   "order": 8
+   "order": 8,
+   "explainer": {
+    "question": "If every test item needs a verified receipt, can someone pass off a genuine receipt under the wrong item?",
+    "why": "If a test score depends on receipts, someone could present a real receipt for the wrong item. We tried to do exactly that to our own verifier.",
+    "steps": [
+     "Run 60 single-tool-call items; each emits a receipt that is replayed before it is scored.",
+     "Apply four hand-made tampers: flip an output token, change an argument byte, cut the chain, file a valid receipt under another item.",
+     "Test version 1 (no item binding) and version 2 (item id, prompt and a session nonce bound in)."
+    ],
+    "icons": [
+     "run",
+     "wrench",
+     "compare"
+    ],
+    "headline": "v1 caught 3 of 4; v2 caught 4 of 4",
+    "result": "All 60 receipts verified and 45 of 60 items scored correct. Version 1 caught 3 of the 4 tampers: a valid receipt filed under another item passed. After we bound each receipt to its item, version 2 caught all 4.",
+    "meaning": "A receipt can be genuine and still sit on the wrong item; we found that by attacking our own verifier. The fix was tested on the same four cases, so 4 of 4 is not out-of-sample.",
+    "analogy": "Like a genuine ticket stub handed in for the wrong seat: the stub is real, so you must also check it is for this seat.",
+    "sources": [
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/results/2026-09-13-RECEIPT-VERIFIED-EVAL60.md",
+     "https://github.com/Aefinity-AI/alice-aegis/commit/13ed3c47ae5a"
+    ]
+   }
   },
   {
    "slug": "logging-vs-receipts",
@@ -409,7 +604,28 @@
    ],
    "outcome": "positive",
    "learned": "A log is text anyone could have typed. Replaying the computation catches the mismatch without knowing in advance which field was changed.",
-   "order": 9
+   "order": 9,
+   "explainer": {
+    "question": "If someone edits one field in an AI agent's log, does the log show it?",
+    "why": "Logs are text. The question is whether a log can tell you it has been edited.",
+    "steps": [
+     "Record one two-step tool-using episode.",
+     "Make three single-field edits to the record.",
+     "View each edit in the ordinary unverified display, then run the replay verifier."
+    ],
+    "icons": [
+     "doc",
+     "wrench",
+     "search"
+    ],
+    "headline": "Replay named step and field",
+    "result": "A changed internal token id was invisible in the ordinary display; replay named step 0 and the field. An altered tool output ('20' changed to '21') showed as text, but nothing flagged it as wrong; replay rejected it at step 0. Two of the three edits are detailed here.",
+    "meaning": "A log is text anyone could have typed; replaying the computation catches a mismatch without knowing which field changed. One episode, one model, one machine, and 'ordinary logging' here is our own display, not a third-party product.",
+    "analogy": "Like a till receipt: it looks fine on its own, but re-adding the sums shows the numbers do not match.",
+    "sources": [
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/results/RECEIPT-VS-LOGGING.md"
+    ]
+   }
   },
   {
    "slug": "receipt-overhead",
@@ -453,7 +669,30 @@
    ],
    "outcome": "mixed",
    "learned": "Receipts are not free. In this episode the receipt loop took 2.51x the plain decode, and the source calls that an upper bound. On old hardware, verification took 40 s on box1 and minutes on box2. The cost should be reported next to every integrity claim. These are single runs, not a benchmark.",
-   "order": 10
+   "order": 10,
+   "explainer": {
+    "question": "How much slower and heavier does an AI agent get when every step carries a verifiable receipt?",
+    "why": "Integrity checks are not free. A claim that every step is verifiable means little without its cost next to it.",
+    "steps": [
+     "Run one three-step agent episode with receipts and time it.",
+     "Time a plain 72-token decode of the same prompt.",
+     "Verify the receipt locally, and through a single-worker daemon on a second machine.",
+     "Re-run once to read peak memory and CPU-package energy."
+    ],
+    "icons": [
+     "clock",
+     "clock",
+     "check",
+     "chart"
+    ],
+    "headline": "2.51x the plain run (upper bound)",
+    "result": "The receipt run took 44.74 s against 17.84 s for the plain decode (2.51x; the source calls it an upper bound). The receipt is 1,599 bytes. Verifying took 40.08 s locally; through the queued daemon it took about 12 min 13 s (an earlier run: about 7.5 min). Peak memory 1,309,996 KB; 369.45 J on the CPU package alone.",
+    "meaning": "Receipts are not free, and the cost belongs next to every integrity claim. Single runs on old hardware with different workloads: not a benchmark, with no repeat statistics and no phone result.",
+    "analogy": null,
+    "sources": [
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/results/2026-09-22-RECEIPT-OVERHEAD-TABLE.md"
+    ]
+   }
   },
   {
    "slug": "continuous-validation",
@@ -501,7 +740,30 @@
    ],
    "outcome": "mixed",
    "learned": "The hash gate catches a one-byte change. But a convenience feature, the automatic re-download, would likely hide exactly the corruption a monitor exists to report (inferred, not run on corrupted input).",
-   "order": 11
+   "order": 11,
+   "explainer": {
+    "question": "If one byte of a deployed model file changes, will a monitoring check actually report it?",
+    "why": "A monitor that quietly repairs what it was meant to report is worse than no monitor.",
+    "steps": [
+     "Run the self-check twice by hand, about 6.5 minutes apart.",
+     "Overwrite one byte of the model file on purpose and run the verifier on it.",
+     "Restore the files and run the monitor script twice by hand.",
+     "Re-run on a fresh clone on 2026-10-01."
+    ],
+    "icons": [
+     "loop",
+     "flip",
+     "run",
+     "loop"
+    ],
+    "headline": "Caught, but a monitor may hide it",
+    "result": "The two baseline runs matched. The one-byte change was stopped by the file's sha256 pin before the model ran. But the self-check re-downloads the pinned weights, so a monitor wrapping it would likely log PASS and mask the corruption (inferred; the monitor was never run on corrupted weights).",
+    "meaning": "The hash gate catches a one-byte change, but a convenience feature could hide exactly what a monitor exists to report. Not a deployed service: n=2, one host, no scheduler, run by hand.",
+    "analogy": "Like an alarm that quietly fixes the broken window before it can ring.",
+    "sources": [
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/results/2026-09-27-CONTINUOUS-VALIDATION.md"
+    ]
+   }
   },
   {
    "slug": "training-checkpoints-cross-isa",
@@ -541,7 +803,30 @@
    ],
    "outcome": "mixed",
    "learned": "Identical printed loss numbers hid different checkpoint bytes; only hashing the raw bytes revealed it. Pinning the kernel made two x86_64 machines agree, and a fixed-order trainer gave identical bytes across instruction sets, shown so far only at toy scale on our own hosts.",
-   "order": 12
+   "order": 12,
+   "explainer": {
+    "question": "If you run the same training job with the same seed on two computers, do you get the same model?",
+    "why": "If the same training job gives different checkpoint bytes on different computers, a trained model cannot be reproduced from its recipe.",
+    "steps": [
+     "Train a tiny language model with a fixed seed; hash the raw parameter bytes at steps 50, 100, 150, 200.",
+     "Run default PyTorch on a CPU with AVX2 and one without.",
+     "Run PyTorch again with the CPU kernel and thread count pinned.",
+     "Run a from-scratch fixed-order C trainer (13,088 parameters) on five hosts."
+    ],
+    "icons": [
+     "hash",
+     "chip",
+     "wrench",
+     "blocks"
+    ],
+    "headline": "Default differs; fixed order matches",
+    "result": "With default PyTorch the printed losses were identical but every checkpoint hash differed between the two CPUs from step 50. With kernel and threads pinned, two x86_64 machines matched byte for byte. The fixed-order C trainer matched on all five hosts, including an aarch64 phone.",
+    "meaning": "Matching printed numbers can hide different bytes; only hashing the raw bytes shows it. Toy scale only: 13,088 parameters, CPU only, our own hosts, one run per setup.",
+    "analogy": "Like two calculators that show the same rounded answer while holding different digits underneath.",
+    "sources": [
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/results/2026-09-24-CROSS-ISA-TRAINING-RECEIPT.md"
+    ]
+   }
   },
   {
    "slug": "e22-necessity-matrix",
@@ -589,7 +874,30 @@
    ],
    "outcome": "mixed",
    "learned": "Passing the published test does not prove every rule matters. 12 of 16 single-rule breaks were caught. The tie-break and the denormal-flush pin are protected only by inputs this vector never contains. One of our own null results turned out to be a vacuous edit that tested nothing, and we corrected it in place. Correcting it exposed a weak spot in the spec's own rsqrt check, which tests only a value where every implementation agrees.",
-   "order": 13
+   "order": 13,
+   "explainer": {
+    "question": "If we deliberately break one rule of our own spec, does the official test notice?",
+    "why": "A passing test only means something if breaking the rules makes it fail. We broke our own rules to see how much the test notices.",
+    "steps": [
+     "Make 16 single-rule breaks (mutations) of the C verifier.",
+     "Build and run each against the pinned test vector on one machine.",
+     "Add unbroken builds at four optimisation levels as controls.",
+     "Count a rule as exercised if breaking it moves the digest."
+    ],
+    "icons": [
+     "wrench",
+     "run",
+     "loop",
+     "count"
+    ],
+    "headline": "12 of 16 breaks caught",
+    "result": "12 of 16 mutations moved the digest, 3 did not and 1 was skipped. The tie-break rule is never reached by this vector. One 'no effect' row (M16) was a vacuous edit that tested nothing; we corrected it in place. Unbroken builds matched at all four optimisation levels.",
+    "meaning": "A passing test does not prove every rule matters. A rule the vector cannot detect is untested, not unnecessary. One compiler, one machine, one 135M model, one short prompt.",
+    "analogy": "Like testing a smoke alarm with 16 kinds of fire: it sounded for 12, stayed silent for 3, and 1 was not tried.",
+    "sources": [
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E22_NECESSITY_MATRIX.md"
+    ]
+   }
   },
   {
    "slug": "e24-unicode-gap",
@@ -627,7 +935,28 @@
    ],
    "outcome": "mixed",
    "learned": "A spec can be exact about arithmetic and still leave the input text under-specified. Claims like 'generated from the Unicode database' need a check pinned to the environment.",
-   "order": 14
+   "order": 14,
+   "explainer": {
+    "question": "Can two programs that follow the spec exactly still split the same text differently?",
+    "why": "Splitting text into tokens depends on which characters count as letters. Two programs that follow the spec could split differently.",
+    "steps": [
+     "Notice our own CI check fail the same way on x86_64 and aarch64.",
+     "Generate the letter, number and whitespace tables under Unicode 15.0.0 and 15.1.0 and compare them.",
+     "Encode four test strings with both tables."
+    ],
+    "icons": [
+     "warn",
+     "compare",
+     "run"
+    ],
+    "headline": "Spec names no Unicode version",
+    "result": "The set of letters grew by 622 characters between Unicode 15.0.0 and 15.1.0 (136,104 to 136,726); numbers and whitespace did not change. Spec v0.3b names no Unicode version. For the pinned vocabulary the four test strings encoded identically, so no published digest moves.",
+    "meaning": "A spec can be exact about arithmetic and still leave the input text under-specified. A bounded finding, not a reproduction failure. The fix is proposed for v0.4 and is a maintainer decision.",
+    "analogy": "Like a game rule that says 'words only' but never says which dictionary edition.",
+    "sources": [
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E24_UNICODE_VERSION_GAP.md"
+    ]
+   }
   },
   {
    "slug": "e25-rmsnorm-order",
@@ -670,7 +999,29 @@
    ],
    "outcome": "positive",
    "learned": "A reordering that leaves the generated text unchanged (on this short vector) still changes the bits, so comparing text is not enough. A published limitation was out of date, and we corrected it in the open.",
-   "order": 15
+   "order": 15,
+   "explainer": {
+    "question": "Does a tiny change in multiplication order change the AI's internal numbers, even when the output text stays the same?",
+    "why": "If text matches while the bits differ, comparing output text cannot show that two systems computed the same thing.",
+    "steps": [
+     "Build a test version of the decode that multiplies in the non-conforming order.",
+     "Run SmolLM2-135M on 'Once upon a time' for 16 tokens.",
+     "Count how many numbers differ and whether the digest and tokens moved."
+    ],
+    "icons": [
+     "blocks",
+     "run",
+     "count"
+    ],
+    "headline": "34.60% of numbers differ",
+    "result": "231,014 of 667,584 normalisation values (34.60%) differ between the two orders in one 16-token decode. The digest moved. The generated tokens did not. It also showed an earlier sentence in our spec ('no divergence observed') was false, and we corrected it.",
+    "meaning": "Matching text can hide different bits, so comparing text is not enough. The tokens stayed the same only for this 16-token run; a longer decode was not tested.",
+    "analogy": "Like adding numbers in a different order on a calculator with limited digits: the rounded total often looks the same, the digits underneath do not.",
+    "sources": [
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E25_RMSNORM_ASSOCIATION.md",
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/CHANGELOG.md"
+    ]
+   }
   },
   {
    "slug": "e26-trig-range",
@@ -718,7 +1069,28 @@
    ],
    "outcome": "mixed",
    "learned": "4,096 samples per binade never hit the worst points among about 8.4 million, so sampling gave a comfortable answer that was wrong. An exhaustive sweep replaced it. Absolute error stays flat while ULP error grows near zeros of sin/cos, so ULP alone is the wrong figure of merit for these functions.",
-   "order": 16
+   "order": 16,
+   "explainer": {
+    "question": "Does the pinned sin/cos stay accurate at the huge angles a million-token context produces, and can spot-checking tell you?",
+    "why": "Spot-checking a function is cheap and can be reassuring and wrong.",
+    "steps": [
+     "Run a sampled sweep: 4,096 inputs per range.",
+     "Replace it with an exhaustive sweep of every float32 in [0, 2^20) against a float64 reference.",
+     "Check symmetry and the rotary angle sets for 131,072 positions on both models."
+    ],
+    "icons": [
+     "list",
+     "count",
+     "check"
+    ],
+    "headline": "Sampling was wrong; the math held",
+    "result": "The sampled sweep reported at most 1 ULP below 2^16. Checking all 1,233,125,376 inputs below 2^20 found up to 66 ULP (sin) and 2283 (cos) below 2^16, but only near zeros, where values are tiny. Absolute error stayed flat at 9.4218e-8 or less, under one float32 step at 1.0, for every angle up to a 1,048,576-token context.",
+    "meaning": "The pinned sin/cos holds up at long context, but the sampled check could not show it: 4,096 samples out of 8,388,608 per range missed the hard spots. ULP alone is the wrong yardstick near zeros. One host, not a proof; nothing is claimed at or above 2^31.",
+    "analogy": "Like testing a few bolts on a bridge instead of every one.",
+    "sources": [
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E26_TRIG_RANGE.md"
+    ]
+   }
   },
   {
    "slug": "e27-exp-ln-range",
@@ -757,7 +1129,28 @@
    ],
    "outcome": "mixed",
    "learned": "The accuracy was the unremarkable part. Exhaustive testing found a real defect in our own spec that sampled tests could not, and we recorded it in the open.",
-   "order": 17
+   "order": 17,
+   "explainer": {
+    "question": "Is the pinned exponential accurate on every possible input, and are the spec's safety guards correct?",
+    "why": "The softmax inside every transformer uses exp. If its guards are wrong the spec pins a wrong answer exactly.",
+    "steps": [
+     "Evaluate exp, ln and SiLU on all 2^32 float32 bit patterns.",
+     "Compare against a float64 reference and run checks that need no reference.",
+     "Re-run on a second machine."
+    ],
+    "icons": [
+     "count",
+     "compare",
+     "loop"
+    ],
+    "headline": "Within 1 ULP; one spec defect",
+    "result": "All 3,257,925,634 inputs where both values are finite were within one ULP (max relative error 1.1921e-7); exp and ln were monotone with zero violations. The headline is a defect in our spec: the high guard (x > 88.0 returns infinity) clips 94,743 inputs whose true exp is finite. An erratum was filed.",
+    "meaning": "Exhaustive testing found a real defect in our own spec that sampling could not. The clipped range was entered 0 times in the instrumented decode, but other models and prompts were not ruled out.",
+    "analogy": "Like testing every light switch in a building: that is how the one wired backwards gets found.",
+    "sources": [
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E27_EXP_LN_RANGE.md"
+    ]
+   }
   },
   {
    "slug": "layer-oracle-e28-e36-e37",
@@ -797,7 +1190,30 @@
    ],
    "outcome": "positive",
    "learned": "A maximum measured on one input is only that input's maximum. Widening the sweep corrected our own published number on SmolLM2 (1.53x higher), and on Qwen showed the single-prompt figure happened to be the worst case, so it was unknown, not reliably low.",
-   "order": 18
+   "order": 18,
+   "explainer": {
+    "question": "Could errors inside the model cancel out, so the final answer looks right while the inside is wrong?",
+    "why": "Errors inside a model could cancel, so the final answer looks right while the middle is wrong.",
+    "steps": [
+     "Feed the same token ids to our verifier and to a Hugging Face transformers fp32 pass.",
+     "Compare every intermediate tensor.",
+     "Start with one prompt, then widen to six prompt cells on each of two models."
+    ],
+    "icons": [
+     "run",
+     "compare",
+     "list"
+    ],
+    "headline": "144,825 tensors compared",
+    "result": "The widened runs compared 144,825 tensors across two models. The single-prompt worst disagreement was 9.9e-5 (Qwen). Widening corrected our own published SmolLM2 worst case to 3.406e-05, which is 1.53 times the number we first published.",
+    "meaning": "Agreement is to about 1e-5 relative (up to 1e-4 on Qwen), not bit-exact, because the comparison uses a different implementation on purpose. A maximum from one input is only that input's maximum.",
+    "analogy": "Like checking every line of a sum against a second person's working, not only the final total.",
+    "sources": [
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E28_LAYER_ORACLE.md",
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E36_ORACLE_PROMPT_SWEEP.md",
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E37_QWEN_ORACLE_SWEEP.md"
+    ]
+   }
   },
   {
    "slug": "e29-optimizer-invariance",
@@ -831,7 +1247,29 @@
    ],
    "outcome": "positive",
    "learned": "Optimisation was not the enemy for this decode. The pinned order of operations is preserved in the emitted code, so builds with very different vector instruction counts produced identical bytes. This is measured on one compiler version and on the tested models and prompts.",
-   "order": 19
+   "order": 19,
+   "explainer": {
+    "question": "Does getting identical results mean giving up on fast, optimised code?",
+    "why": "If identical results meant giving up optimised code, the approach would be too slow to use.",
+    "steps": [
+     "Dump every intermediate value of the decode from differently compiled builds.",
+     "Compare them exactly with sha256 and a structural diff; inspect the disassembly.",
+     "Cover three binaries on two models, then ten optimisation and target-CPU settings."
+    ],
+    "icons": [
+     "doc",
+     "compare",
+     "loop"
+    ],
+    "headline": "10 builds, 1 identical dump",
+    "result": "The optimiser did vectorise the code (hundreds of AVX2 instructions) and the dumped values did not change. Ten distinct x86_64 binaries on SmolLM2-135M produced one identical 51,750,154-byte dump, with zero FMA instructions.",
+    "meaning": "For this decode, optimisation did not break identical results. One compiler version, six prompts, up to 64 generated tokens, ASCII only. The mechanism we first gave was later corrected.",
+    "analogy": null,
+    "sources": [
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E29_OPTIMIZER_INVARIANCE.md",
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E39_FTZ_IS_NOT_WHERE_WE_SAID.md"
+    ]
+   }
   },
   {
    "slug": "ftz-reach-e35-e40",
@@ -893,7 +1331,32 @@
    ],
    "outcome": "null",
    "learned": "We never found a case where the flush rule changes the digest. The explanations we first gave for why were wrong, and we published the corrections next to the exhaustive count that replaced them.",
-   "order": 20
+   "order": 20,
+   "explainer": {
+    "question": "Does one obscure rule about tiny numbers ever change a real AI output, and how sure can we be?",
+    "why": "One obscure rule about tiny numbers is pinned in the spec. If it never matters, is it needed?",
+    "steps": [
+     "Count how often tiny values arise (E35, E38).",
+     "Analyse exp exhaustively over all 2^32 inputs (E39).",
+     "Classify every reduction and normalisation intermediate (E40)."
+    ],
+    "icons": [
+     "count",
+     "search",
+     "list"
+    ],
+    "headline": "0 tiny values in 562 billion",
+    "result": "Of 562,531,070,920 intermediates classified across both pinned models, none was subnormal (a very tiny number); 0 of 628,547,776 weight values were. On the normative vector the rule does not affect the digest. Two of our earlier explanations for why were wrong and were withdrawn.",
+    "meaning": "No case was found where the rule changes the digest, but that holds for these two models and prompts only: on constructed inputs the rule can change bits.",
+    "analogy": null,
+    "sources": [
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E35_DENORMAL_REACH.md",
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E38_REACH_SWEEP.md",
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E39_FTZ_IS_NOT_WHERE_WE_SAID.md",
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E40_MATVEC_RMSNORM_REACH.md",
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/CHANGELOG.md"
+    ]
+   }
   },
   {
    "slug": "e41-detokenization-gap",
@@ -936,7 +1399,28 @@
    ],
    "outcome": "negative",
    "learned": "Matching digests is not the same as matching meaning. The missing piece is a text-level definition; whether v0.4 specifies detokenization or declares it out of scope is a spec-owner decision.",
-   "order": 21
+   "order": 21,
+   "explainer": {
+    "question": "Could two programs that both follow the spec agree on every digest yet print different text?",
+    "why": "A receipt is read by people. If two conforming programs can print different text for the same digests, the receipt's meaning is not pinned.",
+    "steps": [
+     "Read the spec against the tokenizers of the two named models.",
+     "Count vocabulary entries and output slots where turning ids back into text is ambiguous.",
+     "Probe with small Rust examples."
+    ],
+    "icons": [
+     "doc",
+     "count",
+     "run"
+    ],
+    "headline": "313 + 271 ambiguous entries",
+    "result": "313 of SmolLM2's 49,152 vocabulary entries (0.64%) are not valid text on their own. 271 of Qwen's 151,936 output slots map to no string. All 17 of SmolLM2's special tokens decode to text that re-encodes to different ids. So two conforming programs can disagree on what a receipt says.",
+    "meaning": "Matching digests is not the same as matching meaning: the spec pins text to tokens but not tokens to text. A gap in our spec, not a defect in the models. It does not show that any real receipt was misread.",
+    "analogy": null,
+    "sources": [
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E41_DETOKENIZATION_IS_UNSPECIFIED.md"
+    ]
+   }
   },
   {
    "slug": "ev1-mini-eval",
@@ -986,7 +1470,31 @@
    ],
    "outcome": "mixed",
    "learned": "The model scores poorly but repeats exactly on one machine. We report the poor accuracy alongside the perfect same-host repeatability. Cross-host verification is still open.",
-   "order": 22
+   "order": 22,
+   "explainer": {
+    "question": "Can a tiny model be evaluated in a way anyone can repeat exactly, and what does it actually score?",
+    "why": "Before measuring big claims we wanted a small evaluation anyone can repeat bit for bit.",
+    "steps": [
+     "Assemble 160 items in four categories.",
+     "Run them through the repository's reference program on SmolLM2-135M, fp32, greedy.",
+     "Score with simple substring and refusal-marker rules.",
+     "Run twice and compare digests."
+    ],
+    "icons": [
+     "list",
+     "run",
+     "count",
+     "loop"
+    ],
+    "headline": "Low scores, 20 of 20 repeat",
+    "result": "Truthfulness 3 of 60, refusal probes 10 of 20 (chance level), tool-use proxy 5 of 60. Self-consistency: 20 of 20 items gave identical digests across two runs on one host.",
+    "meaning": "The model scores poorly but repeats exactly on one machine; the point is repeatability, not accuracy. A 135M base model, weak scoring rules, no second-host check, and the refusal items are not a safety measurement.",
+    "analogy": null,
+    "sources": [
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/results/2026-09-22-ev1-mini-eval-kit.md",
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/eval/results/summary.json"
+    ]
+   }
   },
   {
    "slug": "test-standard-ledger",
@@ -1049,7 +1557,35 @@
    ],
    "outcome": "mixed",
    "learned": "We publish how we test, including what the method cannot prove, and we correct our own published claims through numbered errata.",
-   "order": 23
+   "order": 23,
+   "explainer": {
+    "question": "How can an outsider tell that a lab did not tune its results after the fact, rewrite them later, or quietly drop the failures?",
+    "why": "Results are only as credible as the process behind them.",
+    "steps": [
+     "Write the pass mark before the run.",
+     "Publish a salted, hash-chained fingerprint of the private register.",
+     "Number every defect as an erratum.",
+     "Remove numbers that have no provenance."
+    ],
+    "icons": [
+     "write",
+     "hash",
+     "list",
+     "wrench"
+    ],
+    "headline": "84 experiments, 65 verdicts",
+    "result": "The public ledger holds 233 lines covering 84 registered experiments; 65 have a verdict line and 161 of the 233 lines are backfill. The page says what it cannot prove: it cannot show when an experiment ran, and the start rule is a promise it cannot check itself.",
+    "meaning": "It shows how we test and what the method cannot prove. No outsider has audited whether we always followed it, and backfill lines prove existence only from their publication date.",
+    "analogy": null,
+    "sources": [
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/ledger/README.md",
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/ledger/LEDGER.tsv",
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/ledger/verify_ledger.py",
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/CONTRIBUTING.md",
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/CHANGELOG.md",
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/E15m_PREREG.md"
+    ]
+   }
   },
   {
    "slug": "hall-of-divergence",
@@ -1082,7 +1618,29 @@
    ],
    "outcome": "null",
    "learned": "As of 2026-10-12 no one outside the lab has reproduced or broken the CIS-2 results, and the page says so plainly. The only listed runs are our own, and their logs are not yet public.",
-   "order": 24
+   "order": 24,
+   "explainer": {
+    "question": "Has anyone outside the lab reproduced these results, or broken them?",
+    "why": "Everything on this site was run by us. The honest next step is for others to run it.",
+    "steps": [
+     "Publish a table for verified reproductions and divergences.",
+     "List only runs that come with a full log.",
+     "Offer credit only, no cash or prize."
+    ],
+    "icons": [
+     "list",
+     "doc",
+     "flag"
+    ],
+    "headline": "0 outside reproductions",
+    "result": "As of 2026-10-12 the table has two rows, both our own runs on our own machines (9 passed, 0 failed each). No third-party reproduction is listed and no divergence has been reported.",
+    "meaning": "A standing challenge, not a finished experiment. Nobody outside the lab has reproduced or broken the results yet, and the logs for our two rows are not yet public.",
+    "analogy": null,
+    "sources": [
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/HALL-OF-DIVERGENCE.md",
+     "https://github.com/Aefinity-AI/cis2-spec/blob/main/CONTRIBUTING.md"
+    ]
+   }
   },
   {
    "slug": "ranger-mock-run",
@@ -1121,7 +1679,28 @@
    ],
    "outcome": "mixed",
    "learned": "On synthetic data, one sub-hypothesis was falsified and two design constraints emerged: rotate only after splitting off the sparse outliers, and rotation helps 4-bit activations but not below 4 bits. A later test showed width and rotation overlap on outliers. These are mechanism-level findings, not claims about real models.",
-   "order": 25
+   "order": 25,
+   "explainer": {
+    "question": "Do popular tricks for shrinking AI models to very few bits actually work, when tested where they can fail?",
+    "why": "Low-bit compression ideas often look good in prose. We tested them where they could fail.",
+    "steps": [
+     "Build synthetic tensors with documented outlier patterns, fixed seed 20260714.",
+     "Run tests E0 to E5, plus a follow-up E6, in pure numpy.",
+     "Rebuild any test that did not compute its target."
+    ],
+    "icons": [
+     "blocks",
+     "run",
+     "wrench"
+    ],
+    "headline": "Rotation helps 4-bit only",
+    "result": "Bits saved per width doubling came out at -0.60 against a predicted -0.50, after we rebuilt a first test that was not computing the target. Rotation helped at 4-bit (1.23x) but was slightly worse than plain per-token quantization at 3 and 2 bits (0.92x).",
+    "meaning": "On made-up data one idea was falsified and two design rules emerged. These are mechanism-level findings, not claims about real models.",
+    "analogy": null,
+    "sources": [
+     "https://github.com/Aefinity-AI/ranger/blob/main/research/experiments/RESULTS.md"
+    ]
+   }
   },
   {
    "slug": "ranger-phase1",
@@ -1169,7 +1748,28 @@
    ],
    "outcome": "mixed",
    "learned": "A prior null result was retracted publicly. Rotation recovery replicated across two architectures (92.3% and 92.5%), while the census-replaces-rotation shortcut was refuted, and a super-weight lever is null at 135M and only small at 0.6B. One of our own sub-results (0.38 rescue) was refuted by our confirmation pass.",
-   "order": 26
+   "order": 26,
+   "explainer": {
+    "question": "Do those shrinking tricks survive on real pretrained models, and was our earlier null result even valid?",
+    "why": "Synthetic results do not count until they survive on real models.",
+    "steps": [
+     "Measure perplexity on a WikiText-2 slice for SmolLM2-135M; replicate on Qwen3-0.6B.",
+     "Fix predictions and kill gates before each run; claim effects only above 3x run noise.",
+     "Re-test small effects on disjoint slices."
+    ],
+    "icons": [
+     "chart",
+     "flag",
+     "loop"
+    ],
+    "headline": "Rotation recovers 92.3%",
+    "result": "Our earlier E7 null result was retracted as an artifact of how it was built. 4-bit activations collapsed perplexity from 16.14 to 13,773; a rotation recovered 92.3% of the collapse on SmolLM2-135M and 92.5% on Qwen3-0.6B. 'Skip the rotation' was refuted.",
+    "meaning": "Recovery is of the collapse, not full parity (27.11 against 16.14). Two small models, CPU only, simulated quantization as an upper bound, one text slice plus one confirmation slice.",
+    "analogy": null,
+    "sources": [
+     "https://github.com/Aefinity-AI/ranger/blob/main/research/phase1/RESULTS-phase1.md"
+    ]
+   }
   },
   {
    "slug": "retraction-prochot",
@@ -1222,7 +1822,28 @@
    ],
    "outcome": "negative",
    "learned": "Measure the machine before measuring the code. We retracted every earlier number from that box instead of reporting a speed-up.",
-   "order": 27
+   "order": 27,
+   "explainer": {
+    "question": "Were our speed measurements measuring our code, or a hidden hardware throttle?",
+    "why": "A speed number is meaningless if the machine was secretly throttled.",
+    "steps": [
+     "Print the CPU's current speed ratio against the requested ratio at boot.",
+     "Apply a fix: clear the hardware throttle flag and request the maximum speed state.",
+     "Generate the same 214 tokens with two same-day builds."
+    ],
+    "icons": [
+     "search",
+     "wrench",
+     "run"
+    ],
+    "headline": "Running at 5 of 27 speed",
+    "result": "The CPU was clamped to core ratio 5 of a requested 27 while the temperature sensor read cool. Every performance number from that machine before 2026-07-29 was taken at about a fifth of nominal clock, and we retracted them. After the fix the ratio went from 5 to 25 on 3 of 3 cold boots. We do not report a speedup.",
+    "meaning": "Measure the machine before measuring the code. One laptop and three boots; the two halves of the fix were not tested separately, and whether it survives suspend is untested.",
+    "analogy": "Like timing a runner who is secretly wearing ankle weights: the time says nothing about their training.",
+    "sources": [
+     "https://github.com/Aefinity-AI/alice-aegis/blob/main/docs/posts/2026-08-05_bd-prochot-benchmark-lie.md"
+    ]
+   }
   },
   {
    "slug": "soft-float-avx2",
@@ -1254,7 +1875,28 @@
    ],
    "outcome": "negative",
    "learned": "Trust the binary you ship, not the annotation you wrote. Nothing failed and nothing warned; only counting instructions in the artifact exposed it. A mechanical check (assert nonzero ymm/vfmadd count in CI) is the fix, not a benchmark.",
-   "order": 28
+   "order": 28,
+   "explainer": {
+    "question": "How can code run hundreds of times slower than its parts predict, with no error and correct output?",
+    "why": "Code can be badly slow with no error and correct output.",
+    "steps": [
+     "Count vector instructions in the preserved shipped binary.",
+     "Rebuild with a hard-float target.",
+     "Measure ticks per token for both builds."
+    ],
+    "icons": [
+     "count",
+     "wrench",
+     "clock"
+    ],
+    "headline": "217 to 258 times slower",
+    "result": "Our hand-written AVX2 kernels compiled to zero vector instructions. The shipped binary used 1.65 to 1.67 billion ticks per token against 6.48 to 7.59 million for the rebuild: 217 to 258 times slower, with correct output and no warning.",
+    "meaning": "Trust the binary you ship, not the annotation you wrote. One machine; the ratio is derived from ranges and is not a controlled benchmark. The fix is a check that counts instructions.",
+    "analogy": "Like a van that still delivers but whose engine was swapped for pedals: right answer, no warning light, far slower.",
+    "sources": [
+     "https://github.com/Aefinity-AI/alice-aegis/blob/main/docs/posts/2026-08-05_uefi-soft-float-deletes-your-avx2.md"
+    ]
+   }
   },
   {
    "slug": "os-cost-held-back",
@@ -1273,7 +1915,28 @@
    ],
    "outcome": "held",
    "learned": "A surprising result was held back by a rule we had written in advance. We found one contributing cause in our own build (soft-float), but the question remains open; the numbers will be published when the mechanism is understood.",
-   "order": 29
+   "order": 29,
+   "explainer": {
+    "question": "Is running AI with no operating system at all faster than a minimal Linux on the same laptop?",
+    "why": "A surprising result should be explained before it is published.",
+    "steps": [
+     "Pre-register a comparison of a no-OS build against a minimal Linux on one laptop.",
+     "Run it. The first result surprised us.",
+     "Apply the pre-registered rule: a surprising result is not published until its cause is understood.",
+     "Look for the mechanism. We found one contributing cause in our own build; the question stays open."
+    ],
+    "icons": [
+     "flag",
+     "run",
+     "lock",
+     "search"
+    ],
+    "headline": "Held back",
+    "result": "No numbers from this comparison are published. They will be published when the mechanism is understood.",
+    "meaning": "This shows a rule written in advance doing its job. It says nothing about what an operating system costs, or about speed.",
+    "analogy": "Like a referee who will not announce a score until the clock is fixed.",
+    "sources": []
+   }
   },
   {
    "slug": "lut-kernel-retraction",
@@ -1307,7 +1970,28 @@
    ],
    "outcome": "negative",
    "learned": "A number cited from a source file but never measured was wrong in the form claimed. The conclusion survived, for a different reason.",
-   "order": 30
+   "order": 30,
+   "explainer": {
+    "question": "Does a performance number copied from a source comment hold up when actually measured?",
+    "why": "Numbers that were never measured spread easily.",
+    "steps": [
+     "Put all candidates in one program and interleave them in one loop on identical packed weights.",
+     "Make three logged runs.",
+     "Compare the f32 arm with the lookup-table (pshufb) arm."
+    ],
+    "icons": [
+     "blocks",
+     "loop",
+     "compare"
+    ],
+    "headline": "'16% slower' did not reproduce",
+    "result": "The lookup-table arm swung 36% between two speed modes while the f32 arm moved 4.7%. In the faster mode it was 1.19 to 1.21 times faster than f32; in run 1 it lost at 1.09x, so the ordering flips between runs. The reject decision stands on memory traffic (a derived ~28% slower decode, not a measurement).",
+    "meaning": "A number that was copied and never measured was wrong in the form claimed; the conclusion survived for a different reason. Three runs on a virtual machine, no end-to-end measurement.",
+    "analogy": "Like repeating a rumour that a road is slow, then timing it three times and finding the answer flips from run to run.",
+    "sources": [
+     "https://github.com/Aefinity-AI/alice-aegis/blob/main/docs/hardware_logs/lut_mpgemm_ab_findings_2026-07-30.md"
+    ]
+   }
   },
   {
    "slug": "fabricated-metrics-audit",
@@ -1333,7 +2017,26 @@
    ],
    "outcome": "negative",
    "learned": "Every published number needs a machine, a log and a source behind it. This audit is where that rule came from.",
-   "order": 31
+   "order": 31,
+   "explainer": {
+    "question": "Did an earlier version of our software print performance numbers it never measured?",
+    "why": "This is where our provenance rule came from.",
+    "steps": [
+     "Review the print statements of a deleted crate preserved in git history.",
+     "Check whether they take any values to print at all (format arguments)."
+    ],
+    "icons": [
+     "doc",
+     "search"
+    ],
+    "headline": "Printed 'results' were fixed text",
+    "result": "The benchmark lines in the removed crate were fixed string literals with no format arguments: text asserting measurements that were never taken. The crate also did not compile (9 errors), so the numbers could not have come from a run.",
+    "meaning": "This audit is where our rule 'every number needs a machine, a log and a source' came from. It covers our old code only; no experiment was run and it is a self-review.",
+    "analogy": "Like a speedometer painted on the dashboard: it shows a number, but nothing is connected to it.",
+    "sources": [
+     "https://github.com/Aefinity-AI/alice-aegis/blob/main/docs/EVIDENCE_fabricated_metrics.md"
+    ]
+   }
   },
   {
    "slug": "es1-trit-census",
@@ -1371,7 +2074,28 @@
    ],
    "outcome": "null",
    "learned": "Pretrained ternary weights are close to uniform, so lossless coding gains little. Real savings would need changes to the model, not a better coder.",
-   "order": 32
+   "order": 32,
+   "explainer": {
+    "question": "Can a 1.58-bit AI model be squeezed much smaller without losing anything?",
+    "why": "Could a ternary model be made much smaller without losing anything?",
+    "steps": [
+     "Count all 2,084,044,800 weights in the 210 body tensors.",
+     "Compress them with rANS, xz and zstd.",
+     "Verify the round trip byte for byte."
+    ],
+    "icons": [
+     "count",
+     "blocks",
+     "check"
+    ],
+    "headline": "1.532 bits per weight",
+    "result": "The best of the lossless coders tested (zstd -19) reached 1.532 bits per weight against 2.000 for the engine's current packing. The round trip was byte-exact with 0 mismatches. Against ideal ternary packing (1.600) the saving is about 4%.",
+    "meaning": "Pretrained ternary weights are close to uniform, so lossless coding gains little; real savings would need changes to the model. One model, one machine; coding speed not measured.",
+    "analogy": "Like zipping a file of coin flips: there is almost no pattern to squeeze out.",
+    "sources": [
+     "https://github.com/Aefinity-AI/alice-aegis/blob/main/docs/experiments/ES1_TRIT_CENSUS_RESULTS.md"
+    ]
+   }
   },
   {
    "slug": "refuted-literature-claims",
@@ -1404,7 +2128,28 @@
    ],
    "outcome": "negative",
    "learned": "Several widely repeated recipe claims failed when we checked them, so we keep a public list of what failed. For each claim, the list says whether we ran it ourselves or checked it against a source's stated requirements.",
-   "order": 33
+   "order": 33,
+   "explainer": {
+    "question": "Do published recipes for training small ternary models work as claimed on ordinary hardware?",
+    "why": "Recipes repeated in papers and blog posts can fail on ordinary hardware.",
+    "steps": [
+     "Record each cited recipe as refuted, corrected or surviving.",
+     "Run it on our target machine where we can.",
+     "Where we cannot, say so and cite the stated requirement."
+    ],
+    "icons": [
+     "list",
+     "run",
+     "doc"
+    ],
+    "headline": "2 recipe claims refuted",
+    "result": "A stock Hugging Face recipe for training soft prompts on the Falcon-E model gave outputs wrong by about 300 times on one real layer, as measured by us. The claim that a stock library runs on a free T4 GPU in 2 to 5 hours is marked refuted on a documented hardware requirement; we did not run it on a T4.",
+    "meaning": "Several widely repeated recipe claims failed when checked: one by measurement, one from a stated requirement. It is our environment and one set of library versions, not proof they fail everywhere.",
+    "analogy": null,
+    "sources": [
+     "https://github.com/Aefinity-AI/alice-aegis/blob/main/program/model-lab/refuted_claims.md"
+    ]
+   }
   }
  ]
 }

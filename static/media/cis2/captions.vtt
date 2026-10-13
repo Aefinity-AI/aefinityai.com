@@ -1,0 +1,254 @@
+WEBVTT
+
+1
+00:00:00.400 --> 00:00:02.571
+How can you check what an AI really did?
+
+2
+00:00:03.071 --> 00:00:06.310
+You ask an AI a question, and it gives you an answer.
+
+3
+00:00:06.610 --> 00:00:08.802
+But which model really produced it?
+
+4
+00:00:08.802 --> 00:00:11.244
+And was anything changed along the way?
+
+5
+00:00:11.544 --> 00:00:14.307
+Today, you take the operator's word for it.
+
+6
+00:00:15.107 --> 00:00:17.837
+Why not just run it again and compare?
+
+7
+00:00:17.837 --> 00:00:21.645
+Because computers don't always agree with themselves.
+
+8
+00:00:21.945 --> 00:00:23.526
+Think of a grocery bill.
+
+9
+00:00:23.526 --> 00:00:27.149
+Add the items in a different order, rounding as you go,
+
+10
+00:00:27.149 --> 00:00:29.388
+and the total can shift by a cent.
+
+11
+00:00:29.688 --> 00:00:31.116
+Computers do the same.
+
+12
+00:00:31.116 --> 00:00:35.596
+Different chips add in a different order, so one model, on one input,
+
+13
+00:00:35.596 --> 00:00:37.933
+can give slightly different numbers.
+
+14
+00:00:38.233 --> 00:00:41.739
+Nobody can say if that is noise, or a changed model.
+
+15
+00:00:42.839 --> 00:00:46.432
+CIS-2 is an open standard that fixes this.
+
+16
+00:00:46.432 --> 00:00:52.593
+It is a written specification that pins down every one of those choices.
+
+17
+00:00:52.893 --> 00:00:59.852
+Think of a recipe so exact that it fixes the order of every step and how to round every measurement.
+
+18
+00:00:59.852 --> 00:01:02.983
+Any cook, in any kitchen, gets the same cake.
+
+19
+00:01:03.883 --> 00:01:08.350
+When a model runs under CIS-2, it produces a receipt:
+
+20
+00:01:08.350 --> 00:01:11.046
+a short fingerprint of its work.
+
+21
+00:01:11.346 --> 00:01:17.522
+At every step, the model scores about forty-nine thousand possible next words.
+
+22
+00:01:17.522 --> 00:01:21.797
+CIS-2 folds all of those numbers into one fingerprint.
+
+23
+00:01:22.097 --> 00:01:26.002
+Change the weights, the input, or one bit of the arithmetic,
+
+24
+00:01:26.002 --> 00:01:28.540
+and the fingerprint changes completely.
+
+25
+00:01:29.440 --> 00:01:32.735
+A recipe is good if a stranger can follow it.
+
+26
+00:01:32.735 --> 00:01:35.150
+So we tested the text on its own:
+
+27
+00:01:35.150 --> 00:01:39.542
+separate builds, made from the spec alone, in Rust and in C.
+
+28
+00:01:39.842 --> 00:01:45.311
+They never saw each other's code, and both matched on Intel and ARM chips.
+
+29
+00:01:45.611 --> 00:01:49.033
+The test also caught a mistake in our own write-up:
+
+30
+00:01:49.033 --> 00:01:51.180
+one step was in the wrong order.
+
+31
+00:01:51.180 --> 00:01:54.401
+We fixed the text, and every build then matched.
+
+32
+00:01:55.401 --> 00:01:57.882
+You don't have to take our word for it.
+
+33
+00:01:57.882 --> 00:01:59.918
+The verifier is public and free.
+
+34
+00:02:00.218 --> 00:02:05.918
+One command downloads the pinned model, checks every file against a known hash,
+
+35
+00:02:05.918 --> 00:02:08.299
+builds the verifier, and runs it.
+
+36
+00:02:08.599 --> 00:02:12.489
+It compares every fingerprint with the published one.
+
+37
+00:02:12.489 --> 00:02:14.984
+If they all match, you get a PASS.
+
+38
+00:02:14.984 --> 00:02:17.332
+No account, no special hardware.
+
+39
+00:02:17.632 --> 00:02:22.671
+And if even one byte of the model file is changed, it refuses to run.
+
+40
+00:02:23.671 --> 00:02:26.914
+Why fingerprint all the numbers, not just the words?
+
+41
+00:02:26.914 --> 00:02:31.591
+Because the words can stay the same while the model underneath has changed.
+
+42
+00:02:31.891 --> 00:02:36.962
+In our own tests on a separate, larger model, we corrupted it in small ways.
+
+43
+00:02:36.962 --> 00:02:42.567
+Comparing the text missed one hundred and eighty-two of two hundred and forty-seven.
+
+44
+00:02:42.567 --> 00:02:44.769
+The full fingerprint missed none.
+
+45
+00:02:45.069 --> 00:02:47.513
+Nudge one row out of fifty thousand:
+
+46
+00:02:47.513 --> 00:02:50.364
+comparing text caught none of forty tries.
+
+47
+00:02:50.364 --> 00:02:52.605
+The fingerprint caught all forty.
+
+48
+00:02:53.605 --> 00:02:59.061
+For the main published test, a small open model, a short prompt, and sixteen tokens,
+
+49
+00:02:59.061 --> 00:03:01.140
+there is one pinned fingerprint.
+
+50
+00:03:01.440 --> 00:03:07.033
+It was reproduced on Intel chips, a cloud server chip, an ARM phone,
+
+51
+00:03:07.033 --> 00:03:10.240
+and an NVIDIA Tesla P100 graphics card.
+
+52
+00:03:11.040 --> 00:03:12.870
+Now, what it does not do.
+
+53
+00:03:12.870 --> 00:03:16.897
+It does not tell you an answer is right, safe, or fair.
+
+54
+00:03:16.897 --> 00:03:20.923
+A model can be perfectly repeatable and still be wrong.
+
+55
+00:03:21.223 --> 00:03:27.052
+Today it covers full-precision numbers and greedy decoding, on small open models,
+
+56
+00:03:27.052 --> 00:03:29.211
+mostly on ordinary processors.
+
+57
+00:03:29.511 --> 00:03:32.392
+And every run so far was done by us.
+
+58
+00:03:32.392 --> 00:03:35.514
+No outside party has reproduced it yet.
+
+59
+00:03:35.814 --> 00:03:37.558
+So we publish a challenge:
+
+60
+00:03:37.558 --> 00:03:41.515
+if you can make it differ, tell us, and we will credit you.
+
+61
+00:03:42.315 --> 00:03:45.391
+CIS-2 is open under the Apache license.
+
+62
+00:03:45.391 --> 00:03:52.175
+The specification, the verifiers, and the test vectors are on GitHub and Hugging Face.
+
+63
+00:03:52.175 --> 00:03:55.646
+Run it, break it, and tell us what you find.
+

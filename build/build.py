@@ -26,7 +26,9 @@ PUBLIC = ROOT / "public"
 ASSETS_SRC = ROOT / "build" / "assets"
 sys.dont_write_bytecode = True
 sys.path.insert(0, str(ROOT / "build" / "pages"))
+sys.path.insert(0, str(ROOT / "build"))
 import site_copy as C  # noqa: E402
+import explainer as XP  # noqa: E402
 
 KEEP = {"favicon.svg", "og.png", "robots.txt"}  # hand-made files in public/
 HELD_BACK_FILES = ("oscost_ANALYSIS", "MECH11", "mech2_")
@@ -377,7 +379,7 @@ def footer():
 </footer>"""
 
 
-def page(path, title, desc, body, active=None, canonical=None):
+def page(path, title, desc, body, active=None, canonical=None, og_image=None):
     canon = C.SITE + (canonical if canonical is not None else path)
     full_title = title if title.startswith("Aefinity AI") else f"{title} · Aefinity AI"
     doc = f"""<!doctype html>
@@ -393,7 +395,7 @@ def page(path, title, desc, body, active=None, canonical=None):
 <meta property="og:title" content="{esc(full_title)}">
 <meta property="og:description" content="{esc(desc)}">
 <meta property="og:url" content="{esc(canon)}">
-<meta property="og:image" content="{C.SITE}/og.png">
+<meta property="og:image" content="{C.SITE}{og_image or '/og.png'}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -426,6 +428,13 @@ def write(path, doc):
     out = PUBLIC / rel
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(doc)
+    WRITTEN.append(rel)
+
+
+def write_file(rel, text):
+    out = PUBLIC / rel
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(text)
     WRITTEN.append(rel)
 
 
@@ -628,6 +637,112 @@ def render_check(l):
     return lk + "".join(out)
 
 
+# --------------------------------------------------------------------------
+# picture explainers
+# --------------------------------------------------------------------------
+EX_FIELDS = ("question", "why", "headline", "result", "meaning")
+
+
+def explainer_of(l):
+    """The lab's explainer with prose rules applied; checks its shape."""
+    ex = l.get("explainer")
+    assert ex, ("no explainer", l["slug"])
+    out = {k: prose(ex[k]) for k in EX_FIELDS}
+    out["steps"] = [prose(x) for x in ex["steps"]]
+    out["icons"] = list(ex["icons"])
+    out["analogy"] = prose(ex["analogy"]) if ex.get("analogy") else None
+    out["sources"] = list(ex["sources"])
+    assert 2 <= len(out["steps"]) <= 5 and len(out["icons"]) == len(out["steps"]), l["slug"]
+    assert all(i in XP.ICONS for i in out["icons"]), l["slug"]
+    if l["outcome"] == "held":
+        assert not out["sources"] and not re.search(r"\d", out["headline"] + out["result"]), "held-back lab must carry no numbers"
+    return out
+
+
+def explainer_words(l, ex):
+    steps = "".join(f"<li>{esc(x)}</li>" for x in ex["steps"])
+    if ex["sources"]:
+        src = '<ul class="check-links">' + "".join(f"<li>{link(u, esc(short_url(u)))}</li>" for u in ex["sources"]) + "</ul>"
+    else:
+        src = "<p>Nothing is published for this lab: the result is held back, so there is no source to link.</p>"
+    an = f"<dt>Everyday comparison</dt><dd>{esc(ex['analogy'])}</dd>" if ex["analogy"] else ""
+    return f"""<div class="ex-words">
+  <h3>The same picture, in words</h3>
+  <dl>
+    <dt>Question</dt><dd>{esc(ex['question'])}</dd>
+    <dt>Why it matters</dt><dd>{esc(ex['why'])}</dd>
+    <dt>How the test works</dt><dd><ol>{steps}</ol></dd>
+    <dt>What we found</dt><dd class="ex-res"><strong>{esc(ex['headline'])}.</strong> {esc(ex['result'])}</dd>
+    <dt>What it means</dt><dd>{esc(ex['meaning'])}</dd>
+    {an}
+    <dt>Where the facts come from</dt><dd>{src}</dd>
+  </dl>
+</div>"""
+
+
+def explainer_section(l, site_css):
+    """Inline picture (wide and phone versions), its words, and the shareable files."""
+    ex = explainer_of(l)
+    lab = OUT[l["outcome"]][0]
+    meta = {"code": l["code"], "title": l["title"]}
+    title = f"{l['title']}: the test explained in one picture"
+    desc = (f"Question: {ex['question']} How we tested: " + " ".join(f"{i + 1}. {x}" for i, x in enumerate(ex["steps"]))
+            + f" What we found ({lab}): {ex['headline']}. {ex['result']} What it means: {ex['meaning']}")
+    try:
+        wh, hh, hb = XP.horizontal(l["slug"], ex, lab, meta)
+        wv, hv, vb = XP.vertical(l["slug"], ex, lab, meta)
+    except ValueError as e:
+        raise SystemExit(f"explainer layout: {l['slug']}: {e}")
+    h_svg = XP.inline(wh, hh, hb, title, desc, "ex-h", l["outcome"])
+    v_svg = XP.inline(wv, hv, vb, title, desc, "ex-v", l["outcome"])
+    file_svg = XP.standalone(wh, hh, hb, title, desc, l["outcome"], site_css)
+    write_file(f"labs/{l['slug']}/explainer.svg", file_svg)
+    png_rel = f"labs/{l['slug']}/explainer.png"
+    has_png = (PUBLIC / png_rel).exists()
+    if has_png:
+        WRITTEN.append(png_rel)
+    share = (f'<p class="ex-share">Share this picture: <a href="/labs/{l["slug"]}/explainer.svg">SVG</a>'
+             + (f' &middot; <a href="/labs/{l["slug"]}/explainer.png">PNG (1200 x 630)</a>' if has_png else "") + "</p>")
+    sec = f"""<section class="explainer" aria-labelledby="ex-h">
+  <div class="wrap">
+    <h2 id="ex-h">The test in one picture</h2>
+    <p class="ex-sub-lede">Question, method, result and meaning, in plain words. The sourced detail is further down the page.</p>
+    <figure class="ex-fig o-{l['outcome']}">{h_svg}{v_svg}</figure>
+    {explainer_words(l, ex)}
+    {share}
+  </div>
+</section>"""
+    return sec, (f"/{png_rel}" if has_png else None)
+
+
+def glance_section(labs):
+    """'All labs at a glance': mini pictures grouped by hard question."""
+    groups = {}
+    for l in labs:
+        groups.setdefault(l["qs"][0] if l["qs"] else 0, []).append(l)
+    out = []
+    for q in sorted(groups):
+        cards = []
+        for l in groups[q]:
+            ex = explainer_of(l)
+            lab = OUT[l["outcome"]][0]
+            mini = XP.mini(ex, l["outcome"])
+            cards.append(f"""<li class="glance-card o-{l['outcome']}"><a href="/labs/{l['slug']}/">
+  <span class="gc-mini"><svg viewBox="0 0 240 48" role="img" aria-label="{esc(l['code'])}: {esc(len(ex['steps']))} steps, then {esc(lab)}" focusable="false">{mini}</svg></span>
+  <span class="gc-head">{esc(ex['headline'])}</span>
+  <span class="gc-meta">{l['code']} &middot; {esc(lab)}</span>
+  <span class="gc-title">{esc(l['title'])}</span>
+</a></li>""")
+        name = f"Q{q} &middot; {esc(C.QUESTION_SHORT[q])}" if q else "Other"
+        out.append(f'<div class="glance-group"><h3>{name}</h3><ul class="glance-grid">{"".join(cards)}</ul></div>')
+    return f"""<section class="wrap glance" aria-labelledby="glance-h">
+  <h2 id="glance-h">All labs at a glance</h2>
+  <p class="glance-video"><a href="/cis2/explainer/">Watch the 4-minute CIS-2 explainer {ARROW}</a></p>
+  <p class="ex-sub-lede">Each lab as a small picture: the question, the steps of the test, then the verdict. Grouped by the hard question it belongs to. Open any card for the full picture and the sourced detail.</p>
+  {"".join(out)}
+</section>"""
+
+
 def lab_page(l, labs, data):
     c = l["c"]
     idx = l["no"] - 1
@@ -650,7 +765,7 @@ def lab_page(l, labs, data):
     rail_rows.append(("Reproduction", "Run by us; no unaffiliated reproduction"))
     rail = "".join(f"<div><dt>{k}</dt><dd>{v}</dd></div>" for k, v in rail_rows)
 
-    toc = [("why", "Why it matters"), ("method", "Method"), ("results", "Results"),
+    toc = [("ex-h", "The test in one picture"), ("why", "Why it matters"), ("method", "Method"), ("results", "Results"),
            ("not-show", "What it does NOT show"), ("scope", "Scope and caveats"),
            ("outcome", "Outcome"), ("learned", "What we learned"), ("check", "Check it yourself")]
     toc_html = "".join(f'<li><a href="#{a}">{t}</a></li>' for a, t in toc)
@@ -680,6 +795,7 @@ def lab_page(l, labs, data):
            if next_l else "<span></span>")
     pn += "</nav>"
 
+    ex_sec, og_png = explainer_section(l, (ASSETS_SRC / "site.css").read_text())
     body = f"""<article class="lab o-{l['outcome']}">
 <header class="lab-head">
   <div class="wrap">
@@ -690,6 +806,7 @@ def lab_page(l, labs, data):
     <p class="prov"><span class="prov-dot" aria-hidden="true"></span>Run by us; no unaffiliated reproduction</p>
   </div>
 </header>
+{ex_sec}
 <div class="wrap lab-grid">
   <div class="lab-body prose-col">
     <section id="why" aria-labelledby="why-h"><h2 id="why-h"><span class="sn">01</span>Why it matters</h2><p class="lead">{md(c['why'])}</p></section>
@@ -722,7 +839,7 @@ def lab_page(l, labs, data):
 </section>
 </article>"""
     desc = f"{prose(c['question'])} Outcome: {olab}. Run by us; no unaffiliated reproduction."
-    page(f"/labs/{l['slug']}/", l["title"], desc, body, active="/labs/")
+    page(f"/labs/{l['slug']}/", l["title"], desc, body, active="/labs/", og_image=og_png)
 
 
 def labs_index(labs, data):
@@ -743,6 +860,7 @@ def labs_index(labs, data):
     {ledger(labs)}
   </div>
 </section>
+{glance_section(labs)}
 <section class="wrap labs-index" aria-labelledby="all-h">
   <h2 class="sr-only" id="all-h">All labs</h2>
   <div class="filters" role="group" aria-label="Filter labs">
@@ -784,6 +902,7 @@ def home(labs, data):
     <h1 class="hero-h hero-h-biz" id="hero-h">{C.HERO["h1"]}</h1>
     <p class="hero-lede">{esc(C.HERO["lede"])}</p>
     <div class="cta-row"><a class="btn btn-lg" href="{C.NAV_CTA[0]}">{C.NAV_CTA[1]} {ARROW}</a><a class="btn btn-ghost" href="#of-h">What we offer</a></div>
+    {video_card("video-cta video-cta-sm")}
     <p class="hero-mission">{esc(first)}. <a href="/mission/">Our mission {ARROW}</a> <span aria-hidden="true">&middot;</span> <a href="/labs/">All 33 labs {ARROW}</a></p>
    </div>
    <div class="hero-ledger">
@@ -1124,6 +1243,7 @@ ICONS = {
     "pin": '<path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>',
 }
 ICONS["stop"] = '<circle cx="12" cy="12" r="8.5"/><rect x="9" y="9" width="6" height="6" rx="1"/>'
+ICONS["play"] = '<path d="M9 6.5v11l9-5.5z"/>'
 
 
 def icon(name, cls="ic"):
@@ -1332,6 +1452,7 @@ def cis_page(labs):
   <div>
     <p class="cis2-p">{esc(X["cis2"])}</p>
     <ul class="link-list">{links}</ul>
+    {video_card()}
   </div>
   <div>
     <p class="hq-k">The labs behind it</p>
@@ -1469,10 +1590,94 @@ def commercial_guard():
     assert not re.search(r"\d", re.sub(r"mailto:[^\"]+", "", sec_text)), "CIS-3 section carries a number"
 
 
+VIDEO_SRC = ROOT / "static" / "media" / "cis2"
+VIDEO_FILES = ("cis2-explainer.mp4", "cis2-explainer.webm", "poster.jpg", "captions.vtt")
+VIDEO_TRANSCRIPT = ROOT / "content" / "cis2-transcript.md"
+GH = "https://github.com/Aefinity-AI/cis2-spec/blob/main/"
+VIDEO_SOURCES = [
+    ("What CIS-2 is, what it pins, and the order-of-addition point", [("README", GH + "README.md"), ("Specification v0.3b", GH + "docs/CIS2_SPEC_v0.3b.md"), ("Apache-2.0 licence", GH + "LICENSE")]),
+    ("The receipt: one SHA-256 stream over the weights, prompt and every step's full logit vector", [("Specification v0.3b, section 12", GH + "docs/CIS2_SPEC_v0.3b.md")]),
+    ("Pinned test vector and digest (SmolLM2-135M, 16 greedy tokens)", [("EXPECTED_DIGESTS.md", GH + "EXPECTED_DIGESTS.md")]),
+    ("Builds from the spec text alone, and the write-up error they caught", [("README", GH + "README.md"), ("C clean-room result", GH + "docs/E15j_CLEANROOM_C_RESULT.md")]),
+    ("Same digest on other chips: cloud CPU run and Tesla P100 GPU", [("Cloud CPU self-check", GH + "docs/results/2026-09-25-LIGHTNING-STUDIO-SELFCHECK.md"), ("GPU result", GH + "docs/GPU_RESULT.md")]),
+    ("One-command self-check; a changed model file is refused", [("README", GH + "README.md"), ("Continuous validation", GH + "docs/results/2026-09-27-CONTINUOUS-VALIDATION.md")]),
+    ("Corruption tests on a separate, larger model (our own runs)", [("Bit-flip head-to-head", GH + "docs/results/2026-09-13-BITFLIP-HEADTOHEAD.md"), ("Embedding-row head-to-head", GH + "docs/results/2026-09-17-EMBED-SUBSTITUTION-HEADTOHEAD.md")]),
+    ("Limits, and the public challenge", [("README", GH + "README.md"), ("CHALLENGE.md", GH + "CHALLENGE.md"), ("Hall of Divergence", GH + "HALL-OF-DIVERGENCE.md")]),
+    ("Where to get it", [("CIS-2 on GitHub", "https://github.com/Aefinity-AI/cis2-spec"), ("Conformance vectors on Hugging Face", "https://huggingface.co/datasets/aefinityAIINC/cis2-conformance")]),
+]
+
+
+def video_transcript_html():
+    out, para = [], []
+    def flush():
+        if para:
+            out.append("<p>" + esc(" ".join(para)) + "</p>")
+            para.clear()
+    for line in VIDEO_TRANSCRIPT.read_text().splitlines():
+        if line.startswith("# "):
+            continue
+        if line.startswith("Links:"):
+            flush()
+            continue
+        m = re.match(r"## (.+?)\s+\((\d+:\d\d)\)\s*$", line)
+        if m:
+            flush()
+            out.append(f'<h3 class="vt-h">{esc(m.group(1))} <span class="vt-t">{m.group(2)}</span></h3>')
+        elif line.strip():
+            para.append(line.strip())
+        else:
+            flush()
+    flush()
+    return "".join(out)
+
+
+def video_card(cls="video-cta"):
+    return f"""<a class="{cls}" href="/cis2/explainer/">
+  <span class="vc-thumb"><img src="/media/cis2/poster.jpg" alt="" width="320" height="180" loading="lazy"><span class="vc-play" aria-hidden="true">{icon("play", "ic")}</span></span>
+  <span class="vc-text"><span class="vc-k">Video &middot; 4 minutes</span><span class="vc-t">Watch the 4-minute explainer {ARROW}</span><span class="vc-d">What CIS-2 checks, how anyone can verify it, and what it does not prove.</span></span>
+</a>"""
+
+
+def video_page():
+    for f in VIDEO_FILES:
+        out = PUBLIC / "media" / "cis2" / f
+        out.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(VIDEO_SRC / f, out)
+        WRITTEN.append(f"media/cis2/{f}")
+    src = "".join(f'<li><span class="vs-c">{esc(c)}</span> ' + ", ".join(f'<a class="ext" href="{esc(u)}">{esc(t)}</a>' for t, u in ls) + "</li>" for c, ls in VIDEO_SOURCES)
+    head = simple_head("CIS-2 explainer", "CIS-2 &middot; Video", "CIS-2 in four minutes",
+                       '<p class="lede">A 4-minute explainer: what CIS-2 checks, how anyone can verify it, and what it does not prove.</p>')
+    body = f"""{head}
+<section class="wrap video-sec" aria-labelledby="vid-h">
+  <h2 class="sr-only" id="vid-h">The video</h2>
+  <div class="video-frame">
+    <video controls preload="metadata" playsinline poster="/media/cis2/poster.jpg" width="1280" height="720">
+      <source src="/media/cis2/cis2-explainer.webm" type="video/webm">
+      <source src="/media/cis2/cis2-explainer.mp4" type="video/mp4">
+      <track kind="captions" srclang="en" label="English" src="/media/cis2/captions.vtt" default>
+      Your browser cannot play this video. The full transcript is below.
+    </video>
+  </div>
+  <p class="video-credit">Narration: Piper TTS, LJ Speech voice (public domain). The voice is synthetic.</p>
+  <p class="more"><a href="/cis/#cis-2">Back to CIS-2 {ARROW}</a></p>
+</section>
+<section class="wrap video-sec" aria-labelledby="tr-h">
+  <h2 id="tr-h">Transcript</h2>
+  <div class="vt prose-col">{video_transcript_html()}</div>
+</section>
+<section class="wrap video-sec" aria-labelledby="src-h">
+  <h2 id="src-h">Sources for every claim</h2>
+  <p class="ex-sub-lede">Every link is public. The corruption tests were run by us on a separate, larger model, and no outside party has reproduced CIS-2 yet.</p>
+  <ul class="vsrc">{src}</ul>
+</section>"""
+    page("/cis2/explainer/", "CIS-2 explainer video", "A 4-minute explainer: what CIS-2 checks, how anyone can verify it, and what it does not prove.",
+         body, active="/cis/", og_image="/media/cis2/poster.jpg")
+
+
 def sitemap(labs):
     # /pilot is served from public/pilot.html; the host maps the extensionless path.
     urls = ["/", "/mission/", "/questions/", "/labs/"] + [f"/labs/{l['slug']}/" for l in labs] + ["/learned/", "/standard/", "/projects/", "/pilot",
-            "/alice/", "/cis/", "/operations/", "/contact/"]
+            "/alice/", "/cis/", "/cis2/explainer/", "/operations/", "/contact/"]
     body = "".join(f"  <url><loc>{C.SITE}{u}</loc></url>\n" for u in urls)
     write("/sitemap.xml", f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{body}</urlset>\n')
     return urls
@@ -1500,6 +1705,7 @@ def main():
     pilot_page()
     alice_page(labs)
     cis_page(labs)
+    video_page()
     operations_page(labs)
     contact_page()
     not_found()
@@ -1522,6 +1728,11 @@ def main():
         m = re.search(C.NICKNAME_RE, bare)
         assert not m, (rel, m.group(0))
     commercial_guard()
+    site_re = re.compile(r"\b(" + "|".join(C.SITE_BANNED) + r")\b", re.I)
+    for rel in WRITTEN:  # the shareable pictures carry the same text as the pages
+        if rel.endswith(".svg"):
+            m = site_re.search(html.unescape(re.sub(r"<style>.*?</style>|<[^>]+>", " ", (PUBLIC / rel).read_text(), flags=re.S)))
+            assert not m, (rel, m.group(0))
     pages = sum(1 for r in WRITTEN if r.endswith(".html"))
     print(f"built {pages} pages, {len(urls)} sitemap URLs, {len(WRITTEN)} files")
 
