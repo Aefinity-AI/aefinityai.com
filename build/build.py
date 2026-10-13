@@ -382,12 +382,14 @@ def footer():
 def page(path, title, desc, body, active=None, canonical=None, og_image=None):
     canon = C.SITE + (canonical if canonical is not None else path)
     full_title = title if title.startswith("Aefinity AI") else f"{title} · Aefinity AI"
+    # Google Search Console ownership proof for the home page; never remove it.
+    gsv = '<meta name="google-site-verification" content="utJ_SxVkTZLvmS1LT0q6WjuKvv7GzHwIRvjA3aaqshk">\n' if path == "/" else ""
     doc = f"""<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{esc(full_title)}</title>
+{gsv}<title>{esc(full_title)}</title>
 <meta name="description" content="{esc(desc)}">
 <link rel="canonical" href="{esc(canon)}">
 <meta property="og:type" content="website">
@@ -1007,6 +1009,15 @@ def mission_page(labs, data):
     <div class="are-grid">
       <div class="are not"><p class="are-k">We are not</p><p class="are-t">Another AI platform or cloud service.</p></div>
       <div class="are yes"><p class="are-k">We are</p><p class="are-t">People who take the hard questions AI raises about the future of humanity, and study, experiment and test as rigorously as we can.</p></div>
+    </div>
+  </div>
+</section>
+<section class="section alt" aria-labelledby="who-h">
+  <div class="wrap">
+    {section_head("", "Who we are", "AEFINITY AI INC. is a Texas corporation in Orange, Texas, founded and run by two co-founders.", hid="who-h")}
+    <div class="are-grid">
+      <div class="are yes"><p class="are-k">Co-founder and CEO</p><p class="are-t">Justin Thompson</p><p>Leads the research and the technical work.</p><p><a href="mailto:justin@aefinityai.com">justin@aefinityai.com</a></p></div>
+      <div class="are yes"><p class="are-k">Co-founder and Vice President</p><p class="are-t">Shannon Heslop</p><p>Runs business and operations, and speaks for the company.</p><p><a href="mailto:shannon@aefinityai.com">shannon@aefinityai.com</a></p></div>
     </div>
   </div>
 </section>
