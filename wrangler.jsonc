@@ -1,7 +1,8 @@
 {
   "name": "aefinityai-com",
   "compatibility_date": "2026-09-01",
-  "assets": { "directory": "./public", "html_handling": "auto-trailing-slash", "not_found_handling": "404-page" },
+  "main": "src/worker.js",
+  "assets": { "directory": "./public", "binding": "ASSETS", "run_worker_first": ["/media/*"], "html_handling": "auto-trailing-slash", "not_found_handling": "404-page" },
   "routes": [
     { "pattern": "aefinityai.com", "custom_domain": true },
     { "pattern": "www.aefinityai.com", "custom_domain": true }
