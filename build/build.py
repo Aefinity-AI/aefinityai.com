@@ -1562,7 +1562,7 @@ HOW = [
     ("Which model", """<!-- JUSTIN REVIEW: names the model vendor; the site guard normally bans it -->
 <p data-model-statement>We use Claude, made by Anthropic, as the lab's operator. Anthropic is not a partner of AEFINITY AI INC. and has not endorsed this work.</p>"""),
     ("Incidents", """<!-- JUSTIN REVIEW -->
-<p><strong>2026-10-15</strong> &mdash; Email sent from a founder's account by a second AI assistant, without the operator's review, overstated our standing: it described intended engagements as existing ones and an outside verification that had not taken place. Corrections went to the recipients the same day. That assistant's access is being restricted.</p>"""),
+<p><strong>2026-10-15</strong> &mdash; Email sent from a founder's account by a second AI assistant, without the operator's review, overstated our standing: it described intended engagements as existing ones and a verification by an outside party that had not taken place. Corrections went to the recipients the same day. That assistant's access is being restricted.</p>"""),
 ]
 
 

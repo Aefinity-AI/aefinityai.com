@@ -6,7 +6,7 @@ Generated 2026-10-12 from public sources only. Every result below is quoted from
 
 We are not another AI platform or cloud service. We take the hard questions AI raises about the future of humanity, and we study, experiment and test as rigorously as we can. Our aim is for humankind to reap the benefits of AI: building toward a brighter future, separating evidence from myth and hype, and staying grounded in the work of finding the AI solutions the world still needs.
 
-**Aspiration.** We hope to earn trust as a standards company that leads by example: honest about every result, and every result repeatable. This is an aspiration, not a claim.
+**Aspiration.** We hope to earn trust as a conformance-program operator that leads by example: honest about every result, and every result repeatable. This is an aspiration, not a claim.
 
 ## How to read this site
 
