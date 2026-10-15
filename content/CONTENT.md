@@ -1411,8 +1411,8 @@ Read the page and the committed summary.json (links above).
 
 **Results (exact, sourced).**
 
-- The ledger covers 84 registered experiments, 65 with a verdict; 161 of 233 lines are backfill.
-  - Source quote: `At the time of this export the ledger holds 233 lines. They cover 84 registered experiments, and 65 of them have a verdict line. 161 of the 233 lines are marked backfill.`
+- The ledger covers 84 registered experiments, 65 with a verdict; 161 of 235 lines are backfill (ledger/README.md as of 2026-10-15).
+  - Source quote: `At the time of this export the ledger holds 235 lines. They cover 84 registered experiments, and 65 of them have a verdict line. 161 of the 235 lines are marked backfill.`
   - Source: https://github.com/Aefinity-AI/cis2-spec/blob/main/ledger/README.md
 - The ledger states what it cannot prove.
   - Source quote: `It cannot show when an experiment ran. A lab could run an experiment in private, look at the result, and then publish a pass mark.`
@@ -1438,7 +1438,7 @@ Read the page and the committed summary.json (links above).
 **Scope and caveats, as recorded.**
 
 - Stated and applied by us; no unaffiliated audit of whether practice always matched the statement.
-- 161 of 233 ledger lines are backfill and prove existence only from their publication date; backfill lines show no order of writing.
+- 161 of 235 ledger lines are backfill and prove existence only from their publication date; backfill lines show no order of writing.
 - The ledger shows counts and line kinds, not what was tested or found.
 - The ledger count is a snapshot and will grow.
 - The ledger cannot show when an experiment ran; the rule that a run starts only after its bar line is public applies from the day of publication on, with exceptions marked start-unanchored.
@@ -1965,7 +1965,7 @@ This page describes the protocol as our public repository documents it. It is st
 
 **In the repository's own words**
 
-- "At the time of this export the ledger holds 233 lines. They cover 84 registered experiments, and 65 of them have a verdict line. 161 of the 233 lines are marked backfill." (https://github.com/Aefinity-AI/cis2-spec/blob/main/ledger/README.md)
+- "At the time of this export the ledger holds 235 lines. They cover 84 registered experiments, and 65 of them have a verdict line. 161 of the 235 lines are marked backfill." (https://github.com/Aefinity-AI/cis2-spec/blob/main/ledger/README.md)
 - "It cannot show when an experiment ran. A lab could run an experiment in private, look at the result, and then publish a pass mark." (https://github.com/Aefinity-AI/cis2-spec/blob/main/ledger/README.md)
 - "That rule is a promise. This page cannot check it." (https://github.com/Aefinity-AI/cis2-spec/blob/main/ledger/README.md)
 - "A number with no provenance gets removed rather than trusted." (https://github.com/Aefinity-AI/cis2-spec/blob/main/CONTRIBUTING.md)
@@ -1976,7 +1976,7 @@ This page describes the protocol as our public repository documents it. It is st
 **What the standard cannot prove**
 
 - Stated and applied by us; no unaffiliated audit of whether practice always matched the statement.
-- 161 of 233 ledger lines are backfill and prove existence only from their publication date; backfill lines show no order of writing.
+- 161 of 235 ledger lines are backfill and prove existence only from their publication date; backfill lines show no order of writing.
 - The ledger shows counts and line kinds, not what was tested or found.
 - The ledger count is a snapshot and will grow.
 - The ledger cannot show when an experiment ran; the rule that a run starts only after its bar line is public applies from the day of publication on, with exceptions marked start-unanchored.
