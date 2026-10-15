@@ -32,7 +32,7 @@ NAV_MORE = [
     ("/projects/", "Projects"),
 ]
 NAV_CTA = ("/contact/", "Book a briefing")
-FOOT_NAV = NAV + NAV_MORE + [("/contact/", "Contact"), ("/pilot", "Replay pilot")]
+FOOT_NAV = NAV + NAV_MORE + [("/operations/how-we-run/", "How we run"), ("/contact/", "Contact"), ("/pilot", "Replay pilot")]
 
 # Outcome labels. Definitions are CONTENT.md's own wording.
 OUTCOMES = [
@@ -464,13 +464,20 @@ CIS = {
     "licensing": "CIS-2 is open under Apache-2.0. Commercial support, integration into your test harness, and CIS-3 licensing are available.",
 }
 
+# Ledger counts. source: claudius-maximus state/ledger/experiments.jsonl @0cb928e1 2026-10-15
+# (236 lines: 84 registered, 73 started, 65 result, 14 amended). 84 and 65 match the
+# public cis2-spec ledger export quoted on /standard/ ("84 registered experiments, 65 verdicts").
+LEDGER_SOURCE = "source: claudius-maximus state/ledger/experiments.jsonl @0cb928e1 2026-10-15"
+LEDGER_REGISTERED = 84
+LEDGER_RESULTS = 65
+
 OPS = {
     "title": "Autonomous Operations: AI that runs the work, to a lab standard",
     "h1": "AI that runs the work, <em>to a lab standard.</em>",
     "lead": "We design, set up and manage AI-run workflows for office operations, customer service and research. Every action logged. Every risky step gated for a human. Every result checked before it ships.",
     "proof_kicker": "Proof",
     "proof_h": "We run our own lab this way.",
-    "proof_body": "Our lab is operated day and night by an AI-managed workflow across several machines: it registers experiments, runs them, keeps the records, checks its own work and writes the reports. People sign off on money, credentials, outreach and anything public.",
+    "proof_body": "Our lab is operated by an AI-managed workflow on a small number of our own refurbished machines, often just one of them online, plus free-tier cloud GPU hours: it registers experiments, runs them, keeps the records, checks its own work and writes the reports. People sign off on money, credentials, outreach and anything public.",
     "loop": ["Register", "Run", "Record", "Check", "Report"],
     "log": [
         ("inbox", "Triage the shared inbox", "Logged", "ok"),
@@ -485,7 +492,7 @@ OPS = {
         ("inbox", "Office operations", "Inbox triage and drafting, scheduling, documents, records, reporting."),
         ("headset", "Customer service", "Answers drafted from your own knowledge base, clear escalation rules, every reply logged and reviewable."),
         ("data", "Research and data operations", "Pipelines, experiments, reports with a source behind every number."),
-        ("server", "Machine fleet and IT care", "Health checks, updates, alerts, recovery."),
+        ("server", "Machines and IT care", "Health checks, updates, alerts, recovery."),
     ],
     "standard": [
         ("gate", "Gates", "Money, credentials, outreach and publishing wait for a named person."),
@@ -528,7 +535,7 @@ def _private_banned():
 
 
 SITE_BANNED = [r"HIPAA", r"FedRAMP", r"lawsuit", r"world'?s",
-               r"state-of-the-art", r"revolutionary", r"partner of", r"accredit\w*"] + _private_banned()
+               r"state-of-the-art", r"revolutionary", r"(?<!not a )partner of", r"accredit\w*"] + _private_banned()
 # Lab caveats say "not a guarantee"; the commercial pages never use the word.
 COMMERCIAL_BANNED = SITE_BANNED + [r"guarantee\w*", r"certified", r"certif\w+", r"compliant", r"compliance", r"classified",
                                    r"unique", r"first", r"(?<!append-)only", r"leading", r"best", r"\$\s?\d", r"price\w*",

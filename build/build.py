@@ -1405,7 +1405,7 @@ def offer_cards():
 
 
 def proof_strip():
-    out = "".join(f'<li><span class="ps-big">{esc(p["big"])}</span><span class="ps-lab">{esc(p["label"])}</span></li>' for p in C.PROOF)
+    out = f"<!-- {C.LEDGER_SOURCE} (the 84) -->" + "".join(f'<li><span class="ps-big">{esc(p["big"])}</span><span class="ps-lab">{esc(p["label"])}</span></li>' for p in C.PROOF)
     return f'<ul class="proof-strip">{out}</ul>'
 
 
@@ -1521,11 +1521,12 @@ def operations_page(labs):
       {ops_loop()}
     </div>
     <ul class="pd-stats">
-      <li><span class="ps-big">84</span><span class="ps-lab">registered experiments on our public, hash-chained ledger</span></li>
+      <!-- {C.LEDGER_SOURCE} -->
+      <li><span class="ps-big">{C.LEDGER_REGISTERED}</span><span class="ps-lab">registered experiments on our public, hash-chained ledger</span></li>
       <li><span class="ps-big">{len(labs)}</span><span class="ps-lab">published labs, each with sources and verbatim quotes</span></li>
       <li class="pd-site"><span class="ps-lab">{esc(O["site_fact"])}</span></li>
     </ul>
-    <p class="pd-links"><a href="/standard/">Our test standard {ARROW}</a><a href="/labs/">All {len(labs)} labs {ARROW}</a></p>
+    <p class="pd-links"><a href="/standard/">Our test standard {ARROW}</a><a href="/labs/">All {len(labs)} labs {ARROW}</a><a href="/operations/how-we-run/">How this lab is run {ARROW}</a></p>
   </div>
 </section>"""
     auto = "".join(f'<li class="uc">{icon(i, "ic ic-lg")}<h3>{esc(t)}</h3><p class="uc-give">{esc(b)}</p></li>' for i, t, b in O["automate"])
@@ -1538,6 +1539,44 @@ def operations_page(labs):
     body += biz_section("How we engage", engage_flow(O["engage"]) + f'<p class="stage-line">{esc(O["models"])}</p>', None, "oe-h")
     body += cta_band(C.BRIEFING["title"], esc(C.BRIEFING["body"]))
     page("/operations/", O["title"], O["lead"], body, active="/operations/")
+
+
+HOW = [
+    ("What the AI operator does on its own", """<ul>
+<li>Runs registered experiments on the lab's machines and on free cloud GPU time.</li>
+<li>Keeps the experiment ledger and the lab board.</li>
+<li>Drafts documents, emails and grant applications for human review.</li>
+<li>Opens pull requests.</li>
+<li>Watches the inbox and answers questions from the company's own records.</li>
+<li>Keeps the machines fed and healthy.</li></ul>"""),
+    ("What never happens without a human", """<ul>
+<li>Spending or moving money.</li>
+<li>Legal commitments and signatures.</li>
+<li>Logins, credentials and security settings.</li>
+<li>Sending email to a new named contact.</li>
+<li>Deploying this website.</li>
+<li>Merging anything into the public specification repository without review.</li>
+<li>Publishing a claim that is not in the ledger.</li></ul>"""),
+    ("How every action is logged", """<p>Two records. A private operations log lists every send, push, deploy and decision, with ids. The public experiment ledger lives in the <a class="ext" href="https://github.com/Aefinity-AI/cis2-spec/tree/main/ledger">cis2-spec repository</a>; it is hash-chained, and a timestamp proof made with OpenTimestamps (<code>LEDGER.tsv.ots</code>) dates the file as a whole. The private log is not public.</p>"""),
+    ("Who is accountable", """<p>Justin Thompson, Chief Executive Officer, for everything the operator does.</p>"""),
+    ("Which model", """<!-- JUSTIN REVIEW: names the model vendor; the site guard normally bans it -->
+<p data-model-statement>We use Claude, made by Anthropic, as the lab's operator. Anthropic is not a partner of AEFINITY AI INC. and has not endorsed this work.</p>"""),
+    ("Incidents", """<!-- JUSTIN REVIEW -->
+<p><strong>2026-10-15</strong> &mdash; Email sent from a founder's account by a second AI assistant, without the operator's review, overstated our standing: it described intended engagements as existing ones and an outside verification that had not taken place. Corrections went to the recipients the same day. That assistant's access is being restricted.</p>"""),
+]
+
+
+def how_we_run_page():
+    secs = "".join(f'<h3>{esc(t)}</h3>{b}' for t, b in HOW)
+    body = f"""{simple_head("How we run", "Autonomous Operations", "How this lab is <em>run.</em>", '<p class="lede">What the AI operator does, what needs a person, and how it is recorded.</p>')}
+<section class="section" aria-labelledby="how-t">
+  <div class="wrap prose">
+    <h2 id="how-t">How this lab is run</h2>
+    {secs}
+    <p><a href="/operations/">Back to Autonomous Operations {ARROW}</a></p>
+  </div>
+</section>"""
+    page("/operations/how-we-run/", "How this lab is run", "What the AI operator does on its own, what never happens without a human, how actions are logged, and who is accountable.", body, active="/operations/")
 
 
 def contact_page():
@@ -1580,6 +1619,8 @@ def commercial_guard():
             continue
         t = (PUBLIC / rel).read_text()
         bare = re.sub(r"<blockquote.*?</blockquote>", "", t, flags=re.S)
+        if rel == "operations/how-we-run/index.html":  # the mandated model statement names the vendor
+            bare = re.sub(r"<p data-model-statement>.*?</p>", "", bare, flags=re.S)
         text = html.unescape(re.sub(r"<[^>]+>", " ", re.sub(r"<(script|style)\b.*?</\1>", "", bare, flags=re.S)))
         m = site_re.search(text)
         assert not m, (rel, m.group(0))
@@ -1688,7 +1729,7 @@ def video_page():
 def sitemap(labs):
     # /pilot is served from public/pilot.html; the host maps the extensionless path.
     urls = ["/", "/mission/", "/questions/", "/labs/"] + [f"/labs/{l['slug']}/" for l in labs] + ["/learned/", "/standard/", "/projects/", "/pilot",
-            "/alice/", "/cis/", "/cis2/explainer/", "/operations/", "/contact/"]
+            "/alice/", "/cis/", "/cis2/explainer/", "/operations/", "/operations/how-we-run/", "/contact/"]
     body = "".join(f"  <url><loc>{C.SITE}{u}</loc></url>\n" for u in urls)
     write("/sitemap.xml", f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{body}</urlset>\n')
     return urls
@@ -1718,6 +1759,7 @@ def main():
     cis_page(labs)
     video_page()
     operations_page(labs)
+    how_we_run_page()
     contact_page()
     not_found()
     urls = sitemap(labs)
