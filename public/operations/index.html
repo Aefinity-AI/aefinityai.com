@@ -59,7 +59,7 @@
       <div>
         <p class="kicker">Proof</p>
         <h2 class="pd-title" id="pf-h">We run our own lab this way.</h2>
-        <p class="pd-body">Our lab is operated day and night by an AI-managed workflow across several machines: it registers experiments, runs them, keeps the records, checks its own work and writes the reports. People sign off on money, credentials, outreach and anything public.</p>
+        <p class="pd-body">Our lab is operated by an AI-managed workflow on a small number of our own refurbished machines, often just one of them online, plus free-tier cloud GPU hours: it registers experiments, runs them, keeps the records, checks its own work and writes the reports. People sign off on money, credentials, outreach and anything public.</p>
       </div>
       <figure class="oloop" aria-label="The loop the workflow runs: Register, Run, Record, Check, Report, with people signing off on money, credentials, outreach and anything public">
   <svg viewBox="0 0 340 300" aria-hidden="true">
@@ -73,16 +73,17 @@
 </figure>
     </div>
     <ul class="pd-stats">
+      <!-- source: claudius-maximus state/ledger/experiments.jsonl @0cb928e1 2026-10-15 -->
       <li><span class="ps-big">84</span><span class="ps-lab">registered experiments on our public, hash-chained ledger</span></li>
       <li><span class="ps-big">33</span><span class="ps-lab">published labs, each with sources and verbatim quotes</span></li>
       <li class="pd-site"><span class="ps-lab">This website was produced by the same workflow, with human sign-off. Every claim on its 33 lab pages was checked against its public source by a separate AI checking pass before publishing.</span></li>
     </ul>
-    <p class="pd-links"><a href="/standard/">Our test standard <span class="arr" aria-hidden="true">&rarr;</span></a><a href="/labs/">All 33 labs <span class="arr" aria-hidden="true">&rarr;</span></a></p>
+    <p class="pd-links"><a href="/standard/">Our test standard <span class="arr" aria-hidden="true">&rarr;</span></a><a href="/labs/">All 33 labs <span class="arr" aria-hidden="true">&rarr;</span></a><a href="/operations/how-we-run/">How this lab is run <span class="arr" aria-hidden="true">&rarr;</span></a></p>
   </div>
 </section><section class="bsec " aria-labelledby="au-h">
   <div class="wrap">
     <header class="bs-head"><h2 class="bs-title" id="au-h">What we automate</h2></header>
-    <ul class="ucs ucs-4"><li class="uc"><svg class="ic ic-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 13.5l2.6-8a1.5 1.5 0 0 1 1.4-1h9a1.5 1.5 0 0 1 1.4 1l2.6 8v5a1.5 1.5 0 0 1-1.5 1.5h-14A1.5 1.5 0 0 1 3.5 18.5z"/><path d="M3.5 13.5h5l1.5 2.5h4l1.5-2.5h5"/></svg><h3>Office operations</h3><p class="uc-give">Inbox triage and drafting, scheduling, documents, records, reporting.</p></li><li class="uc"><svg class="ic ic-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="13.5" width="4" height="6" rx="1.5"/><rect x="17" y="13.5" width="4" height="6" rx="1.5"/><path d="M19 19.5c0 1.4-2 2-5 2"/></svg><h3>Customer service</h3><p class="uc-give">Answers drafted from your own knowledge base, clear escalation rules, every reply logged and reviewable.</p></li><li class="uc"><svg class="ic ic-lg" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="5.5" rx="7.5" ry="2.7"/><path d="M4.5 5.5v13c0 1.5 3.4 2.7 7.5 2.7s7.5-1.2 7.5-2.7v-13M4.5 12c0 1.5 3.4 2.7 7.5 2.7s7.5-1.2 7.5-2.7"/></svg><h3>Research and data operations</h3><p class="uc-give">Pipelines, experiments, reports with a source behind every number.</p></li><li class="uc"><svg class="ic ic-lg" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="6.5" rx="1.6"/><rect x="4" y="13.5" width="16" height="6.5" rx="1.6"/><path d="M7.5 7.25h.01M7.5 16.75h.01M11 7.25h5M11 16.75h5"/></svg><h3>Machine fleet and IT care</h3><p class="uc-give">Health checks, updates, alerts, recovery.</p></li></ul>
+    <ul class="ucs ucs-4"><li class="uc"><svg class="ic ic-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 13.5l2.6-8a1.5 1.5 0 0 1 1.4-1h9a1.5 1.5 0 0 1 1.4 1l2.6 8v5a1.5 1.5 0 0 1-1.5 1.5h-14A1.5 1.5 0 0 1 3.5 18.5z"/><path d="M3.5 13.5h5l1.5 2.5h4l1.5-2.5h5"/></svg><h3>Office operations</h3><p class="uc-give">Inbox triage and drafting, scheduling, documents, records, reporting.</p></li><li class="uc"><svg class="ic ic-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="13.5" width="4" height="6" rx="1.5"/><rect x="17" y="13.5" width="4" height="6" rx="1.5"/><path d="M19 19.5c0 1.4-2 2-5 2"/></svg><h3>Customer service</h3><p class="uc-give">Answers drafted from your own knowledge base, clear escalation rules, every reply logged and reviewable.</p></li><li class="uc"><svg class="ic ic-lg" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="5.5" rx="7.5" ry="2.7"/><path d="M4.5 5.5v13c0 1.5 3.4 2.7 7.5 2.7s7.5-1.2 7.5-2.7v-13M4.5 12c0 1.5 3.4 2.7 7.5 2.7s7.5-1.2 7.5-2.7"/></svg><h3>Research and data operations</h3><p class="uc-give">Pipelines, experiments, reports with a source behind every number.</p></li><li class="uc"><svg class="ic ic-lg" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="6.5" rx="1.6"/><rect x="4" y="13.5" width="16" height="6.5" rx="1.6"/><path d="M7.5 7.25h.01M7.5 16.75h.01M11 7.25h5M11 16.75h5"/></svg><h3>Machines and IT care</h3><p class="uc-give">Health checks, updates, alerts, recovery.</p></li></ul>
   </div>
 </section><section class="bsec alt" aria-labelledby="os-h">
   <div class="wrap">
@@ -114,7 +115,7 @@
         <p>We are not another AI platform or cloud service.</p>
         <p class="foot-prov">Every result on this site: run by us; no unaffiliated reproduction.</p>
       </div>
-      <nav aria-label="Site"><h2>Site</h2><ul class="foot-nav"><li><a href="/alice/">ALICE</a></li><li><a href="/cis/">CIS</a></li><li><a href="/operations/">Operations</a></li><li><a href="/labs/">Labs</a></li><li><a href="/questions/">Questions</a></li><li><a href="/standard/">Standard</a></li><li><a href="/mission/">Mission</a></li><li><a href="/learned/">Learned</a></li><li><a href="/projects/">Projects</a></li><li><a href="/contact/">Contact</a></li><li><a href="/pilot">Replay pilot</a></li></ul></nav>
+      <nav aria-label="Site"><h2>Site</h2><ul class="foot-nav"><li><a href="/alice/">ALICE</a></li><li><a href="/cis/">CIS</a></li><li><a href="/operations/">Operations</a></li><li><a href="/labs/">Labs</a></li><li><a href="/questions/">Questions</a></li><li><a href="/standard/">Standard</a></li><li><a href="/mission/">Mission</a></li><li><a href="/learned/">Learned</a></li><li><a href="/projects/">Projects</a></li><li><a href="/operations/how-we-run/">How we run</a></li><li><a href="/contact/">Contact</a></li><li><a href="/pilot">Replay pilot</a></li></ul></nav>
       <nav aria-label="Open materials"><h2>Open materials</h2><ul>
         <li><a class="ext" href="https://github.com/Aefinity-AI/cis2-spec">CIS-2 on GitHub</a></li>
         <li><a class="ext" href="https://huggingface.co/datasets/aefinityAIINC/cis2-conformance">Conformance dataset</a></li>

@@ -267,7 +267,7 @@ Other public pages for this lab: https://github.com/Aefinity-AI/cis2-spec/blob/m
 
 | Claim | Verbatim quote | URL |
 |---|---|---|
-| The ledger covers 84 registered experiments, 65 with a verdict; 161 of 233 lines are backfill. | `At the time of this export the ledger holds 233 lines. They cover 84 registered experiments, and 65 of them have a verdict line. 161 of the 233 lines are marked backfill.` | https://github.com/Aefinity-AI/cis2-spec/blob/main/ledger/README.md |
+| The ledger covers 84 registered experiments, 65 with a verdict; 161 of 235 lines are backfill (ledger/README.md as of 2026-10-15). | `At the time of this export the ledger holds 235 lines. They cover 84 registered experiments, and 65 of them have a verdict line. 161 of the 235 lines are marked backfill.` | https://github.com/Aefinity-AI/cis2-spec/blob/main/ledger/README.md |
 | The ledger states what it cannot prove. | `It cannot show when an experiment ran. A lab could run an experiment in private, look at the result, and then publish a pass mark.` | https://github.com/Aefinity-AI/cis2-spec/blob/main/ledger/README.md |
 | The start rule is a promise the page itself cannot check. | `That rule is a promise. This page cannot check it.` | https://github.com/Aefinity-AI/cis2-spec/blob/main/ledger/README.md |
 | Provenance on every number, or the number is removed. | `A number with no provenance gets removed rather than trusted.` | https://github.com/Aefinity-AI/cis2-spec/blob/main/CONTRIBUTING.md |

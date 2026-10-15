@@ -1512,8 +1512,8 @@
    "method": "Stated practices in public files: (1) pre-registration, a pass mark written before the run, then a verdict; (2) a public salted, hash-chained fingerprint ledger of the private register, with a verify_ledger.py script and an OpenTimestamps proof file (LEDGER.tsv.ots); (3) no timing or throughput numbers in the spec repo; (4) provenance on every number; (5) defects recorded as numbered errata in CHANGELOG.md, and pinned digests do not move silently; (6) mismatches are welcomed as results. The standard is stated and applied by us, not audited by an outside party. All six URLs returned HTTP 200 unauthenticated (github.com and raw.githubusercontent.com) on 2026-10-12.",
    "results": [
     {
-     "claim": "The ledger covers 84 registered experiments, 65 with a verdict; 161 of 233 lines are backfill.",
-     "quote": "At the time of this export the ledger holds 233 lines. They cover 84 registered experiments, and 65 of them have a verdict line. 161 of the 233 lines are marked backfill.",
+     "claim": "The ledger covers 84 registered experiments, 65 with a verdict; 161 of 235 lines are backfill (ledger/README.md as of 2026-10-15).",
+     "quote": "At the time of this export the ledger holds 235 lines. They cover 84 registered experiments, and 65 of them have a verdict line. 161 of the 235 lines are marked backfill.",
      "url": "https://github.com/Aefinity-AI/cis2-spec/blob/main/ledger/README.md"
     },
     {
@@ -1549,7 +1549,7 @@
    ],
    "caveats": [
     "Stated and applied by us; no unaffiliated audit of whether practice always matched the statement.",
-    "161 of 233 ledger lines are backfill and prove existence only from their publication date; backfill lines show no order of writing.",
+    "161 of 235 ledger lines are backfill and prove existence only from their publication date; backfill lines show no order of writing.",
     "The ledger shows counts and line kinds, not what was tested or found.",
     "The ledger count is a snapshot and will grow.",
     "The ledger cannot show when an experiment ran; the rule that a run starts only after its bar line is public applies from the day of publication on, with exceptions marked start-unanchored.",
@@ -1574,7 +1574,7 @@
      "wrench"
     ],
     "headline": "84 experiments, 65 verdicts",
-    "result": "The public ledger holds 233 lines covering 84 registered experiments; 65 have a verdict line and 161 of the 233 lines are backfill. The page says what it cannot prove: it cannot show when an experiment ran, and the start rule is a promise it cannot check itself.",
+    "result": "The public ledger holds 235 lines covering 84 registered experiments; 65 have a verdict line and 161 of the 235 lines are backfill. The page says what it cannot prove: it cannot show when an experiment ran, and the start rule is a promise it cannot check itself.",
     "meaning": "It shows how we test and what the method cannot prove. No outsider has audited whether we always followed it, and backfill lines prove existence only from their publication date.",
     "analogy": null,
     "sources": [

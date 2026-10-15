@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How this lab is run · Aefinity AI</title>
+<meta name="description" content="What the AI operator does on its own, what never happens without a human, how actions are logged, and who is accountable.">
+<link rel="canonical" href="https://aefinityai.com/operations/how-we-run/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Aefinity AI">
+<meta property="og:title" content="How this lab is run · Aefinity AI">
+<meta property="og:description" content="What the AI operator does on its own, what never happens without a human, how actions are logged, and who is accountable.">
+<meta property="og:url" content="https://aefinityai.com/operations/how-we-run/">
+<meta property="og:image" content="https://aefinityai.com/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500&amp;family=Instrument+Serif:ital@0;1&amp;display=swap">
+<link rel="stylesheet" href="/assets/site.css?v=3e3414c830">
+<script>(function(){var d=document.documentElement;d.classList.add('js');try{var t=localStorage.getItem('aefinity-theme');if(t==='light'||t==='dark')d.setAttribute('data-theme',t);}catch(e){}})();</script>
+<script src="/assets/site.js?v=331dd97031" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap hdr">
+    <a class="brand" href="/" aria-label="Aefinity AI, home"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8"/><path d="M8.6 24.2 16 7.6l7.4 16.6M12.4 17.4h7.2M11 21h10"/></svg><span class="wm">Aefinity <span>AI</span></span></a>
+    <nav id="site-nav" class="nav" aria-label="Primary">
+      <ul><li><a href="/alice/">ALICE</a></li><li><a href="/cis/">CIS</a></li><li><a href="/operations/" aria-current="page">Operations</a></li><li><a href="/labs/">Labs</a></li><li><a href="/questions/">Questions</a></li><li><a href="/standard/">Standard</a></li><li><a href="/mission/">Mission</a></li><li class="nav-more"><a href="/learned/">Learned</a></li><li class="nav-more"><a href="/projects/">Projects</a></li></ul>
+      <a class="nav-cta" href="/contact/">Book a briefing</a>
+    </nav>
+    <div class="hdr-tools">
+      <button class="icon-btn theme-btn" type="button" data-theme-toggle aria-label="Switch colour theme"><svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+      <button class="icon-btn menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Menu"><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+<main id="main" tabindex="-1">
+<section class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li aria-current="page">How we run</li></ol></nav>
+    <p class="kicker">Autonomous Operations</p>
+    <h1 class="display">How this lab is <em>run.</em></h1>
+    <p class="lede">What the AI operator does, what needs a person, and how it is recorded.</p>
+  </div>
+</section>
+<section class="section" aria-labelledby="how-t">
+  <div class="wrap prose">
+    <h2 id="how-t">How this lab is run</h2>
+    <h3>What the AI operator does on its own</h3><ul>
+<li>Runs registered experiments on the lab's machines and on free cloud GPU time.</li>
+<li>Keeps the experiment ledger and the lab board.</li>
+<li>Drafts documents, emails and grant applications for human review.</li>
+<li>Opens pull requests.</li>
+<li>Watches the inbox and answers questions from the company's own records.</li>
+<li>Keeps the machines fed and healthy.</li></ul><h3>What never happens without a human</h3><ul>
+<li>Spending or moving money.</li>
+<li>Legal commitments and signatures.</li>
+<li>Logins, credentials and security settings.</li>
+<li>Sending email to a new named contact.</li>
+<li>Deploying this website.</li>
+<li>Merging anything into the public specification repository without review.</li>
+<li>Publishing a claim that is not in the ledger.</li></ul><h3>How every action is logged</h3><p>Two records. A private operations log lists every send, push, deploy and decision, with ids. The public experiment ledger lives in the <a class="ext" href="https://github.com/Aefinity-AI/cis2-spec/tree/main/ledger">cis2-spec repository</a>; it is hash-chained, and a timestamp proof made with OpenTimestamps (<code>LEDGER.tsv.ots</code>) dates the file as a whole. The private log is not public.</p><h3>Who is accountable</h3><p>Justin Thompson, Chief Executive Officer, for everything the operator does.</p><h3>Which model</h3><!-- JUSTIN REVIEW: names the model vendor; the site guard normally bans it -->
+<p data-model-statement>We use Claude, made by Anthropic, as the lab's operator. Anthropic is not a partner of AEFINITY AI INC. and has not endorsed this work.</p><h3>Incidents</h3><!-- JUSTIN REVIEW -->
+<p><strong>2026-10-15</strong> &mdash; Email sent from a founder's account by a second AI assistant, without the operator's review, overstated our standing: it described intended engagements as existing ones and a verification by an outside party that had not taken place. Corrections went to the recipients the same day. That assistant's access is being restricted.</p>
+    <p><a href="/operations/">Back to Autonomous Operations <span class="arr" aria-hidden="true">&rarr;</span></a></p>
+  </div>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-about">
+        <a class="brand" href="/" aria-label="Aefinity AI, home"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8"/><path d="M8.6 24.2 16 7.6l7.4 16.6M12.4 17.4h7.2M11 21h10"/></svg><span class="wm">Aefinity <span>AI</span></span></a>
+        <p>We are not another AI platform or cloud service.</p>
+        <p class="foot-prov">Every result on this site: run by us; no unaffiliated reproduction.</p>
+      </div>
+      <nav aria-label="Site"><h2>Site</h2><ul class="foot-nav"><li><a href="/alice/">ALICE</a></li><li><a href="/cis/">CIS</a></li><li><a href="/operations/">Operations</a></li><li><a href="/labs/">Labs</a></li><li><a href="/questions/">Questions</a></li><li><a href="/standard/">Standard</a></li><li><a href="/mission/">Mission</a></li><li><a href="/learned/">Learned</a></li><li><a href="/projects/">Projects</a></li><li><a href="/operations/how-we-run/">How we run</a></li><li><a href="/contact/">Contact</a></li><li><a href="/pilot">Replay pilot</a></li></ul></nav>
+      <nav aria-label="Open materials"><h2>Open materials</h2><ul>
+        <li><a class="ext" href="https://github.com/Aefinity-AI/cis2-spec">CIS-2 on GitHub</a></li>
+        <li><a class="ext" href="https://huggingface.co/datasets/aefinityAIINC/cis2-conformance">Conformance dataset</a></li>
+        <li><a class="ext" href="https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/public/Design_Partner_Adoption_Path.md">Design Partner Adoption Path</a></li>
+        <li><a class="ext" href="https://github.com/Aefinity-AI/aefinityai.com">Site source</a></li>
+      </ul></nav>
+      <div><h2>Contact</h2><ul>
+        <li><a href="mailto:justin@aefinityai.com">justin@aefinityai.com</a></li>
+        <li><a href="tel:+14093201536">409-320-1536</a></li>
+        <li>Orange, Texas</li>
+      </ul></div>
+    </div>
+    <div class="foot-bottom"><span>&copy; 2026 AEFINITY AI INC. &middot; Orange, Texas</span></div>
+  </div>
+</footer>
+</body>
+</html>
