@@ -192,7 +192,7 @@ No results here. These are questions our own limits sections point at. Nothing b
 
 **Outcome.** Positive (the check worked as expected, within the stated scope).
 
-**What we learned.** With the arithmetic pinned in writing, one fp32 digest reproduced across AVX2 and scalar x86, an aarch64 phone and an AVX-512 cloud CPU, in our own runs. Until an outsider runs it, the claim stays 'reproduced by us'.
+**What we learned.** With the arithmetic pinned in writing, one fp32 digest reproduced across AVX2 and scalar x86, an aarch64 phone and an AVX-512-capable cloud CPU (generic build, self-check only), in our own runs. Until an outsider runs it, the claim stays 'reproduced by us'.
 
 **Check it yourself.** Public pages:
 
@@ -474,8 +474,8 @@ Read the pre-registration and the result page (links above). The branch the work
 - Null result: 43 flips (37 of 70 SCALE_FFN and 6 of 35 TRIT_FFN trials) left the witness digest identical to the clean baseline. The digest by design stays silent on these, and a byte-level check would flag them.
   - Source quote: `A byte-level integrity check would flag these 43 cases; the CIS digest, by design, does not, because it attests to computation, not storage.`
   - Source: https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/results/2026-09-13-BITFLIP-HEADTOHEAD.md
-- The write-up corrected its own original report after the independent recount: trial 47 was a bit-7 flip from the random set, not one of the 5 dedicated high-bit control trials.
-  - Source quote: `Correction from the independent recount: the original report used trial 47 as "the" high-bit example;`
+- The write-up corrected its own original report after the second recount: trial 47 was a bit-7 flip from the random set, not one of the 5 dedicated high-bit control trials.
+  - Source quote: `Correction from the second recount: the original report used trial 47 as "the" high-bit example;`
   - Source: https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/results/2026-09-13-BITFLIP-HEADTOHEAD.md
 
 **What it does NOT show.** Adversarial tampering (none was tested), other prompts or models, or timing. The digest's 0 of 247 is exact by construction, so it is not evidence about the digest; the informative numbers are the misses of the other two checks.

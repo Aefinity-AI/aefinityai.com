@@ -378,7 +378,7 @@ PROOF = [
     {"big": "One digest", "label": "Same digest on AVX2, scalar x86, AVX-512, an aarch64 phone and a Tesla P100 GPU, in our own runs",
      "check": ("cis2-cross-machine-digest", "AVX-512"), "check2": ("gpu-p100-reproduces-cpu", "Tesla P100")},
 ]
-MACHINES = ["AVX2 x86", "Scalar x86", "AVX-512 cloud CPU", "aarch64 phone", "Tesla P100 GPU"]
+MACHINES = ["AVX2 x86", "Scalar x86", "AVX-512-capable CPU (self-check only)", "aarch64 phone", "Tesla P100 GPU"]
 
 OPS_BAND = {
     "kicker": "Autonomous Operations",
@@ -433,7 +433,7 @@ CIS = {
     "title": "CIS: the baseline that doesn't move",
     "h1": "The baseline <em>that doesn't move.</em>",
     "lead": "When the AI computation itself is pinned to the last bit, any change you see comes from the thing you changed, not from the machine.",
-    "cis2": "CIS-2 is an open specification with verifiers in C and Rust for bit-exact fp32 inference, with public conformance vectors. In our own runs, one digest reproduced on AVX2 and scalar x86, an AVX-512 cloud CPU, an aarch64 phone and a Tesla P100 GPU.",
+    "cis2": "CIS-2 is an open specification with verifiers in C and Rust for bit-exact fp32 inference, with public conformance vectors. In our own runs, one digest reproduced on AVX2 and scalar x86, an AVX-512-capable cloud CPU (generic build, self-check only), an aarch64 phone and a Tesla P100 GPU.",
     "cis2_links": [
         ("CIS-2 on GitHub", "https://github.com/Aefinity-AI/cis2-spec"),
         ("Conformance vectors on Hugging Face", "https://huggingface.co/datasets/aefinityAIINC/cis2-conformance"),
@@ -538,6 +538,6 @@ SITE_BANNED = [r"HIPAA", r"FedRAMP", r"lawsuit", r"world'?s",
                r"state-of-the-art", r"revolutionary", r"(?<!not a )partner of", r"accredit\w*"] + _private_banned()
 # Lab caveats say "not a guarantee"; the commercial pages never use the word.
 COMMERCIAL_BANNED = SITE_BANNED + [r"guarantee\w*", r"certified", r"certif\w+", r"compliant", r"compliance", r"classified",
-                                   r"unique", r"first", r"(?<!append-)only", r"leading", r"best", r"\$\s?\d", r"price\w*",
+                                   r"unique", r"first", r"(?<!append-)(?<!self-check )only", r"leading", r"best", r"\$\s?\d", r"price\w*",
                                    r"day rate", r"funding", r"customers\b", r"clients\b", r"partnered", r"partners?\b",
                                    r"independent\w*", r"every recommendation"]

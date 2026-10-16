@@ -1336,7 +1336,7 @@ def machines_figure():
     return f"""<figure class="mfig" aria-label="One digest across five kinds of hardware">
   <div class="mf-bar"><span>digest by machine</span><span class="mf-tag">Illustration</span></div>
   <ol>{rows}</ol>
-  <figcaption>Same digest on AVX2, scalar x86, AVX-512, an aarch64 phone and a Tesla P100 GPU, in our own runs. The bit pattern is drawn for illustration.</figcaption>
+  <figcaption>Same digest on AVX2, scalar x86, an AVX-512-capable CPU (generic build, self-check only), an aarch64 phone and a Tesla P100 GPU, in our own runs. The bit pattern is drawn for illustration.</figcaption>
 </figure>"""
 
 
@@ -1560,9 +1560,9 @@ HOW = [
     ("How every action is logged", """<p>Two records. A private operations log lists every send, push, deploy and decision, with ids. The public experiment ledger lives in the <a class="ext" href="https://github.com/Aefinity-AI/cis2-spec/tree/main/ledger">cis2-spec repository</a>; it is hash-chained, and a timestamp proof made with OpenTimestamps (<code>LEDGER.tsv.ots</code>) dates the file as a whole. The private log is not public.</p>"""),
     ("Who is accountable", """<p>Justin Thompson, Chief Executive Officer, for everything the operator does.</p>"""),
     ("Which model", """<!-- JUSTIN REVIEW: names the model vendor; the site guard normally bans it -->
-<p data-model-statement>We use Claude, made by Anthropic, as the lab's operator. Anthropic is not a partner of AEFINITY AI INC. and has not endorsed this work.</p>"""),
+<p data-model-statement>The lab's operator is a commercially licensed frontier language model, used under its provider's standard terms. The model's provider is not a partner of AEFINITY AI INC. and has not endorsed this work.</p>"""),
     ("Incidents", """<!-- JUSTIN REVIEW -->
-<p><strong>2026-10-15</strong> &mdash; Email sent from a founder's account by a second AI assistant, without the operator's review, overstated our standing: it described intended engagements as existing ones and a verification by an outside party that had not taken place. Corrections went to the recipients the same day. That assistant's access is being restricted.</p>"""),
+<p><strong>2026-10-15</strong> &mdash; Email sent from a founder's account by a second AI assistant, without the operator's review, overstated our standing: it described intended engagements as existing ones and a verification by an outside party that had not taken place. A correction went to the NIST recipient the same day; the other messages are listed in the public errata of the cis2-spec repository (docs/ERRATA.md). That assistant's access is being restricted.</p>"""),
 ]
 
 
