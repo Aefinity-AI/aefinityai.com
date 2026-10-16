@@ -43,7 +43,7 @@
     "Conformance-suite internals are not public; only the vectors and spec are."
    ],
    "outcome": "positive",
-   "learned": "With the arithmetic pinned in writing, one fp32 digest reproduced across AVX2 and scalar x86, an aarch64 phone and an AVX-512 cloud CPU, in our own runs. Until an outsider runs it, the claim stays 'reproduced by us'.",
+   "learned": "With the arithmetic pinned in writing, one fp32 digest reproduced across AVX2 and scalar x86, an aarch64 phone and an AVX-512-capable cloud CPU (generic build, self-check only), in our own runs. Until an outsider runs it, the claim stays 'reproduced by us'.",
    "order": 1,
    "explainer": {
     "question": "Can different computers produce exactly the same AI output, bit for bit, from a written specification?",
@@ -388,8 +388,8 @@
      "url": "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/results/2026-09-13-BITFLIP-HEADTOHEAD.md"
     },
     {
-     "claim": "The write-up corrected its own original report after the independent recount: trial 47 was a bit-7 flip from the random set, not one of the 5 dedicated high-bit control trials.",
-     "quote": "Correction from the independent recount: the original report used trial 47 as \"the\" high-bit example;",
+     "claim": "The write-up corrected its own original report after the second recount: trial 47 was a bit-7 flip from the random set, not one of the 5 dedicated high-bit control trials.",
+     "quote": "Correction from the second recount: the original report used trial 47 as \"the\" high-bit example;",
      "url": "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/results/2026-09-13-BITFLIP-HEADTOHEAD.md"
     }
    ],

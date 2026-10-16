@@ -19,12 +19,12 @@ PARTNER_PATH = "https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/public/D
 
 # Desktop navigation. NAV_MORE shows in the mobile menu and the footer only.
 NAV = [
-    ("/alice/", "ALICE"),
-    ("/cis/", "CIS"),
-    ("/operations/", "Operations"),
+    ("/alice/", "A.L.I.C.E."),
+    ("/cis/", "CIS-1"),
     ("/labs/", "Labs"),
     ("/questions/", "Questions"),
     ("/standard/", "Standard"),
+    ("/operations/", "Operations"),
     ("/mission/", "Mission"),
 ]
 NAV_MORE = [
@@ -32,7 +32,7 @@ NAV_MORE = [
     ("/projects/", "Projects"),
 ]
 NAV_CTA = ("/contact/", "Book a briefing")
-FOOT_NAV = NAV + NAV_MORE + [("/operations/how-we-run/", "How we run"), ("/contact/", "Contact"), ("/pilot", "Replay pilot")]
+FOOT_NAV = NAV + NAV_MORE + [("/operations/how-we-run/", "How we run"), ("/contact/", "Contact"), ("/pilot", "Archived: CIS-2 replay pilot")]
 
 # Outcome labels. Definitions are CONTENT.md's own wording.
 OUTCOMES = [
@@ -68,7 +68,7 @@ HOW_WE_WORK = [
 
 # Home page: six labs chosen for balance (two positive, two mixed, two negative).
 HOME_LABS = [
-    "cis2-cross-machine-digest",
+    "logging-vs-receipts",
     "bitflip-weights",
     "receipt-verified-eval",
     "e22-necessity-matrix",
@@ -291,14 +291,14 @@ FIGURES = {
 # Pilot page copy, from the v2 public/pilot.html. Two timing phrases removed
 # ("It takes about 15 minutes", "about 15 min") under the no-timing rule.
 PILOT = {
-    "title": "Paid pilots: do your receipts replay bit for bit elsewhere?",
-    "lede": "One of your inference pipelines emits CIS-2 receipts. We replay them on a machine separate from yours and report every mismatch. 4 to 6 weeks.",
+    "title": "CIS-2 replay pilot (archived)",
+    "lede": "Archived research (2026-10), development paused. This pilot is no longer offered. The page stays as a record of what it was.",
     "glance": [
         ("Length", "4 to 6 weeks"),
         ("Scope", "One pipeline, one open-weight model, a set of requests"),
         ("Replay", "On a machine separate from yours, with the open verifier"),
         ("Output", "Mismatch report, replayable artifact, plain statement of limits"),
-        ("Terms", "Paid pilots; contact us for scope and terms"),
+        ("Status", "Archived research (2026-10), development paused; no longer offered"),
     ],
     "report_rows": [("req 001", True, "all digests equal"), ("req 002", True, "all digests equal"),
                     ("req 003", False, "earliest divergent step, if traced"), ("req 004", True, "all digests equal")],
@@ -347,25 +347,33 @@ def mailto(subject):
     return f"mailto:{EMAIL}?subject=" + subject.replace(" ", "%20")
 
 
-OFFER_TITLE = "Four ways to put verifiable AI to work."
+OFFER_TITLE = "Bare-metal inference, built for air-gapped work."
 
-# Home hero: the commercial offer on the first screen; the mission stays one
-# click away on /mission/.
+ARCHIVE_NOTE = "Archived research (2026-10), development paused."
+
+# Home hero: A.L.I.C.E. on the first screen. The research labs stay published,
+# below the A.L.I.C.E. story.
 HERO = {
-    "kicker": "Aefinity AI · Verifiable, private, autonomous AI",
-    "h1": "AI you can verify, <em>keep private, and put to work.</em>",
-    "lede": "Private AI built to stay in your building. A computation baseline that never moves. AI-run operations held to a lab standard. Our labs, good and bad, are on the public record.",
+    "kicker": "Aefinity AI · A.L.I.C.E. · Bare-metal inference",
+    "h1": "A.L.I.C.E.: AI inference that runs <em>on bare metal.</em>",
+    "lede": "A.L.I.C.E. is built to run a ternary language model with integer math and no general-purpose operating system. Every generation carries a receipt that a separate host verifier re-derives. Built for air-gapped inference and security, and for defense and Army field requirements. Non-air-gapped variants are planned, to be built and tested to spec.",
     "mission_note": "We are not another AI platform or cloud service.",
 }
+HERO_FLOW = [
+    ("Bootable image", "Inference runs without a general-purpose operating system."),
+    ("Integer and ternary math", "BitNet b1.58 weights, integer arithmetic, run on the CPU."),
+    ("Receipt", "Each generation produces a receipt."),
+    ("Host verifier", "A separate verifier re-derives the receipt and reports any mismatch."),
+]
 OFFERINGS = [
-    {"icon": "alice", "tag": "ALICE", "kind": "Private AI", "href": "/alice/", "cta": "Explore ALICE",
-     "body": "Private AI built to run on your own hardware, with no cloud connection. Pilot-stage, scoped with each customer."},
-    {"icon": "cis", "tag": "CIS-2", "kind": "Open standard", "href": "/cis/", "cta": "See CIS-2",
-     "body": "The same model and input give the same output, to the last bit, on every machine that follows the spec. Open source (Apache-2.0)."},
-    {"icon": "lock", "tag": "CIS-3", "kind": "LLM edition", "badge": "Proprietary", "href": "/cis/#cis-3", "cta": "Ask about CIS-3",
-     "body": "Our proprietary edition for large language models. Briefings under NDA, on request."},
-    {"icon": "ops", "tag": "Autonomous Operations", "kind": "Services", "href": "/operations/", "cta": "See how we run it",
-     "body": "AI-managed workflows, set up and run to our lab standard: every action logged, every risky step gated for a human, every result checked before it ships. We run our own lab this way."},
+    {"icon": "alice", "tag": "A.L.I.C.E.", "kind": "Bare-metal inference", "href": "/alice/", "cta": "Explore A.L.I.C.E.",
+     "body": "Integer and ternary inference built to run without a general-purpose operating system, on hardware you control. Pilot-stage, scoped with each deployment."},
+    {"icon": "cis", "tag": "CIS-1", "kind": "Protocol under A.L.I.C.E.", "href": "/cis/", "cta": "See CIS-1",
+     "body": "Bit-identical integer and ternary inference, with a receipt for every generation that a host verifier can re-derive."},
+    {"icon": "airgap", "tag": "Air-gapped inference and security", "kind": "Primary use", "href": "/alice/#airgap", "cta": "See the primary use",
+     "body": "Inference and security work on disconnected networks, field kits and edge devices. Built for defense and Army field requirements."},
+    {"icon": "compass", "tag": "Roadmap", "kind": "Planned, not built", "href": "/alice/#roadmap", "cta": "See the roadmap",
+     "body": "Non-air-gapped variants and Project Guardian, soldier-facing work: planned, to be built and tested to spec. Not available today."},
 ]
 
 # Proof strip. Each "check" token must appear in the named lab's sourced text.
@@ -373,12 +381,9 @@ PROOF = [
     {"big": "33", "label": "published labs", "check": None},
     {"big": "84", "label": "registered experiments on a public, hash-chained ledger",
      "check": ("test-standard-ledger", "84 registered experiments")},
-    {"big": "C + Rust", "label": "Open spec with verifiers in C and Rust",
-     "check": ("e22-necessity-matrix", "C verifier")},
-    {"big": "One digest", "label": "Same digest on AVX2, scalar x86, AVX-512, an aarch64 phone and a Tesla P100 GPU, in our own runs",
-     "check": ("cis2-cross-machine-digest", "AVX-512"), "check2": ("gpu-p100-reproduces-cpu", "Tesla P100")},
+    {"big": "One receipt", "label": "BitNet b1.58 2B-4T (vocabulary-pruned) under CIS-1: the same receipt on three x86 machines, with and without AVX2, re-verified by a standalone verifier. Our own runs, October 2026.", "check": None},
+    {"big": "Bootable", "label": "The bootable image has been demonstrated in QEMU and on physical hardware with a smaller model.", "check": None},
 ]
-MACHINES = ["AVX2 x86", "Scalar x86", "AVX-512 cloud CPU", "aarch64 phone", "Tesla P100 GPU"]
 
 OPS_BAND = {
     "kicker": "Autonomous Operations",
@@ -387,81 +392,92 @@ OPS_BAND = {
 }
 
 BRIEFING = {
-    "title": "Tell us what you need to verify, protect or automate.",
+    "title": "Tell us what you need to run air-gapped.",
     "body": "We reply personally.",
 }
 
 ALICE = {
-    "title": "ALICE: private AI built to stay in the building",
-    "h1": "Private AI, <em>built to stay in the building.</em>",
-    "lead": "ALICE is private AI built to run on your own machines, with no cloud connection. Designed for places where data cannot leave the building.",
+    "title": "A.L.I.C.E.: bare-metal inference for air-gapped work",
+    "h1": "Bare-metal inference, <em>built for air-gapped work.</em>",
+    "lead": "A.L.I.C.E. is inference built to run without a general-purpose operating system, using integer and ternary math. Every generation carries a receipt that a separate host verifier re-derives. Built for air-gapped inference and security, and for defense and Army field requirements.",
     "caps": [
-        ("airgap", "Designed for disconnected networks"),
-        ("server", "Runs on your hardware, on premises"),
-                ("nocloud", "No outside data processor, no per-query cloud bill"),
-        ("target", "Right-sized models: small, task-specific models where a large language model is more risk than help"),
-        ("laptop", "Runs on modest hardware (a 2B-parameter ternary model on an ordinary laptop CPU)"),
+        ("airgap", "Primary use: inference and security on air-gapped networks"),
+        ("server", "Built to run without a general-purpose operating system"),
+        ("nocloud", "No outside data processor, no cloud connection required"),
+        ("target", "Integer and ternary arithmetic (CIS-1), designed for bit-identical results"),
+        ("laptop", "Today: BitNet b1.58 2B-4T, vocabulary-pruned, on ordinary x86 CPUs"),
     ],
-    # (icon, who, the need in one line, what ALICE gives)
+    "how_title": "How it works",
+    "how": [
+        ("Bootable image", "Inference runs without a general-purpose operating system underneath it."),
+        ("Integer inference", "A ternary BitNet b1.58 model, integer arithmetic, on the CPU."),
+        ("Receipt", "Each generation produces a receipt."),
+        ("Host verifier", "A separate verifier re-derives the receipt and reports any mismatch."),
+    ],
+    "today_title": "What runs today",
+    "today_intro": "Everything below is from our own runs. No outside party has reproduced any of it yet.",
+    "today": [
+        ("Model", "BitNet b1.58 2B-4T, vocabulary-pruned, run under CIS-1 integer math."),
+        ("Receipts", "In October 2026, one generation produced the same receipt on three x86 machines, with and without AVX2, and a standalone verifier re-verified it on each."),
+        ("Bootable image", "Demonstrated in QEMU and on physical hardware with a smaller model."),
+    ],
+    # (icon, who, the need in one line, what A.L.I.C.E. gives)
     "uses": [
+        ("shield", "Defense, government and secure facilities", "Restricted networks are disconnected on purpose.",
+         "Inference and security work on disconnected networks, field kits and edge devices, on hardware you control. Built for defense and Army field requirements; we are pursuing Army SBIR work."),
+        ("bolt", "Critical infrastructure and industrial sites", "Operations cannot depend on the network.",
+         "An offline operations assistant for procedures, logs and shift handovers that keeps working when the network does not."),
+        ("compass", "Remote and field operations", "Ships, remote sites, disaster response.",
+         "A working assistant aboard a ship, at a remote site or in a response kit, with no connectivity required."),
         ("hospital", "Hospitals and clinics", "Patient data cannot leave the hospital network.",
          "Clinical notes, discharge letters, inbox triage and coding support, on machines inside the hospital network. Designed to keep patient data on hospital hardware."),
         ("scales", "Law firms and legal departments", "Privileged documents cannot go to a third-party processor.",
          "Review and summarize privileged documents with no third-party processor."),
-        ("shield", "Defense, government and secure facilities", "Restricted networks are disconnected on purpose.",
-         "AI for disconnected and restricted networks, field kits and edge devices, on hardware you control."),
         ("bank", "Finance and insurance", "Decisions are examined after the fact.",
          "Decision support, document review and model risk checks on your own servers."),
-        ("bolt", "Critical infrastructure and industrial sites", "Operations cannot depend on the network.",
-         "An offline operations assistant for procedures, logs and shift handovers that keeps working when the network does not."),
         ("flask", "Research and regulated R&D", "IP has to stay in house.",
          "Keep IP and AI-assisted work in house, on your own machines."),
-        ("compass", "Remote and field operations", "Ships, remote sites, disaster response.",
-         "A working assistant aboard a ship, at a remote site or in a response kit, with no connectivity required."),
         ("folder", "Any team handling sensitive data", "HR, internal investigations, board materials.",
          "Summarize and search HR files, investigation notes and board papers on a machine in the room, designed so nothing leaves it."),
+    ],
+    "roadmap_title": "Roadmap: planned, not built",
+    "roadmap_intro": "Nothing in this section exists as a product today. Each item is to be built and tested to spec.",
+    "roadmap": [
+        ("laptop", "Non-air-gapped variants", "Planned. Variants for networked deployments, to be built and tested to spec."),
+        ("shield", "Project Guardian", "Planned future work for soldiers. This is roadmap, not product: nothing is built, tested or fielded."),
+        ("flask", "DeltaNet and hybrid models", "Planned research. Not built."),
     ],
     "engage": [
         ("Briefing", "We map your use case."),
         ("Pilot on your hardware", "Scoped and measured."),
-        ("Deployment and support", "On site or remote."),
+        ("Support", "On site or remote."),
     ],
-    "stage": "ALICE is pilot-stage technology; each deployment is scoped and tested with you on site.",
+    "stage": "A.L.I.C.E. is pilot-stage technology; each deployment is scoped and tested with you on site.",
 }
 
 CIS = {
-    "title": "CIS: the baseline that doesn't move",
-    "h1": "The baseline <em>that doesn't move.</em>",
-    "lead": "When the AI computation itself is pinned to the last bit, any change you see comes from the thing you changed, not from the machine.",
-    "cis2": "CIS-2 is an open specification with verifiers in C and Rust for bit-exact fp32 inference, with public conformance vectors. In our own runs, one digest reproduced on AVX2 and scalar x86, an AVX-512 cloud CPU, an aarch64 phone and a Tesla P100 GPU.",
+    "title": "CIS-1: the protocol under A.L.I.C.E.",
+    "h1": "The protocol <em>under A.L.I.C.E.</em>",
+    "lead": "CIS-1 is integer and ternary inference whose results are bit-identical, with a receipt for every generation that a host verifier can re-derive.",
+    "cis1": [
+        "CIS-1 is the protocol A.L.I.C.E. runs under. Inference uses integer and ternary arithmetic with no floating point, so the same model and input are designed to give the same output on any machine that follows the protocol. Each generation produces a receipt, and a separate host verifier re-derives it.",
+        "What we have run so far: BitNet b1.58 2B-4T, vocabulary-pruned, produced the same receipt on three x86 machines, with and without AVX2, and a standalone verifier re-verified it on each. These are our own runs from October 2026; no outside party has reproduced them. DeltaNet and hybrid models are planned research and are not built.",
+    ],
+    "cis1_links": [
+        ("A.L.I.C.E. on GitHub", "https://github.com/Aefinity-AI/alice-aegis"),
+    ],
+    "archive_note": "Archived research (2026-10), development paused. CIS-2 (bit-exact fp32 inference) is no longer a product or an offer. The pages and results stay public as a record.",
+    "cis2": "CIS-2 is an open specification with verifiers in C and Rust for bit-exact fp32 inference, with public conformance vectors. In our own runs, one digest reproduced on AVX2 and scalar x86, an AVX-512-capable cloud CPU (generic build, self-check only), an aarch64 phone and a Tesla P100 GPU.",
     "cis2_links": [
-        ("CIS-2 on GitHub", "https://github.com/Aefinity-AI/cis2-spec"),
-        ("Conformance vectors on Hugging Face", "https://huggingface.co/datasets/aefinityAIINC/cis2-conformance"),
+        ("CIS-2 on GitHub (archive)", "https://github.com/Aefinity-AI/cis2-spec"),
+        ("Conformance vectors on Hugging Face (archive)", "https://huggingface.co/datasets/aefinityAIINC/cis2-conformance"),
     ],
     "cis2_labs": ["cis2-cross-machine-digest", "gpu-p100-reproduces-cpu", "cleanroom-reimplementations"],
-    "cis3_kicker": "CIS-3 · LLM edition · Proprietary",
-    "cis3_h": "Checkable inference, taken to large language models.",
-    "cis3_body": "Available to prospective licensees and collaborators under NDA, on request.",
-    "cis3_cta": "Request a CIS-3 briefing",
-    "cis3_subject": "CIS-3 briefing",
-    "uses_title": "What a fixed baseline makes possible",
-    # (icon, title, body, optional lab slugs to link)
-    "uses": [
-        ("harness", "The baseline for every AI test harness",
-         "A non-changing, per-hardware reference that evaluations, safety tests, red-teaming and regression suites run against, so drift in results means drift in the model, not noise.", []),
-        ("chip", "Hardware and cloud qualification",
-         "Prove a new server, GPU, driver or cloud instance produces identical results before it goes into service.", []),
-        ("chain", "Model supply-chain integrity",
-         "Detect silent changes to model weights.", ["bitflip-weights", "embedding-edits"]),
-        ("replay", "Audit and dispute evidence",
-         "Replay a run and show the record matches, bit for bit.", []),
-        ("eye", "Vendor verification",
-         "Check that an AI provider ran the model and settings it says it ran.", []),
-        ("flask", "Reproducible research and evaluation",
-         "Results anyone can re-run exactly.", []),
-    ],
-    "cta": "Put a baseline that doesn't move under your test harness.",
-    "licensing": "CIS-2 is open under Apache-2.0. Commercial support, integration into your test harness, and CIS-3 licensing are available.",
+    "cis3_kicker": "CIS-3 · LLM edition · Development paused",
+    "cis3_h": "Not offered at this time.",
+    "cis3_body": "Our work is focused on A.L.I.C.E. and CIS-1.",
+    "cta": "Talk to us about A.L.I.C.E.",
+    "licensing": "Briefings are on request. Tell us about your air-gapped inference and security requirements.",
 }
 
 # Ledger counts. source: claudius-maximus state/ledger/experiments.jsonl @0cb928e1 2026-10-15
@@ -513,13 +529,13 @@ OPS = {
 CONTACT = {
     "title": "Book a briefing",
     "h1": "Book a <em>briefing.</em>",
-    "lead": "Tell us what you need to verify, protect or automate. We reply personally.",
+    "lead": "Tell us about your air-gapped inference and security requirements. We reply personally.",
     # (icon, title, line, subject, extra link)
     "cards": [
-        ("alice", "ALICE private AI briefing", "Private, offline AI on your own hardware.", "ALICE private AI briefing", None),
-        ("cis", "CIS-2 integration or CIS-3 licensing", "A fixed baseline for your test harness, or the LLM edition under NDA.", "CIS-2 integration or CIS-3 licensing", None),
+        ("alice", "A.L.I.C.E. briefing", "Bare-metal inference for air-gapped work, on hardware you control.", "A.L.I.C.E. briefing", None),
+        ("airgap", "Air-gapped inference and security", "Requirements for disconnected networks, field kits and edge devices.", "Air-gapped inference and security", None),
+        ("compass", "Non-air-gapped variants and Project Guardian", "Planned work, to be built and tested to spec. Tell us your requirement.", "Planned variants and Project Guardian", None),
         ("ops", "Autonomous Operations", "AI-run workflows, set up and managed to our lab standard.", "Autonomous Operations", None),
-        ("replay", "Inference replay pilot", "We replay your CIS-2 receipts on a separate machine and report every mismatch.", "Inference replay pilot", ("/pilot", "How a replay pilot works")),
     ],
 }
 
@@ -538,6 +554,8 @@ SITE_BANNED = [r"HIPAA", r"FedRAMP", r"lawsuit", r"world'?s",
                r"state-of-the-art", r"revolutionary", r"(?<!not a )partner of", r"accredit\w*"] + _private_banned()
 # Lab caveats say "not a guarantee"; the commercial pages never use the word.
 COMMERCIAL_BANNED = SITE_BANNED + [r"guarantee\w*", r"certified", r"certif\w+", r"compliant", r"compliance", r"classified",
-                                   r"unique", r"first", r"(?<!append-)only", r"leading", r"best", r"\$\s?\d", r"price\w*",
+                                   r"unique", r"first", r"(?<!append-)(?<!self-check )only", r"leading", r"best", r"\$\s?\d", r"price\w*",
                                    r"day rate", r"funding", r"customers\b", r"clients\b", r"partnered", r"partners?\b",
-                                   r"independent\w*", r"every recommendation"]
+                                   r"independent\w*", r"every recommendation",
+                                   r"proves\b", r"validated", r"military-grade", r"unhackable", r"conformant",
+                                   r"contract\w*", r"endorse\w*", r"selected"]

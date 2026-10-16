@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CIS: the baseline that doesn&#x27;t move · Aefinity AI</title>
-<meta name="description" content="When the AI computation itself is pinned to the last bit, any change you see comes from the thing you changed, not from the machine.">
+<title>CIS-1: the protocol under A.L.I.C.E. · Aefinity AI</title>
+<meta name="description" content="CIS-1 is integer and ternary inference whose results are bit-identical, with a receipt for every generation that a host verifier can re-derive.">
 <link rel="canonical" href="https://aefinityai.com/cis/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Aefinity AI">
-<meta property="og:title" content="CIS: the baseline that doesn&#x27;t move · Aefinity AI">
-<meta property="og:description" content="When the AI computation itself is pinned to the last bit, any change you see comes from the thing you changed, not from the machine.">
+<meta property="og:title" content="CIS-1: the protocol under A.L.I.C.E. · Aefinity AI">
+<meta property="og:description" content="CIS-1 is integer and ternary inference whose results are bit-identical, with a receipt for every generation that a host verifier can re-derive.">
 <meta property="og:url" content="https://aefinityai.com/cis/">
 <meta property="og:image" content="https://aefinityai.com/og.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -18,7 +18,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500&amp;family=Instrument+Serif:ital@0;1&amp;display=swap">
-<link rel="stylesheet" href="/assets/site.css?v=3e3414c830">
+<link rel="stylesheet" href="/assets/site.css?v=4a95692c0a">
 <script>(function(){var d=document.documentElement;d.classList.add('js');try{var t=localStorage.getItem('aefinity-theme');if(t==='light'||t==='dark')d.setAttribute('data-theme',t);}catch(e){}})();</script>
 <script src="/assets/site.js?v=331dd97031" defer></script>
 </head>
@@ -28,7 +28,7 @@
   <div class="wrap hdr">
     <a class="brand" href="/" aria-label="Aefinity AI, home"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8"/><path d="M8.6 24.2 16 7.6l7.4 16.6M12.4 17.4h7.2M11 21h10"/></svg><span class="wm">Aefinity <span>AI</span></span></a>
     <nav id="site-nav" class="nav" aria-label="Primary">
-      <ul><li><a href="/alice/">ALICE</a></li><li><a href="/cis/" aria-current="page">CIS</a></li><li><a href="/operations/">Operations</a></li><li><a href="/labs/">Labs</a></li><li><a href="/questions/">Questions</a></li><li><a href="/standard/">Standard</a></li><li><a href="/mission/">Mission</a></li><li class="nav-more"><a href="/learned/">Learned</a></li><li class="nav-more"><a href="/projects/">Projects</a></li></ul>
+      <ul><li><a href="/alice/">A.L.I.C.E.</a></li><li><a href="/cis/" aria-current="page">CIS-1</a></li><li><a href="/labs/">Labs</a></li><li><a href="/questions/">Questions</a></li><li><a href="/standard/">Standard</a></li><li><a href="/operations/">Operations</a></li><li><a href="/mission/">Mission</a></li><li class="nav-more"><a href="/learned/">Learned</a></li><li class="nav-more"><a href="/projects/">Projects</a></li></ul>
       <a class="nav-cta" href="/contact/">Book a briefing</a>
     </nav>
     <div class="hdr-tools">
@@ -39,30 +39,54 @@
 </header>
 <main id="main" tabindex="-1">
 <section class="biz-head">
-  <div class="wrap biz-hero has-art">
+  <div class="wrap biz-hero">
     <div class="bh-text">
-      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li aria-current="page">CIS</li></ol></nav>
-      <p class="kicker kicker-acc">CIS &middot; Checkable inference</p>
-      <h1 class="biz-h">The baseline <em>that doesn't move.</em></h1>
-      <p class="biz-lead">When the AI computation itself is pinned to the last bit, any change you see comes from the thing you changed, not from the machine.</p>
-      <div class="cta-row"><a class="btn btn-lg" href="#cis-2">CIS-2 &middot; open standard <span class="arr" aria-hidden="true">&rarr;</span></a><a class="btn btn-ghost" href="#cis-3">CIS-3 &middot; LLM edition</a></div>
+      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li aria-current="page">CIS-1</li></ol></nav>
+      <p class="kicker kicker-acc">CIS-1 &middot; Protocol under A.L.I.C.E.</p>
+      <h1 class="biz-h">The protocol <em>under A.L.I.C.E.</em></h1>
+      <p class="biz-lead">CIS-1 is integer and ternary inference whose results are bit-identical, with a receipt for every generation that a host verifier can re-derive.</p>
+      <div class="cta-row"><a class="btn btn-lg" href="#cis-1">CIS-1 <span class="arr" aria-hidden="true">&rarr;</span></a><a class="btn btn-ghost" href="#cis-2">CIS-2 &middot; archived research</a></div>
     </div>
-    <figure class="mfig" aria-label="One digest across five kinds of hardware">
-  <div class="mf-bar"><span>digest by machine</span><span class="mf-tag">Illustration</span></div>
-  <ol><li><span class="mf-m">AVX2 x86</span><span class="mf-bits" aria-hidden="true"><i class="b1"></i><i class="b0"></i><i class="b1"></i><i class="b0"></i><i class="b0"></i><i class="b1"></i><i class="b1"></i><i class="b1"></i><i class="b0"></i><i class="b0"></i><i class="b0"></i><i class="b0"></i><i class="b0"></i><i class="b0"></i><i class="b0"></i><i class="b1"></i><i class="b1"></i><i class="b0"></i><i class="b0"></i><i class="b1"></i><i class="b1"></i><i class="b1"></i><i class="b0"></i><i class="b1"></i><i class="b1"></i><i class="b0"></i><i class="b0"></i><i class="b1"></i><i class="b1"></i><i class="b1"></i><i class="b0"></i><i class="b0"></i></span><span class="mf-ok"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M8.2 12.2l2.6 2.6 5-5.4"/></svg><span>same</span></span></li><li><span class="mf-m">Scalar x86</span><span class="mf-bits" aria-hidden="true"><i class="b1"></i><i class="b0"></i><i class="b1"></i><i class="b0"></i><i class="b0"></i><i class="b1"></i><i class="b1"></i><i class="b1"></i><i class="b0"></i><i class="b0"></i><i class="b0"></i><i class="b0"></i><i class="b0"></i><i class="b0"></i><i class="b0"></i><i class="b1"></i><i class="b1"></i><i class="b0"></i><i class="b0"></i><i class="b1"></i><i class="b1"></i><i class="b1"></i><i class="b0"></i><i class="b1"></i><i class="b1"></i><i class="b0"></i><i class="b0"></i><i class="b1"></i><i class="b1"></i><i class="b1"></i><i class="b0"></i><i class="b0"></i></span><span class="mf-ok"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M8.2 12.2l2.6 2.6 5-5.4"/></svg><span>same</span></span></li><li><span class="mf-m">AVX-512-capable CPU (self-check only)</span><span class="mf-bits" aria-hidden="true"><i class="b1"></i><i class="b0"></i><i class="b1"></i><i class="b0"></i><i class="b0"></i><i class="b1"></i><i class="b1"></i><i class="b1"></i><i class="b0"></i><i class="b0"></i><i class="b0"></i><i class="b0"></i><i class="b0"></i><i class="b0"></i><i class="b0"></i><i class="b1"></i><i class="b1"></i><i class="b0"></i><i class="b0"></i><i class="b1"></i><i class="b1"></i><i class="b1"></i><i class="b0"></i><i class="b1"></i><i class="b1"></i><i class="b0"></i><i class="b0"></i><i class="b1"></i><i class="b1"></i><i class="b1"></i><i class="b0"></i><i class="b0"></i></span><span class="mf-ok"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M8.2 12.2l2.6 2.6 5-5.4"/></svg><span>same</span></span></li><li><span class="mf-m">aarch64 phone</span><span class="mf-bits" aria-hidden="true"><i class="b1"></i><i class="b0"></i><i class="b1"></i><i class="b0"></i><i class="b0"></i><i class="b1"></i><i class="b1"></i><i class="b1"></i><i class="b0"></i><i class="b0"></i><i class="b0"></i><i class="b0"></i><i class="b0"></i><i class="b0"></i><i class="b0"></i><i class="b1"></i><i class="b1"></i><i class="b0"></i><i class="b0"></i><i class="b1"></i><i class="b1"></i><i class="b1"></i><i class="b0"></i><i class="b1"></i><i class="b1"></i><i class="b0"></i><i class="b0"></i><i class="b1"></i><i class="b1"></i><i class="b1"></i><i class="b0"></i><i class="b0"></i></span><span class="mf-ok"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M8.2 12.2l2.6 2.6 5-5.4"/></svg><span>same</span></span></li><li><span class="mf-m">Tesla P100 GPU</span><span class="mf-bits" aria-hidden="true"><i class="b1"></i><i class="b0"></i><i class="b1"></i><i class="b0"></i><i class="b0"></i><i class="b1"></i><i class="b1"></i><i class="b1"></i><i class="b0"></i><i class="b0"></i><i class="b0"></i><i class="b0"></i><i class="b0"></i><i class="b0"></i><i class="b0"></i><i class="b1"></i><i class="b1"></i><i class="b0"></i><i class="b0"></i><i class="b1"></i><i class="b1"></i><i class="b1"></i><i class="b0"></i><i class="b1"></i><i class="b1"></i><i class="b0"></i><i class="b0"></i><i class="b1"></i><i class="b1"></i><i class="b1"></i><i class="b0"></i><i class="b0"></i></span><span class="mf-ok"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M8.2 12.2l2.6 2.6 5-5.4"/></svg><span>same</span></span></li></ol>
-  <figcaption>Same digest on AVX2, scalar x86, an AVX-512-capable CPU (generic build, self-check only), an aarch64 phone and a Tesla P100 GPU, in our own runs. The bit pattern is drawn for illustration.</figcaption>
-</figure>
+    
   </div>
-</section><section class="bsec cis2-sec" aria-labelledby="cis-2">
+</section><section class="bsec cis2-sec" aria-labelledby="cis-1">
   <div class="wrap">
-    <header class="bs-head"><p class="kicker kicker-acc">Apache-2.0</p><h2 class="bs-title" id="cis-2">CIS-2 &middot; <em>open standard</em></h2></header>
+    <header class="bs-head"><p class="kicker kicker-acc">Protocol</p><h2 class="bs-title" id="cis-1">CIS-1 &middot; <em>integer and ternary inference</em></h2></header>
     <div class="cis2-grid">
+  <div><p class="cis2-p">CIS-1 is the protocol A.L.I.C.E. runs under. Inference uses integer and ternary arithmetic with no floating point, so the same model and input are designed to give the same output on any machine that follows the protocol. Each generation produces a receipt, and a separate host verifier re-derives it.</p><p class="cis2-p">What we have run so far: BitNet b1.58 2B-4T, vocabulary-pruned, produced the same receipt on three x86 machines, with and without AVX2, and a standalone verifier re-verified it on each. These are our own runs from October 2026; no outside party has reproduced them. DeltaNet and hybrid models are planned research and are not built.</p><ul class="link-list"><li><a class="ext" href="https://github.com/Aefinity-AI/alice-aegis">A.L.I.C.E. on GitHub</a></li></ul></div>
+  <div><figure class="aart" aria-hidden="true">
+  <svg viewBox="0 0 360 300" class="aart-svg">
+    <rect x="18" y="40" width="236" height="232" rx="18" class="a-wall"/>
+    <text x="38" y="70" class="a-lab">YOUR BUILDING</text>
+    <rect x="46" y="96" width="76" height="76" rx="10" class="a-box"/>
+    <rect x="66" y="116" width="36" height="36" rx="5" class="a-core"/>
+    <path d="M74 96v-10M94 96v-10M74 182v-10M94 182v-10M46 124h-10M46 144h-10M132 124h-10M132 144h-10" class="a-pin"/>
+    <text x="46" y="198" class="a-cap">ALICE</text>
+    <rect x="150" y="104" width="80" height="22" rx="5" class="a-row"/>
+    <rect x="150" y="134" width="80" height="22" rx="5" class="a-row"/>
+    <rect x="150" y="164" width="56" height="22" rx="5" class="a-row a-row-acc"/>
+    <text x="150" y="214" class="a-cap">YOUR DATA</text>
+    <path d="M46 236h176" class="a-dash"/>
+    <text x="46" y="256" class="a-small">on premises · your hardware</text>
+    <path d="M254 150h34" class="a-cut"/>
+    <path d="M300 136l16 28M316 136l-16 28" class="a-x"/>
+    <path d="M296 104h40a14 14 0 0 0 0-28 20 20 0 0 0-38-4 12 12 0 0 0-2 32z" class="a-cloud"/>
+    <text x="290" y="196" class="a-small">offline</text>
+  </svg>
+</figure></div>
+</div>
+  </div>
+</section><section class="bsec alt" aria-labelledby="cis-2">
+  <div class="wrap">
+    <header class="bs-head"><p class="kicker kicker-acc">Archive</p><h2 class="bs-title" id="cis-2">CIS-2 &middot; <em>archived research</em></h2></header>
+    <p class="archive-note"><strong>Archived research (2026-10), development paused. CIS-2 (bit-exact fp32 inference) is no longer a product or an offer. The pages and results stay public as a record.</strong></p>
+<div class="cis2-grid">
   <div>
     <p class="cis2-p">CIS-2 is an open specification with verifiers in C and Rust for bit-exact fp32 inference, with public conformance vectors. In our own runs, one digest reproduced on AVX2 and scalar x86, an AVX-512-capable cloud CPU (generic build, self-check only), an aarch64 phone and a Tesla P100 GPU.</p>
-    <ul class="link-list"><li><a class="ext" href="https://github.com/Aefinity-AI/cis2-spec">CIS-2 on GitHub</a></li><li><a class="ext" href="https://huggingface.co/datasets/aefinityAIINC/cis2-conformance">Conformance vectors on Hugging Face</a></li><li><a href="/standard/">Our test standard</a></li></ul>
+    <ul class="link-list"><li><a class="ext" href="https://github.com/Aefinity-AI/cis2-spec">CIS-2 on GitHub (archive)</a></li><li><a class="ext" href="https://huggingface.co/datasets/aefinityAIINC/cis2-conformance">Conformance vectors on Hugging Face (archive)</a></li><li><a href="/standard/">Our test standard</a></li></ul>
     <a class="video-cta" href="/cis2/explainer/">
   <span class="vc-thumb"><img src="/media/cis2/poster.jpg" alt="" width="320" height="180" loading="lazy"><span class="vc-play" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6.5v11l9-5.5z"/></svg></span></span>
-  <span class="vc-text"><span class="vc-k">Video &middot; 4 minutes</span><span class="vc-t">Watch the 4-minute explainer <span class="arr" aria-hidden="true">&rarr;</span></span><span class="vc-d">What CIS-2 checks, how anyone can verify it, and what it does not prove.</span></span>
+  <span class="vc-text"><span class="vc-k">Archived video &middot; 4 minutes</span><span class="vc-t">Watch the 4-minute explainer <span class="arr" aria-hidden="true">&rarr;</span></span><span class="vc-d">What CIS-2 checks, how anyone can verify it, and where its claims stop.</span></span>
 </a>
   </div>
   <div>
@@ -76,20 +100,14 @@
   <div class="wrap cis3-grid">
     <div class="cis3-lock" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2.2"/><path d="M8 10.5V7.6a4 4 0 0 1 8 0v2.9M12 14.5v2.4"/></svg></div>
     <div>
-      <p class="kicker">CIS-3 · LLM edition · Proprietary</p>
-      <h2 class="cis3-h" id="cis3-h">Checkable inference, taken to large language models.</h2>
-      <p class="cis3-b">Available to prospective licensees and collaborators under NDA, on request.</p>
-      <div class="cta-row"><a class="btn btn-lg btn-inv" href="mailto:justin@aefinityai.com?subject=CIS-3%20briefing">Request a CIS-3 briefing <span class="arr" aria-hidden="true">&rarr;</span></a></div>
+      <p class="kicker">CIS-3 · LLM edition · Development paused</p>
+      <h2 class="cis3-h" id="cis3-h">Not offered at this time.</h2>
+      <p class="cis3-b">Our work is focused on A.L.I.C.E. and CIS-1.</p>
     </div>
-  </div>
-</section><section class="bsec " aria-labelledby="fx-h">
-  <div class="wrap">
-    <header class="bs-head"><p class="kicker kicker-acc">Licensing use cases</p><h2 class="bs-title" id="fx-h">What a fixed baseline makes possible</h2></header>
-    <ul class="ucs ucs-3"><li class="uc"><svg class="ic ic-lg" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/><path d="M3.5 15.5h17"/><path d="M7 12l3-3.5 3 2.5 4-4.5"/></svg><h3>The baseline for every AI test harness</h3><p class="uc-give">A non-changing, per-hardware reference that evaluations, safety tests, red-teaming and regression suites run against, so drift in results means drift in the model, not noise.</p></li><li class="uc"><svg class="ic ic-lg" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9.5 2.8V6M14.5 2.8V6M9.5 18v3.2M14.5 18v3.2M2.8 9.5H6M2.8 14.5H6M18 9.5h3.2M18 14.5h3.2"/><path d="M9.8 12.2l1.6 1.6 3-3.2"/></svg><h3>Hardware and cloud qualification</h3><p class="uc-give">Prove a new server, GPU, driver or cloud instance produces identical results before it goes into service.</p></li><li class="uc"><svg class="ic ic-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1.2 1.2"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1.2-1.2"/></svg><h3>Model supply-chain integrity</h3><p class="uc-give">Detect silent changes to model weights.</p><p class="uc-labs"><a href="/labs/bitflip-weights/">L06 &middot; One flipped bit in the weights: which checks notice?</a> <a href="/labs/embedding-edits/">L07 &middot; Realistic edits to the embedding table, including one hidden row</a></p></li><li class="uc"><svg class="ic ic-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 3.5v4.5h4.5"/><path d="M10.5 9v6l4.5-3z"/></svg><h3>Audit and dispute evidence</h3><p class="uc-give">Replay a run and show the record matches, bit for bit.</p></li><li class="uc"><svg class="ic ic-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg><h3>Vendor verification</h3><p class="uc-give">Check that an AI provider ran the model and settings it says it ran.</p></li><li class="uc"><svg class="ic ic-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 3h5M10.5 3v6L4.8 18.6A1.6 1.6 0 0 0 6.2 21h11.6a1.6 1.6 0 0 0 1.4-2.4L13.5 9V3"/><path d="M7.5 15h9"/></svg><h3>Reproducible research and evaluation</h3><p class="uc-give">Results anyone can re-run exactly.</p></li></ul>
   </div>
 </section><section class="cta-band" aria-labelledby="cb-h">
   <div class="wrap cb-grid">
-    <div><p class="kicker">Book a briefing</p><h2 class="cb-title" id="cb-h">Put a baseline that doesn&#x27;t move under your test harness.</h2><p class="cb-body">CIS-2 is open under Apache-2.0. Commercial support, integration into your test harness, and CIS-3 licensing are available.</p></div>
+    <div><p class="kicker">Book a briefing</p><h2 class="cb-title" id="cb-h">Talk to us about A.L.I.C.E.</h2><p class="cb-body">Briefings are on request. Tell us about your air-gapped inference and security requirements.</p></div>
     <div class="cb-actions">
       <a class="btn btn-lg btn-inv" href="/contact/">Book a briefing <span class="arr" aria-hidden="true">&rarr;</span></a>
       <a class="cb-line" href="mailto:justin@aefinityai.com"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5l8.5 6.5 8.5-6.5"/></svg><span>justin@aefinityai.com</span></a>
@@ -107,11 +125,11 @@
         <p>We are not another AI platform or cloud service.</p>
         <p class="foot-prov">Every result on this site: run by us; no unaffiliated reproduction.</p>
       </div>
-      <nav aria-label="Site"><h2>Site</h2><ul class="foot-nav"><li><a href="/alice/">ALICE</a></li><li><a href="/cis/">CIS</a></li><li><a href="/operations/">Operations</a></li><li><a href="/labs/">Labs</a></li><li><a href="/questions/">Questions</a></li><li><a href="/standard/">Standard</a></li><li><a href="/mission/">Mission</a></li><li><a href="/learned/">Learned</a></li><li><a href="/projects/">Projects</a></li><li><a href="/operations/how-we-run/">How we run</a></li><li><a href="/contact/">Contact</a></li><li><a href="/pilot">Replay pilot</a></li></ul></nav>
+      <nav aria-label="Site"><h2>Site</h2><ul class="foot-nav"><li><a href="/alice/">A.L.I.C.E.</a></li><li><a href="/cis/">CIS-1</a></li><li><a href="/labs/">Labs</a></li><li><a href="/questions/">Questions</a></li><li><a href="/standard/">Standard</a></li><li><a href="/operations/">Operations</a></li><li><a href="/mission/">Mission</a></li><li><a href="/learned/">Learned</a></li><li><a href="/projects/">Projects</a></li><li><a href="/operations/how-we-run/">How we run</a></li><li><a href="/contact/">Contact</a></li><li><a href="/pilot">Archived: CIS-2 replay pilot</a></li></ul></nav>
       <nav aria-label="Open materials"><h2>Open materials</h2><ul>
-        <li><a class="ext" href="https://github.com/Aefinity-AI/cis2-spec">CIS-2 on GitHub</a></li>
-        <li><a class="ext" href="https://huggingface.co/datasets/aefinityAIINC/cis2-conformance">Conformance dataset</a></li>
-        <li><a class="ext" href="https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/public/Design_Partner_Adoption_Path.md">Design Partner Adoption Path</a></li>
+        <li><a class="ext" href="https://github.com/Aefinity-AI/alice-aegis">A.L.I.C.E. on GitHub</a></li>
+        <li><a class="ext" href="https://github.com/Aefinity-AI/cis2-spec">CIS-2 on GitHub (archived)</a></li>
+        <li><a class="ext" href="https://huggingface.co/datasets/aefinityAIINC/cis2-conformance">CIS-2 conformance dataset (archived)</a></li>
         <li><a class="ext" href="https://github.com/Aefinity-AI/aefinityai.com">Site source</a></li>
       </ul></nav>
       <div><h2>Contact</h2><ul>

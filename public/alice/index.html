@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ALICE: private AI built to stay in the building · Aefinity AI</title>
-<meta name="description" content="ALICE is private AI built to run on your own machines, with no cloud connection. Designed for places where data cannot leave the building.">
+<title>A.L.I.C.E.: bare-metal inference for air-gapped work · Aefinity AI</title>
+<meta name="description" content="A.L.I.C.E. is inference built to run without a general-purpose operating system, using integer and ternary math. Every generation carries a receipt that a separate host verifier re-derives. Built for air-gapped inference and security, and for defense and Army field requirements.">
 <link rel="canonical" href="https://aefinityai.com/alice/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Aefinity AI">
-<meta property="og:title" content="ALICE: private AI built to stay in the building · Aefinity AI">
-<meta property="og:description" content="ALICE is private AI built to run on your own machines, with no cloud connection. Designed for places where data cannot leave the building.">
+<meta property="og:title" content="A.L.I.C.E.: bare-metal inference for air-gapped work · Aefinity AI">
+<meta property="og:description" content="A.L.I.C.E. is inference built to run without a general-purpose operating system, using integer and ternary math. Every generation carries a receipt that a separate host verifier re-derives. Built for air-gapped inference and security, and for defense and Army field requirements.">
 <meta property="og:url" content="https://aefinityai.com/alice/">
 <meta property="og:image" content="https://aefinityai.com/og.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -18,7 +18,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500&amp;family=Instrument+Serif:ital@0;1&amp;display=swap">
-<link rel="stylesheet" href="/assets/site.css?v=3e3414c830">
+<link rel="stylesheet" href="/assets/site.css?v=4a95692c0a">
 <script>(function(){var d=document.documentElement;d.classList.add('js');try{var t=localStorage.getItem('aefinity-theme');if(t==='light'||t==='dark')d.setAttribute('data-theme',t);}catch(e){}})();</script>
 <script src="/assets/site.js?v=331dd97031" defer></script>
 </head>
@@ -28,7 +28,7 @@
   <div class="wrap hdr">
     <a class="brand" href="/" aria-label="Aefinity AI, home"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8"/><path d="M8.6 24.2 16 7.6l7.4 16.6M12.4 17.4h7.2M11 21h10"/></svg><span class="wm">Aefinity <span>AI</span></span></a>
     <nav id="site-nav" class="nav" aria-label="Primary">
-      <ul><li><a href="/alice/" aria-current="page">ALICE</a></li><li><a href="/cis/">CIS</a></li><li><a href="/operations/">Operations</a></li><li><a href="/labs/">Labs</a></li><li><a href="/questions/">Questions</a></li><li><a href="/standard/">Standard</a></li><li><a href="/mission/">Mission</a></li><li class="nav-more"><a href="/learned/">Learned</a></li><li class="nav-more"><a href="/projects/">Projects</a></li></ul>
+      <ul><li><a href="/alice/" aria-current="page">A.L.I.C.E.</a></li><li><a href="/cis/">CIS-1</a></li><li><a href="/labs/">Labs</a></li><li><a href="/questions/">Questions</a></li><li><a href="/standard/">Standard</a></li><li><a href="/operations/">Operations</a></li><li><a href="/mission/">Mission</a></li><li class="nav-more"><a href="/learned/">Learned</a></li><li class="nav-more"><a href="/projects/">Projects</a></li></ul>
       <a class="nav-cta" href="/contact/">Book a briefing</a>
     </nav>
     <div class="hdr-tools">
@@ -41,11 +41,11 @@
 <section class="biz-head">
   <div class="wrap biz-hero has-art">
     <div class="bh-text">
-      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li aria-current="page">ALICE</li></ol></nav>
-      <p class="kicker kicker-acc">ALICE &middot; Private AI</p>
-      <h1 class="biz-h">Private AI, <em>built to stay in the building.</em></h1>
-      <p class="biz-lead">ALICE is private AI built to run on your own machines, with no cloud connection. Designed for places where data cannot leave the building.</p>
-      <div class="cta-row"><a class="btn btn-lg" href="/contact/">Book a briefing <span class="arr" aria-hidden="true">&rarr;</span></a></div>
+      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li aria-current="page">A.L.I.C.E.</li></ol></nav>
+      <p class="kicker kicker-acc">A.L.I.C.E. &middot; Bare-metal inference</p>
+      <h1 class="biz-h">Bare-metal inference, <em>built for air-gapped work.</em></h1>
+      <p class="biz-lead">A.L.I.C.E. is inference built to run without a general-purpose operating system, using integer and ternary math. Every generation carries a receipt that a separate host verifier re-derives. Built for air-gapped inference and security, and for defense and Army field requirements.</p>
+      <div class="cta-row"><a class="btn btn-lg" href="/contact/">Book a briefing <span class="arr" aria-hidden="true">&rarr;</span></a><a class="btn btn-ghost ext" href="https://github.com/Aefinity-AI/alice-aegis">A.L.I.C.E. on GitHub</a></div>
     </div>
     <figure class="aart" aria-hidden="true">
   <svg viewBox="0 0 360 300" class="aart-svg">
@@ -68,44 +68,54 @@
   </svg>
 </figure>
   </div>
-</section><section class="cap-band" aria-label="Capabilities"><div class="wrap"><ul class="caps"><li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h6M15 12h6"/><path d="M9 8v8M15 8v8"/><path d="M11 10.5l2 3M13 10.5l-2 3" opacity=".9"/></svg><span>Designed for disconnected networks</span></li><li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="6.5" rx="1.6"/><rect x="4" y="13.5" width="16" height="6.5" rx="1.6"/><path d="M7.5 7.25h.01M7.5 16.75h.01M11 7.25h5M11 16.75h5"/></svg><span>Runs on your hardware, on premises</span></li><li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18.5h9.5a4 4 0 0 0 .6-7.95A5.5 5.5 0 0 0 6.6 9.6 4.5 4.5 0 0 0 7 18.5z"/><path d="M4 3.5l16 17"/></svg><span>No outside data processor, no per-query cloud bill</span></li><li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/></svg><span>Right-sized models: small, task-specific models where a large language model is more risk than help</span></li><li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="10" rx="1.5"/><path d="M2.5 19h19l-2-4h-15z"/></svg><span>Runs on modest hardware (a 2B-parameter ternary model on an ordinary laptop CPU)</span></li></ul></div></section><section class="bsec " aria-labelledby="uc-h">
+</section><section class="cap-band" aria-label="Capabilities"><div class="wrap"><ul class="caps"><li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h6M15 12h6"/><path d="M9 8v8M15 8v8"/><path d="M11 10.5l2 3M13 10.5l-2 3" opacity=".9"/></svg><span>Primary use: inference and security on air-gapped networks</span></li><li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="6.5" rx="1.6"/><rect x="4" y="13.5" width="16" height="6.5" rx="1.6"/><path d="M7.5 7.25h.01M7.5 16.75h.01M11 7.25h5M11 16.75h5"/></svg><span>Built to run without a general-purpose operating system</span></li><li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18.5h9.5a4 4 0 0 0 .6-7.95A5.5 5.5 0 0 0 6.6 9.6 4.5 4.5 0 0 0 7 18.5z"/><path d="M4 3.5l16 17"/></svg><span>No outside data processor, no cloud connection required</span></li><li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/></svg><span>Integer and ternary arithmetic (CIS-1), designed for bit-identical results</span></li><li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="10" rx="1.5"/><path d="M2.5 19h19l-2-4h-15z"/></svg><span>Today: BitNet b1.58 2B-4T, vocabulary-pruned, on ordinary x86 CPUs</span></li></ul></div></section><section class="bsec " aria-labelledby="how-h">
   <div class="wrap">
-    <header class="bs-head"><p class="kicker kicker-acc">Target use cases</p><h2 class="bs-title" id="uc-h">Built for places where <em>data cannot leave.</em></h2></header>
+    <header class="bs-head"><h2 class="bs-title" id="how-h">How it works</h2></header>
+    <ol class="eflow" style="--n:4"><li><span class="ef-n">1</span><h3>Bootable image</h3><p>Inference runs without a general-purpose operating system underneath it.</p></li><li><span class="ef-n">2</span><h3>Integer inference</h3><p>A ternary BitNet b1.58 model, integer arithmetic, on the CPU.</p></li><li><span class="ef-n">3</span><h3>Receipt</h3><p>Each generation produces a receipt.</p></li><li><span class="ef-n">4</span><h3>Host verifier</h3><p>A separate verifier re-derives the receipt and reports any mismatch.</p></li></ol>
+  </div>
+</section><section class="bsec alt" aria-labelledby="today-h">
+  <div class="wrap">
+    <header class="bs-head"><p class="kicker kicker-acc">Evidence</p><h2 class="bs-title" id="today-h">What runs today</h2><p class="bs-intro">Everything below is from our own runs. No outside party has reproduced any of it yet.</p></header>
+    <ul class="cards3"><li><h3>Model</h3><p>BitNet b1.58 2B-4T, vocabulary-pruned, run under CIS-1 integer math.</p></li><li><h3>Receipts</h3><p>In October 2026, one generation produced the same receipt on three x86 machines, with and without AVX2, and a standalone verifier re-verified it on each.</p></li><li><h3>Bootable image</h3><p>Demonstrated in QEMU and on physical hardware with a smaller model.</p></li></ul>
+  </div>
+</section><section class="bsec " aria-labelledby="airgap">
+  <div class="wrap">
+    <header class="bs-head"><p class="kicker kicker-acc">Target use cases</p><h2 class="bs-title" id="airgap">Primary use: <em>air-gapped inference and security.</em></h2></header>
     <ul class="ucs ucs-feat"><li class="uc uc-feat">
+  <svg class="ic ic-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l7.5 3v5.6c0 4.6-3.2 8.4-7.5 9.8-4.3-1.4-7.5-5.2-7.5-9.8V5.8z"/><path d="M8.8 12l2.2 2.2 4.4-4.4"/></svg>
+  <h3>Defense, government and secure facilities</h3>
+  <p class="uc-need">Restricted networks are disconnected on purpose.</p>
+  <p class="uc-give">Inference and security work on disconnected networks, field kits and edge devices, on hardware you control. Built for defense and Army field requirements; we are pursuing Army SBIR work.</p>
+</li><li class="uc uc-feat">
+  <svg class="ic ic-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2.8L5 13.5h6l-1 7.7 8-10.7h-6z"/></svg>
+  <h3>Critical infrastructure and industrial sites</h3>
+  <p class="uc-need">Operations cannot depend on the network.</p>
+  <p class="uc-give">An offline operations assistant for procedures, logs and shift handovers that keeps working when the network does not.</p>
+</li><li class="uc uc-feat">
+  <svg class="ic ic-lg" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>
+  <h3>Remote and field operations</h3>
+  <p class="uc-need">Ships, remote sites, disaster response.</p>
+  <p class="uc-give">A working assistant aboard a ship, at a remote site or in a response kit, with no connectivity required.</p>
+</li></ul><p class="kicker uses-also">Also suited to</p><ul class="ucs ucs-more"><li class="uc">
   <svg class="ic ic-lg" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3.5" width="16" height="17" rx="2.5"/><path d="M12 8v8M8 12h8"/></svg>
   <h3>Hospitals and clinics</h3>
   <p class="uc-need">Patient data cannot leave the hospital network.</p>
   <p class="uc-give">Clinical notes, discharge letters, inbox triage and coding support, on machines inside the hospital network. Designed to keep patient data on hospital hardware.</p>
-</li><li class="uc uc-feat">
+</li><li class="uc">
   <svg class="ic ic-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5v17M7 20.5h10M5 6.5h14"/><path d="M5 6.5l-2.5 6a2.8 2.8 0 0 0 5 0zM19 6.5l-2.5 6a2.8 2.8 0 0 0 5 0z"/></svg>
   <h3>Law firms and legal departments</h3>
   <p class="uc-need">Privileged documents cannot go to a third-party processor.</p>
   <p class="uc-give">Review and summarize privileged documents with no third-party processor.</p>
-</li><li class="uc uc-feat">
-  <svg class="ic ic-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l7.5 3v5.6c0 4.6-3.2 8.4-7.5 9.8-4.3-1.4-7.5-5.2-7.5-9.8V5.8z"/><path d="M8.8 12l2.2 2.2 4.4-4.4"/></svg>
-  <h3>Defense, government and secure facilities</h3>
-  <p class="uc-need">Restricted networks are disconnected on purpose.</p>
-  <p class="uc-give">AI for disconnected and restricted networks, field kits and edge devices, on hardware you control.</p>
-</li></ul><ul class="ucs ucs-more"><li class="uc">
+</li><li class="uc">
   <svg class="ic ic-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9.5L12 4l9 5.5M4.5 20h15M6 10.5v7M10 10.5v7M14 10.5v7M18 10.5v7"/></svg>
   <h3>Finance and insurance</h3>
   <p class="uc-need">Decisions are examined after the fact.</p>
   <p class="uc-give">Decision support, document review and model risk checks on your own servers.</p>
 </li><li class="uc">
-  <svg class="ic ic-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2.8L5 13.5h6l-1 7.7 8-10.7h-6z"/></svg>
-  <h3>Critical infrastructure and industrial sites</h3>
-  <p class="uc-need">Operations cannot depend on the network.</p>
-  <p class="uc-give">An offline operations assistant for procedures, logs and shift handovers that keeps working when the network does not.</p>
-</li><li class="uc">
   <svg class="ic ic-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 3h5M10.5 3v6L4.8 18.6A1.6 1.6 0 0 0 6.2 21h11.6a1.6 1.6 0 0 0 1.4-2.4L13.5 9V3"/><path d="M7.5 15h9"/></svg>
   <h3>Research and regulated R&amp;D</h3>
   <p class="uc-need">IP has to stay in house.</p>
   <p class="uc-give">Keep IP and AI-assisted work in house, on your own machines.</p>
-</li><li class="uc">
-  <svg class="ic ic-lg" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>
-  <h3>Remote and field operations</h3>
-  <p class="uc-need">Ships, remote sites, disaster response.</p>
-  <p class="uc-give">A working assistant aboard a ship, at a remote site or in a response kit, with no connectivity required.</p>
 </li><li class="uc">
   <svg class="ic ic-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 7.5a2 2 0 0 1 2-2h4l2 2.5h7a2 2 0 0 1 2 2v7.5a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/><path d="M10 14.5h4v3h-4zM10.8 14.5v-1a1.2 1.2 0 0 1 2.4 0v1"/></svg>
   <h3>Any team handling sensitive data</h3>
@@ -113,14 +123,19 @@
   <p class="uc-give">Summarize and search HR files, investigation notes and board papers on a machine in the room, designed so nothing leaves it.</p>
 </li></ul>
   </div>
-</section><section class="bsec alt" aria-labelledby="en-h">
+</section><section class="bsec alt" aria-labelledby="roadmap">
+  <div class="wrap">
+    <header class="bs-head"><p class="kicker kicker-acc">Roadmap</p><h2 class="bs-title" id="roadmap">Roadmap: planned, not built</h2><p class="bs-intro">Nothing in this section exists as a product today. Each item is to be built and tested to spec.</p></header>
+    <ul class="ucs ucs-3"><li class="uc"><svg class="ic ic-lg" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="10" rx="1.5"/><path d="M2.5 19h19l-2-4h-15z"/></svg><h3>Non-air-gapped variants</h3><p class="uc-give">Planned. Variants for networked deployments, to be built and tested to spec.</p></li><li class="uc"><svg class="ic ic-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l7.5 3v5.6c0 4.6-3.2 8.4-7.5 9.8-4.3-1.4-7.5-5.2-7.5-9.8V5.8z"/><path d="M8.8 12l2.2 2.2 4.4-4.4"/></svg><h3>Project Guardian</h3><p class="uc-give">Planned future work for soldiers. This is roadmap, not product: nothing is built, tested or fielded.</p></li><li class="uc"><svg class="ic ic-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 3h5M10.5 3v6L4.8 18.6A1.6 1.6 0 0 0 6.2 21h11.6a1.6 1.6 0 0 0 1.4-2.4L13.5 9V3"/><path d="M7.5 15h9"/></svg><h3>DeltaNet and hybrid models</h3><p class="uc-give">Planned research. Not built.</p></li></ul>
+  </div>
+</section><section class="bsec " aria-labelledby="en-h">
   <div class="wrap">
     <header class="bs-head"><h2 class="bs-title" id="en-h">How we engage</h2></header>
-    <ol class="eflow" style="--n:3"><li><span class="ef-n">1</span><h3>Briefing</h3><p>We map your use case.</p></li><li><span class="ef-n">2</span><h3>Pilot on your hardware</h3><p>Scoped and measured.</p></li><li><span class="ef-n">3</span><h3>Deployment and support</h3><p>On site or remote.</p></li></ol><p class="stage-line">ALICE is pilot-stage technology; each deployment is scoped and tested with you on site.</p>
+    <ol class="eflow" style="--n:3"><li><span class="ef-n">1</span><h3>Briefing</h3><p>We map your use case.</p></li><li><span class="ef-n">2</span><h3>Pilot on your hardware</h3><p>Scoped and measured.</p></li><li><span class="ef-n">3</span><h3>Support</h3><p>On site or remote.</p></li></ol><p class="stage-line">A.L.I.C.E. is pilot-stage technology; each deployment is scoped and tested with you on site.</p>
   </div>
 </section><section class="cta-band" aria-labelledby="cb-h">
   <div class="wrap cb-grid">
-    <div><p class="kicker">Book a briefing</p><h2 class="cb-title" id="cb-h">Tell us what you need to verify, protect or automate.</h2><p class="cb-body">We reply personally.</p></div>
+    <div><p class="kicker">Book a briefing</p><h2 class="cb-title" id="cb-h">Tell us what you need to run air-gapped.</h2><p class="cb-body">We reply personally.</p></div>
     <div class="cb-actions">
       <a class="btn btn-lg btn-inv" href="/contact/">Book a briefing <span class="arr" aria-hidden="true">&rarr;</span></a>
       <a class="cb-line" href="mailto:justin@aefinityai.com"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5l8.5 6.5 8.5-6.5"/></svg><span>justin@aefinityai.com</span></a>
@@ -138,11 +153,11 @@
         <p>We are not another AI platform or cloud service.</p>
         <p class="foot-prov">Every result on this site: run by us; no unaffiliated reproduction.</p>
       </div>
-      <nav aria-label="Site"><h2>Site</h2><ul class="foot-nav"><li><a href="/alice/">ALICE</a></li><li><a href="/cis/">CIS</a></li><li><a href="/operations/">Operations</a></li><li><a href="/labs/">Labs</a></li><li><a href="/questions/">Questions</a></li><li><a href="/standard/">Standard</a></li><li><a href="/mission/">Mission</a></li><li><a href="/learned/">Learned</a></li><li><a href="/projects/">Projects</a></li><li><a href="/operations/how-we-run/">How we run</a></li><li><a href="/contact/">Contact</a></li><li><a href="/pilot">Replay pilot</a></li></ul></nav>
+      <nav aria-label="Site"><h2>Site</h2><ul class="foot-nav"><li><a href="/alice/">A.L.I.C.E.</a></li><li><a href="/cis/">CIS-1</a></li><li><a href="/labs/">Labs</a></li><li><a href="/questions/">Questions</a></li><li><a href="/standard/">Standard</a></li><li><a href="/operations/">Operations</a></li><li><a href="/mission/">Mission</a></li><li><a href="/learned/">Learned</a></li><li><a href="/projects/">Projects</a></li><li><a href="/operations/how-we-run/">How we run</a></li><li><a href="/contact/">Contact</a></li><li><a href="/pilot">Archived: CIS-2 replay pilot</a></li></ul></nav>
       <nav aria-label="Open materials"><h2>Open materials</h2><ul>
-        <li><a class="ext" href="https://github.com/Aefinity-AI/cis2-spec">CIS-2 on GitHub</a></li>
-        <li><a class="ext" href="https://huggingface.co/datasets/aefinityAIINC/cis2-conformance">Conformance dataset</a></li>
-        <li><a class="ext" href="https://github.com/Aefinity-AI/cis2-spec/blob/main/docs/public/Design_Partner_Adoption_Path.md">Design Partner Adoption Path</a></li>
+        <li><a class="ext" href="https://github.com/Aefinity-AI/alice-aegis">A.L.I.C.E. on GitHub</a></li>
+        <li><a class="ext" href="https://github.com/Aefinity-AI/cis2-spec">CIS-2 on GitHub (archived)</a></li>
+        <li><a class="ext" href="https://huggingface.co/datasets/aefinityAIINC/cis2-conformance">CIS-2 conformance dataset (archived)</a></li>
         <li><a class="ext" href="https://github.com/Aefinity-AI/aefinityai.com">Site source</a></li>
       </ul></nav>
       <div><h2>Contact</h2><ul>

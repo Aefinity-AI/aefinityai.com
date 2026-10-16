@@ -363,9 +363,9 @@ def footer():
       </div>
       <nav aria-label="Site"><h2>Site</h2><ul class="foot-nav">{nav}</ul></nav>
       <nav aria-label="Open materials"><h2>Open materials</h2><ul>
-        <li><a class="ext" href="https://github.com/Aefinity-AI/cis2-spec">CIS-2 on GitHub</a></li>
-        <li><a class="ext" href="https://huggingface.co/datasets/aefinityAIINC/cis2-conformance">Conformance dataset</a></li>
-        <li><a class="ext" href="{C.PARTNER_PATH}">Design Partner Adoption Path</a></li>
+        <li><a class="ext" href="https://github.com/Aefinity-AI/alice-aegis">A.L.I.C.E. on GitHub</a></li>
+        <li><a class="ext" href="https://github.com/Aefinity-AI/cis2-spec">CIS-2 on GitHub (archived)</a></li>
+        <li><a class="ext" href="https://huggingface.co/datasets/aefinityAIINC/cis2-conformance">CIS-2 conformance dataset (archived)</a></li>
         <li><a class="ext" href="{C.SITE_SOURCE}">Site source</a></li>
       </ul></nav>
       <div><h2>Contact</h2><ul>
@@ -739,7 +739,7 @@ def glance_section(labs):
         out.append(f'<div class="glance-group"><h3>{name}</h3><ul class="glance-grid">{"".join(cards)}</ul></div>')
     return f"""<section class="wrap glance" aria-labelledby="glance-h">
   <h2 id="glance-h">All labs at a glance</h2>
-  <p class="glance-video"><a href="/cis2/explainer/">Watch the 4-minute CIS-2 explainer {ARROW}</a></p>
+  <p class="glance-video"><a href="/cis2/explainer/">Archived: the 4-minute CIS-2 explainer {ARROW}</a></p>
   <p class="ex-sub-lede">Each lab as a small picture: the question, the steps of the test, then the verdict. Grouped by the hard question it belongs to. Open any card for the full picture and the sourced detail.</p>
   {"".join(out)}
 </section>"""
@@ -805,6 +805,7 @@ def lab_page(l, labs, data):
     <p class="eyebrow"><span class="lc-no">{l['code']}</span> {time_el(l)} {badge(l['outcome'])}{eq}</p>
     <h1 class="lab-title">{esc(l['title'])}</h1>
     <p class="lab-q"><span>Question</span>{md(c['question'])}</p>
+    {archive_banner("This lab belongs to the CIS-2 line of research.") if l["slug"] in cis2_lab_slugs(data) else ""}
     <p class="prov"><span class="prov-dot" aria-hidden="true"></span>Run by us; no unaffiliated reproduction</p>
   </div>
 </header>
@@ -859,6 +860,7 @@ def labs_index(labs, data):
     <p class="kicker">The labs</p>
     <h1 class="display">Thirty-three labs. <em>Every outcome shown.</em></h1>
     <p class="lede">Failures, nulls, retractions and corrections of our own work are listed with the successes. Every result is run by us. No unaffiliated party has reproduced any of it yet.</p>
+    <p class="lede">Our focus is now A.L.I.C.E. and CIS-1. The labs stay published; those on CIS-2 are archived research (2026-10), development paused.</p>
     {ledger(labs)}
   </div>
 </section>
@@ -874,6 +876,19 @@ def labs_index(labs, data):
   <p class="f-empty" data-empty hidden>No lab matches both filters. <button type="button" class="linkish" data-reset>Clear filters</button></p>
 </section>"""
     page("/labs/", "Labs", "All 33 labs run by Aefinity AI, with positive, mixed, negative, null and held-back outcomes, each with sourced results.", body, active="/labs/")
+
+
+def archive_banner(extra=""):
+    return f'<p class="archive-note"><strong>{esc(C.ARCHIVE_NOTE)}</strong>{(" " + esc(extra)) if extra else ""}</p>'
+
+
+def cis2_lab_slugs(data):
+    for p in data["projects"]:
+        if p["name"] == "CIS-2":
+            for kind, val in p["blocks"]:
+                if kind == "p" and val.startswith("Labs:"):
+                    return set(re.findall(r"\(#lab-([a-z0-9-]+)\)", val))
+    return set()
 
 
 def home(labs, data):
@@ -892,29 +907,35 @@ def home(labs, data):
     practices = "".join(f"<li>{md(p)}</li>" for p in data["std_practices"])
     mq = [q for q in data["std_quotes"] if q[0].startswith("Open the PR")][0]
     projects = ""
-    for p in data["projects"]:
+    for p in project_order(data["projects"]):
         if p["name"] == "Elsewhere":
             continue
         desc = [b[1] for b in p["blocks"] if b[0] == "p"][0]
-        projects += f'<li class="proj"><h3><a href="/projects/#{slugify(p["name"])}">{esc(p["name"])}</a></h3><p>{md(desc)}</p></li>'
+        projects += f'<li class="proj"><h3><a href="/projects/#{slugify(p["name"])}">{esc(proj_label(p["name"]))}</a></h3><p>{md(desc)}</p></li>'
     body = f"""<section class="hero" aria-labelledby="hero-h">
   <div class="wrap hero-grid">
    <div>
     <p class="kicker kicker-acc">{esc(C.HERO["kicker"])}</p>
     <h1 class="hero-h hero-h-biz" id="hero-h">{C.HERO["h1"]}</h1>
     <p class="hero-lede">{esc(C.HERO["lede"])}</p>
-    <div class="cta-row"><a class="btn btn-lg" href="{C.NAV_CTA[0]}">{C.NAV_CTA[1]} {ARROW}</a><a class="btn btn-ghost" href="#of-h">What we offer</a></div>
-    {video_card("video-cta video-cta-sm")}
-    <p class="hero-mission">{esc(first)}. <a href="/mission/">Our mission {ARROW}</a> <span aria-hidden="true">&middot;</span> <a href="/labs/">All 33 labs {ARROW}</a></p>
+    <div class="cta-row"><a class="btn btn-lg" href="{C.NAV_CTA[0]}">{C.NAV_CTA[1]} {ARROW}</a><a class="btn btn-ghost" href="/alice/">Explore A.L.I.C.E.</a></div>
+    <p class="hero-mission">{esc(first)}. <a href="/mission/">Our mission {ARROW}</a> <span aria-hidden="true">&middot;</span> <a href="/labs/">Research labs {ARROW}</a></p>
    </div>
-   <div class="hero-ledger">
-    <div class="hl-head"><p class="kicker">The record so far</p><p class="hl-note">Each mark is one lab, grouped by outcome. Select a mark to open the lab.</p></div>
-    {ledger(labs)}
+   <div class="hero-ledger hero-flow-box">
+    <div class="hl-head"><p class="kicker">How a generation works</p><p class="hl-note">From the bootable image to a checked receipt.</p></div>
+    <ol class="hero-flow">{"".join(f'<li><span class="hf-n">{i + 1}</span><div><h3>{esc(a)}</h3><p>{esc(b)}</p></div></li>' for i, (a, b) in enumerate(C.HERO_FLOW))}</ol>
    </div>
   </div>
 </section>
 
 {home_biz()}
+
+<section class="section alt" aria-labelledby="rec-h">
+  <div class="wrap">
+    {section_head("", "The research labs", "Our labs stay published, good and bad. Each mark is one lab, grouped by outcome; select a mark to open it. Labs on CIS-2 are archived research (2026-10), development paused.", hid="rec-h")}
+    {ledger(labs)}
+  </div>
+</section>
 
 <section class="section" aria-labelledby="how-h">
   <div class="wrap">
@@ -963,7 +984,9 @@ def home(labs, data):
   </div>
 </section>
 
-{cta_band(C.BRIEFING["title"], esc(C.BRIEFING["body"]) + ' Running inference already? <a href="/pilot">See the replay pilot</a>.', cls="cta-band cta-lite")}
+{ops_band()}
+
+{cta_band(C.BRIEFING["title"], esc(C.BRIEFING["body"]), cls="cta-band cta-lite")}
 
 <section class="aspiration" aria-labelledby="asp-h">
   <div class="wrap">
@@ -972,9 +995,17 @@ def home(labs, data):
     <p class="asp-note">{esc(data["aspiration_note"])}</p>
   </div>
 </section>"""
-    page("/", "Aefinity AI: hard questions about AI, tested in the open",
-         "We take the hard questions AI raises and study, experiment and test as rigorously as we can. 33 labs, every outcome shown, every result run by us.",
+    page("/", "Aefinity AI: A.L.I.C.E. bare-metal inference for air-gapped work",
+         "A.L.I.C.E. is bare-metal inference built for air-gapped inference and security: integer and ternary math, a receipt for every generation, re-derived by a host verifier. Our research labs stay published.",
          body, active="/", canonical="/")
+
+
+def project_order(projects):
+    return sorted(projects, key=lambda p: 0 if p["name"].startswith("ALICE") else 1)
+
+
+def proj_label(name):
+    return "CIS-2 (archived research, development paused)" if name == "CIS-2" else name
 
 
 def slugify(s):
@@ -1129,7 +1160,7 @@ def learned_page(labs, data):
 def projects_page(labs, data):
     by = {l["slug"]: l for l in labs}
     out = []
-    for p in data["projects"]:
+    for p in project_order(data["projects"]):
         pid = slugify(p["name"])
         parts, chips = [], ""
         for kind, val in p["blocks"]:
@@ -1152,12 +1183,12 @@ def projects_page(labs, data):
                 parts.append(code_block(val.strip(), f"cmd-{pid}"))
         labs_html = f'<p class="hq-k">Labs</p><ul class="lab-chips">{chips}</ul>' if chips else ""
         out.append(f"""<section class="project" id="{pid}" aria-labelledby="{pid}-h">
-  <div class="pj-name"><h2 id="{pid}-h">{esc(p['name'])}</h2></div>
-  <div class="pj-body">{''.join(parts)}{labs_html}</div>
+  <div class="pj-name"><h2 id="{pid}-h">{esc(proj_label(p['name']))}</h2></div>
+  <div class="pj-body">{archive_banner() if p['name'] == "CIS-2" else ""}{''.join(parts)}{labs_html}</div>
 </section>""")
-    body = f"""{simple_head("Projects", "Projects", "Open work <em>you can check.</em>", '<p class="lede">CIS-2, ALICE and RANGER are public repositories. Each lists the labs that tested it.</p>')}
+    body = f"""{simple_head("Projects", "Projects", "Open work <em>you can check.</em>", '<p class="lede">A.L.I.C.E., CIS-2 (archived research) and RANGER are public repositories. Each lists the labs that tested it.</p>')}
 <div class="wrap projects">{''.join(out)}</div>"""
-    page("/projects/", "Projects", "CIS-2, ALICE and RANGER: open specifications, engines and research notes, with the labs that tested each and the command to reproduce CIS-2.", body, active="/projects/")
+    page("/projects/", "Projects", "A.L.I.C.E., CIS-2 (archived research, development paused) and RANGER: public repositories and research notes, with the labs that tested each.", body, active="/projects/")
 
 
 def pilot_page():
@@ -1168,16 +1199,14 @@ def pilot_page():
     steps = "".join(f'<li><span class="hw-n">{i + 1:02d}</span><h3>{esc(a)}</h3><p>{esc(b)}</p></li>' for i, (a, b) in enumerate(P["steps"]))
     get = "".join(f"<li><h3>{esc(a)}</h3><p>{esc(b)}</p></li>" for a, b in P["get"])
     nots = "".join(f"<li><h3>{esc(a)}</h3><p>{esc(b)}</p></li>" for a, b in P["not"])
-    lines = "".join(f"<li>{esc(x)}</li>" for x in P["lines"])
-    start = esc(P["start"]).replace(C.EMAIL, f'<a href="{P["mailto_short"]}">{C.EMAIL}</a>')
     body = f"""<section class="page-head pilot-head">
   <div class="wrap pilot-hero">
     <div>
-      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li aria-current="page">Paid pilots</li></ol></nav>
-      <p class="kicker">Paid pilots</p>
-      <h1 class="display">Paid pilots: do your receipts replay <em>bit for bit</em> elsewhere?</h1>
+      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li aria-current="page">CIS-2 replay pilot (archived)</li></ol></nav>
+      <p class="kicker">CIS-2 &middot; Archived</p>
+      <h1 class="display">CIS-2 replay pilot: <em>archived.</em></h1>
       <p class="lede">{esc(P["lede"])}</p>
-      <div class="cta-row"><a class="btn" href="{P['mailto_short']}">Email us about a pilot</a><a class="btn btn-ghost" href="#before">Start with the self-check</a></div>
+      <p class="archive-note"><strong>{esc(C.ARCHIVE_NOTE)}</strong> Current work: <a href="/alice/">A.L.I.C.E.</a> and <a href="/cis/">CIS-1</a>.</p>
     </div>
     <aside class="glance" aria-labelledby="gl-h">
       <h2 class="rail-h" id="gl-h">At a glance</h2>
@@ -1194,18 +1223,8 @@ def pilot_page():
 <section class="section alt" id="process" aria-labelledby="pr-h"><div class="wrap">{section_head("02", "What happens", esc(P["steps_intro"]), hid="pr-h")}<ol class="how">{steps}</ol></div></section>
 <section class="section" id="get" aria-labelledby="get-h"><div class="wrap split">{section_head("03", "What you get", hid="get-h")}<ul class="cards-list ok">{get}</ul></div></section>
 <section class="section alt" id="not" aria-labelledby="not-h"><div class="wrap split">{section_head("04", "What it is not", hid="not-h")}<ul class="cards-list no">{nots}</ul></div></section>
-<section class="section" id="before" aria-labelledby="bf-h"><div class="wrap split">{section_head("05", "Before you write", esc(P["before"]), hid="bf-h")}
-  <div>{code_block(C.SELFCHECK_CMD, "cmd-pilot")}<p class="fine">{esc(P["before_fine"]).replace("The README", '<a class="ext" href="https://github.com/Aefinity-AI/cis2-spec">The README</a>', 1)}</p></div></div></section>
-<section class="section alt" id="start" aria-labelledby="st-h"><div class="wrap split">
-  <header class="sec-head"><span class="sec-n">06</span><h2 class="sec-title" id="st-h">How to start</h2><p class="sec-intro">{start}</p>
-  <p class="fine">{esc(P["about"])} Phone <a href="tel:{C.PHONE_TEL}">{C.PHONE_DISPLAY}</a>.</p></header>
-  <div class="email-tpl">
-    <div class="et-head"><span><b>To</b>{C.EMAIL}</span><span><b>Subject</b>CIS-2 pilot</span></div>
-    <ol>{lines}</ol>
-    <div class="et-foot"><a class="btn" href="{esc(P['mailto'])}">Open this email</a><a class="btn btn-ghost ext" href="https://github.com/Aefinity-AI/cis2-spec">CIS-2 on GitHub</a></div>
-  </div>
-</div></section>"""
-    page("/pilot", "Paid pilots", "Paid pilots: we replay your CIS-2 receipts on a machine separate from yours and report every mismatch.", body, active="/pilot", canonical="/pilot")
+"""
+    page("/pilot", "CIS-2 replay pilot (archived)", "Archived research (2026-10), development paused. The CIS-2 receipt replay pilot is no longer offered.", body, active="/pilot", canonical="/pilot")
 
 
 def not_found():
@@ -1272,8 +1291,6 @@ def check_proof(labs):
                 l = by[slug]
                 hay = " ".join([l["title"], l["method"]] + [r["claim"] + " " + r["quote"] for r in l["results"]] + l["caveats"])
                 assert tok in hay, (slug, tok)
-    for m in ("AVX2", "scalar", "aarch64"):
-        assert m in by["cis2-cross-machine-digest"]["method"], m
 
 
 def biz_head(crumb, kicker, h1, lead, art="", ctas=None):
@@ -1336,7 +1353,7 @@ def machines_figure():
     return f"""<figure class="mfig" aria-label="One digest across five kinds of hardware">
   <div class="mf-bar"><span>digest by machine</span><span class="mf-tag">Illustration</span></div>
   <ol>{rows}</ol>
-  <figcaption>Same digest on AVX2, scalar x86, AVX-512, an aarch64 phone and a Tesla P100 GPU, in our own runs. The bit pattern is drawn for illustration.</figcaption>
+  <figcaption>Same digest on AVX2, scalar x86, an AVX-512-capable CPU (generic build, self-check only), an aarch64 phone and a Tesla P100 GPU, in our own runs. The bit pattern is drawn for illustration.</figcaption>
 </figure>"""
 
 
@@ -1412,12 +1429,15 @@ def proof_strip():
 def home_biz():
     return f"""<section class="offer-band" aria-labelledby="of-h">
   <div class="wrap">
-    <header class="ob-head"><p class="kicker kicker-acc">What we offer</p><h2 class="ob-title" id="of-h">{esc(C.OFFER_TITLE)}</h2></header>
+    <header class="ob-head"><p class="kicker kicker-acc">What we are building</p><h2 class="ob-title" id="of-h">{esc(C.OFFER_TITLE)}</h2></header>
     {offer_cards()}
     <div class="ob-proof"><p class="kicker">On the public record</p>{proof_strip()}</div>
   </div>
-</section>
-<section class="ops-band" aria-labelledby="opb-h">
+</section>"""
+
+
+def ops_band():
+    return f"""<section class="ops-band" aria-labelledby="opb-h">
   <div class="wrap opb-grid">
     <div>
       <p class="kicker">{esc(C.OPS_BAND["kicker"])}</p>
@@ -1442,13 +1462,20 @@ def alice_page(labs):
   <p class="uc-give">{esc(give)}</p>
 </li>"""
     feat, more = A["uses"][:3], A["uses"][3:]
-    assert [u[0] for u in feat] == ["hospital", "scales", "shield"]
+    assert [u[0] for u in feat] == ["shield", "bolt", "compass"]
     uses = (f'<ul class="ucs ucs-feat">{"".join(uc(u, "uc uc-feat") for u in feat)}</ul>'
+            f'<p class="kicker uses-also">Also suited to</p>'
             f'<ul class="ucs ucs-more">{"".join(uc(u, "uc") for u in more)}</ul>')
-    body = biz_head("ALICE", "ALICE &middot; Private AI", A["h1"], A["lead"], alice_art())
+    today = "".join(f'<li><h3>{esc(a)}</h3><p>{esc(b)}</p></li>' for a, b in A["today"])
+    road = "".join(f'<li class="uc">{icon(i, "ic ic-lg")}<h3>{esc(a)}</h3><p class="uc-give">{esc(b)}</p></li>' for i, a, b in A["roadmap"])
+    body = biz_head("A.L.I.C.E.", "A.L.I.C.E. &middot; Bare-metal inference", A["h1"], A["lead"], alice_art(),
+                    [(C.NAV_CTA[0], C.NAV_CTA[1], "btn btn-lg"), ("https://github.com/Aefinity-AI/alice-aegis", "A.L.I.C.E. on GitHub", "btn btn-ghost ext")])
     body += f'<section class="cap-band" aria-label="Capabilities"><div class="wrap"><ul class="caps">{caps}</ul></div></section>'
-    body += biz_section("Built for places where <em>data cannot leave.</em>", uses, "Target use cases", "uc-h")
-    body += biz_section("How we engage", engage_flow(A["engage"]) + f'<p class="stage-line">{esc(A["stage"])}</p>', None, "en-h", "alt")
+    body += biz_section(esc(A["how_title"]), engage_flow(A["how"]), None, "how-h")
+    body += biz_section(esc(A["today_title"]), f'<ul class="cards3">{today}</ul>', "Evidence", "today-h", "alt", intro=esc(A["today_intro"]))
+    body += biz_section("Primary use: <em>air-gapped inference and security.</em>", uses, "Target use cases", "airgap")
+    body += biz_section(esc(A["roadmap_title"]), f'<ul class="ucs ucs-3">{road}</ul>', "Roadmap", "roadmap", "alt", intro=esc(A["roadmap_intro"]))
+    body += biz_section("How we engage", engage_flow(A["engage"]) + f'<p class="stage-line">{esc(A["stage"])}</p>', None, "en-h")
     body += cta_band(C.BRIEFING["title"], esc(C.BRIEFING["body"]))
     page("/alice/", A["title"], A["lead"], body, active="/alice/")
 
@@ -1456,10 +1483,17 @@ def alice_page(labs):
 def cis_page(labs):
     X = C.CIS
     by = {l["slug"]: l for l in labs}
+    paras = "".join(f'<p class="cis2-p">{esc(p)}</p>' for p in X["cis1"])
+    links1 = "".join(f'<li><a class="ext" href="{esc(u)}">{esc(t)}</a></li>' for t, u in X["cis1_links"])
+    cis1 = f"""<div class="cis2-grid">
+  <div>{paras}<ul class="link-list">{links1}</ul></div>
+  <div>{alice_art()}</div>
+</div>"""
     links = "".join(f'<li><a class="ext" href="{esc(u)}">{esc(t)}</a></li>' for t, u in X["cis2_links"])
     links += '<li><a href="/standard/">Our test standard</a></li>'
     chips = "".join(lab_chip(by[s]) for s in X["cis2_labs"])
-    cis2 = f"""<div class="cis2-grid">
+    cis2 = f"""<p class="archive-note"><strong>{esc(X["archive_note"])}</strong></p>
+<div class="cis2-grid">
   <div>
     <p class="cis2-p">{esc(X["cis2"])}</p>
     <ul class="link-list">{links}</ul>
@@ -1478,21 +1512,14 @@ def cis_page(labs):
       <p class="kicker">{esc(X["cis3_kicker"])}</p>
       <h2 class="cis3-h" id="cis3-h">{esc(X["cis3_h"])}</h2>
       <p class="cis3-b">{esc(X["cis3_body"])}</p>
-      <div class="cta-row"><a class="btn btn-lg btn-inv" href="{C.mailto(X["cis3_subject"])}">{esc(X["cis3_cta"])} {ARROW}</a></div>
     </div>
   </div>
 </section>"""
-    uses = []
-    for i, t, b, ls in X["uses"]:
-        lk = ""
-        if ls:
-            lk = '<p class="uc-labs">' + " ".join(f'<a href="/labs/{s}/">{by[s]["code"]} &middot; {esc(by[s]["title"])}</a>' for s in ls) + "</p>"
-        uses.append(f'<li class="uc">{icon(i, "ic ic-lg")}<h3>{esc(t)}</h3><p class="uc-give">{esc(b)}</p>{lk}</li>')
-    body = biz_head("CIS", "CIS &middot; Checkable inference", X["h1"], X["lead"], machines_figure(),
-                    [("#cis-2", "CIS-2 &middot; open standard", "btn btn-lg"), ("#cis-3", "CIS-3 &middot; LLM edition", "btn btn-ghost")])
-    body += biz_section("CIS-2 &middot; <em>open standard</em>", cis2, "Apache-2.0", "cis-2", "cis2-sec")
+    body = biz_head("CIS-1", "CIS-1 &middot; Protocol under A.L.I.C.E.", X["h1"], X["lead"], "",
+                    [("#cis-1", "CIS-1", "btn btn-lg"), ("#cis-2", "CIS-2 &middot; archived research", "btn btn-ghost")])
+    body += biz_section("CIS-1 &middot; <em>integer and ternary inference</em>", cis1, "Protocol", "cis-1", "cis2-sec")
+    body += biz_section("CIS-2 &middot; <em>archived research</em>", cis2, "Archive", "cis-2", "alt")
     body += cis3
-    body += biz_section(esc(X["uses_title"]), f'<ul class="ucs ucs-3">{"".join(uses)}</ul>', "Licensing use cases", "fx-h")
     body += cta_band(X["cta"], esc(X["licensing"]))
     page("/cis/", X["title"], X["lead"], body, active="/cis/")
 
@@ -1560,9 +1587,9 @@ HOW = [
     ("How every action is logged", """<p>Two records. A private operations log lists every send, push, deploy and decision, with ids. The public experiment ledger lives in the <a class="ext" href="https://github.com/Aefinity-AI/cis2-spec/tree/main/ledger">cis2-spec repository</a>; it is hash-chained, and a timestamp proof made with OpenTimestamps (<code>LEDGER.tsv.ots</code>) dates the file as a whole. The private log is not public.</p>"""),
     ("Who is accountable", """<p>Justin Thompson, Chief Executive Officer, for everything the operator does.</p>"""),
     ("Which model", """<!-- JUSTIN REVIEW: names the model vendor; the site guard normally bans it -->
-<p data-model-statement>We use Claude, made by Anthropic, as the lab's operator. Anthropic is not a partner of AEFINITY AI INC. and has not endorsed this work.</p>"""),
+<p data-model-statement>The lab's operator is a commercially licensed frontier language model, used under its provider's standard terms. The model's provider is not a partner of AEFINITY AI INC. and has not endorsed this work.</p>"""),
     ("Incidents", """<!-- JUSTIN REVIEW -->
-<p><strong>2026-10-15</strong> &mdash; Email sent from a founder's account by a second AI assistant, without the operator's review, overstated our standing: it described intended engagements as existing ones and a verification by an outside party that had not taken place. Corrections went to the recipients the same day. That assistant's access is being restricted.</p>"""),
+<p><strong>2026-10-15</strong> &mdash; Email sent from a founder's account by a second AI assistant, without the operator's review, overstated our standing: it described intended engagements as existing ones and a verification by an outside party that had not taken place. A correction went to the NIST recipient the same day; the other messages are listed in the public errata of the cis2-spec repository (docs/ERRATA.md). That assistant's access is being restricted.</p>"""),
 ]
 
 
@@ -1638,7 +1665,7 @@ def commercial_guard():
     t = (PUBLIC / "cis/index.html").read_text()
     sec = t[t.index('<section class="cis3"'):t.index("</section>", t.index('<section class="cis3"'))]
     sec_text = re.sub(r"<[^>]+>", " ", sec)
-    sec_text = re.sub(r"CIS-[23]", "", sec_text).replace("CIS-3%20", "")
+    sec_text = re.sub(r"CIS-[123]", "", sec_text).replace("CIS-3%20", "")
     assert not re.search(r"\d", re.sub(r"mailto:[^\"]+", "", sec_text)), "CIS-3 section carries a number"
 
 
@@ -1686,7 +1713,7 @@ def video_transcript_html():
 def video_card(cls="video-cta"):
     return f"""<a class="{cls}" href="/cis2/explainer/">
   <span class="vc-thumb"><img src="/media/cis2/poster.jpg" alt="" width="320" height="180" loading="lazy"><span class="vc-play" aria-hidden="true">{icon("play", "ic")}</span></span>
-  <span class="vc-text"><span class="vc-k">Video &middot; 4 minutes</span><span class="vc-t">Watch the 4-minute explainer {ARROW}</span><span class="vc-d">What CIS-2 checks, how anyone can verify it, and what it does not prove.</span></span>
+  <span class="vc-text"><span class="vc-k">Archived video &middot; 4 minutes</span><span class="vc-t">Watch the 4-minute explainer {ARROW}</span><span class="vc-d">What CIS-2 checks, how anyone can verify it, and where its claims stop.</span></span>
 </a>"""
 
 
@@ -1697,8 +1724,8 @@ def video_page():
         shutil.copyfile(VIDEO_SRC / f, out)
         WRITTEN.append(f"media/cis2/{f}")
     src = "".join(f'<li><span class="vs-c">{esc(c)}</span> ' + ", ".join(f'<a class="ext" href="{esc(u)}">{esc(t)}</a>' for t, u in ls) + "</li>" for c, ls in VIDEO_SOURCES)
-    head = simple_head("CIS-2 explainer", "CIS-2 &middot; Video", "CIS-2 in four minutes",
-                       '<p class="lede">A 4-minute explainer: what CIS-2 checks, how anyone can verify it, and what it does not prove.</p>')
+    head = simple_head("CIS-2 explainer", "CIS-2 &middot; Video &middot; Archived", "CIS-2 in four minutes",
+                       '<p class="lede">A 4-minute explainer: what CIS-2 checks, how anyone can verify it, and what it does not prove.</p>' + archive_banner())
     body = f"""{head}
 <section class="wrap video-sec" aria-labelledby="vid-h">
   <h2 class="sr-only" id="vid-h">The video</h2>
