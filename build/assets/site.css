@@ -1004,3 +1004,13 @@ a.dl:hover { border-color: var(--ink); }
 .glance-video a { text-decoration: none; }
 .glance-video a:hover { text-decoration: underline; }
 @media (max-width: 480px) { .video-cta { grid-template-columns: 1fr; } .vc-thumb { max-width: 240px; } }
+
+/* A.L.I.C.E. focus (2026-10): archive notes, hero flow, "also suited to" label */
+.archive-note { margin: 14px 0 18px; padding: 10px 14px; border: 1px solid var(--line-2); border-left: 3px solid var(--accent); border-radius: 8px; background: var(--accent-soft); color: var(--ink); font-size: .95rem; max-width: 62ch; }
+.archive-note a { text-decoration: underline; }
+.hero-flow { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.hero-flow li { display: grid; grid-template-columns: 32px 1fr; gap: 12px; align-items: start; }
+.hero-flow .hf-n { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--accent); color: var(--accent); font-family: var(--mono, "Geist Mono", monospace); font-size: .85rem; }
+.hero-flow h3 { margin: 0 0 2px; font-size: 1.02rem; }
+.hero-flow p { margin: 0; color: var(--muted); font-size: .92rem; }
+.uses-also { margin: 28px 0 12px; }
