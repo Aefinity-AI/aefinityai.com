@@ -18,6 +18,16 @@ All URLs were checked with unauthenticated requests on 2026-10-12 (HTTP 200; two
 | Contribution rules and errata policy | https://github.com/Aefinity-AI/cis2-spec/blob/main/CONTRIBUTING.md; https://github.com/Aefinity-AI/cis2-spec/blob/main/CHANGELOG.md |
 | Mission and aspiration text | Our own statement; not a factual claim, no source. |
 
+## A.L.I.C.E. and CIS-1 status (site-level)
+
+| Claim | Verbatim quote | URL |
+|---|---|---|
+| The same receipt (R1 vs R2 SAME, both verifiers rc 0) on three x86 hosts, including two with zero avx2 flags. | `\| w3 \| Intel Celeron N4020 @ 1.10GHz \| 0 \| 6.12.111 \| SAME \| 0 \| 0 \| a5103369549397bc \|` | https://github.com/Aefinity-AI/alice-aegis/blob/main/docs/hardware_logs/2026-10-16-cis1-2b-x86/README.md |
+| The bootable image, run in QEMU/KVM (emulated, not physical), verified the 2B receipt inside the image. | `VERIFY PASS — this machine reproduced all 8 decode steps' full logit vectors bit-for-bit, with no OS underneath` | https://github.com/Aefinity-AI/alice-aegis/blob/main/docs/hardware_logs/2026-10-16-cis1-2b-qemu/README.md |
+| An earlier build booted on a physical machine from a USB stick (log recovered and archived). | `STAGE 6: engine online, SIMD=AVX2+FMA` | https://github.com/Aefinity-AI/alice-aegis/blob/main/docs/hardware_logs/recovered_ALICE_UEFI_stick_BOOTLOG_2026-07-13_archived_2026-07-30.txt |
+| The model in the 3-host x86 receipt is the vocabulary-pruned one. | `"$W" gen "$A/aegis_pruned_model.cis.safetensors" "$A/embed.bin" "$A/vocab.bin" "$MAXNEW" "$PROMPT"` | https://github.com/Aefinity-AI/alice-aegis/blob/main/docs/hardware_logs/2026-10-16-cis1-2b-x86/job.sh |
+| CIS-1 removes floating point from the decode path. | `must remove floats from the decode path entirely` | https://github.com/Aefinity-AI/alice-aegis/blob/main/docs/CIS-1_SPEC_v1.0.md |
+
 ## Per-lab claims
 
 ### 1. CIS-2: the same AI output, bit for bit, on different machines (`cis2-cross-machine-digest`)
