@@ -382,7 +382,7 @@ PROOF = [
     {"big": "84", "label": "registered experiments on a public, hash-chained ledger",
      "check": ("test-standard-ledger", "84 registered experiments")},
     {"big": "One receipt", "label": "BitNet b1.58 2B-4T (vocabulary-pruned) under CIS-1: the same receipt on three x86 machines, with and without AVX2, re-verified by a standalone verifier. Our own runs, October 2026.", "check": None},
-    {"big": "Bootable", "label": "The bootable image has been demonstrated in QEMU and on physical hardware with a smaller model.", "check": None},
+    {"big": "Bootable", "label": "The bootable image ran the 2B model in QEMU with its receipt verified inside the image (October 2026); an earlier build booted on a physical machine from a USB stick (July 2026).", "check": None},
 ]
 
 OPS_BAND = {
@@ -419,7 +419,7 @@ ALICE = {
     "today": [
         ("Model", "BitNet b1.58 2B-4T, vocabulary-pruned, run under CIS-1 integer math."),
         ("Receipts", "In October 2026, one generation produced the same receipt on three x86 machines, with and without AVX2, and a standalone verifier re-verified it on each."),
-        ("Bootable image", "Demonstrated in QEMU and on physical hardware with a smaller model."),
+        ("Bootable image", "The bootable image ran the 2B model in QEMU with its receipt verified inside the image (October 2026), and an earlier build booted on a physical machine from a USB stick (July 2026)."),
     ],
     # (icon, who, the need in one line, what A.L.I.C.E. gives)
     "uses": [
@@ -460,7 +460,7 @@ CIS = {
     "h1": "The protocol <em>under A.L.I.C.E.</em>",
     "lead": "CIS-1 is integer and ternary inference whose results are bit-identical, with a receipt for every generation that a host verifier can re-derive.",
     "cis1": [
-        "CIS-1 is the protocol A.L.I.C.E. runs under. Inference uses integer and ternary arithmetic with no floating point, so the same model and input are designed to give the same output on any machine that follows the protocol. Each generation produces a receipt, and a separate host verifier re-derives it.",
+        "CIS-1 is the protocol A.L.I.C.E. runs under. CIS-1 removes floating point from the decode path: inference uses integer and ternary arithmetic, so the same model and input are designed to give the same output on any machine that follows the protocol. Each generation produces a receipt, and a separate host verifier re-derives it.",
         "What we have run so far: BitNet b1.58 2B-4T, vocabulary-pruned, produced the same receipt on three x86 machines, with and without AVX2, and a standalone verifier re-verified it on each. These are our own runs from October 2026; no outside party has reproduced them. DeltaNet and hybrid models are planned research and are not built.",
     ],
     "cis1_links": [
