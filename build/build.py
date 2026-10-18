@@ -1048,7 +1048,6 @@ def mission_page(labs, data):
     {section_head("", "Who we are", "AEFINITY AI INC. is a Texas corporation in Orange, Texas, founded and owned by Justin Thompson.", hid="who-h")}
     <div class="are-grid">
       <div class="are yes"><p class="are-k">Founder, Owner and CEO</p><p class="are-t">Justin Thompson</p><p>Created ALICE and CIS-1 and leads the research and the technical work.</p><p><a href="mailto:justin@aefinityai.com">justin@aefinityai.com</a></p></div>
-      <div class="are yes"><p class="are-k">Vice President, Business and Operations</p><p class="are-t">Shannon Heslop</p><p>Runs business and operations.</p><p><a href="mailto:shannon@aefinityai.com">shannon@aefinityai.com</a></p></div>
     </div>
   </div>
 </section>
